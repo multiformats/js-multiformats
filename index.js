@@ -29,7 +29,17 @@ const createMultihash = multiformats => {
     const length = varint.encode(digest.length)
     return Buffer.concat([code, length, digest])
   }
-  return { encode, decode }
+  const hash = (buff, key) => {
+    const info = multiformats.get(key)
+    if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
+    return encode(info.encode(buff), key)
+  }
+  const validate = buff => {
+    const { length, digest } = decode(buff)
+    if (digest.length !== length) throw new Error('Incorrect length')
+    return true
+  }
+  return { encode, decode, hash, validate, add: multiformats.add }
 }
 
 const createCID = multiformats => {
@@ -87,3 +97,4 @@ module.exports = (table = []) => {
   multiformats.CID = createCID(multiformats)
   return multiformats
 }
+module.exports.varint = varint

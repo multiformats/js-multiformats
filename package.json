@@ -4,7 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/test-*.js"
+    "test": "mocha test/test-*.js",
+    "coverage": "nyc --reporter=html mocha test/test-*.js && npx http-server coverage"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
