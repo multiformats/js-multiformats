@@ -28,7 +28,15 @@ const testThrow = (fn, message) => {
   }
   throw new Error('Test failed to throw')
 }
-
+const testThrowAsync = async (fn, message) => {
+  try {
+    await fn()
+  } catch (e) {
+    if (e.message !== message) throw e
+    return
+  }
+  throw new Error('Test failed to throw')
+}
 const crypto = require('crypto')
 const encode = data => crypto.createHash('sha256').update(data).digest()
 
@@ -57,17 +65,15 @@ describe('multihash', () => {
       same(validate(hash), true)
       same(validate(hash, Buffer.from('test')), true)
     })
-    /*
-    test('invalid', () => {
-      for (const test of invalid) {
-        console.log(test)
-      }
+    test('no such hash', async () => {
+      let msg = 'Do not have multiformat entry for "notfound"'
+      await testThrowAsync(() => multihash.hash(Buffer.from('test'), 'notfound'), msg)
+      msg = 'Missing hash implementation for "json"'
+      await testThrowAsync(() => multihash.hash(Buffer.from('test'), 'json'), msg)
     })
-    */
   })
-
   describe('decode', () => {
-    test('valid', () => {
+    test('valid fixtures', () => {
       for (const test of valid) {
         const { encoding, hex, size } = test
         const { code, name, varint } = encoding
@@ -76,18 +82,23 @@ describe('multihash', () => {
         same(multihash.decode(buf), { code, name, digest, length: size })
       }
     })
-  })
-
-  /*
-  describe('validate', () => {
-    test('invalid', () => {
-      for (const test of invalid) {
-        const buff = sample(test.encoding.varint || test.code, test.size, test.hex)
-        multihash.validate(buff)
-      }
-      const longBuffer = Buffer.alloc(150, 'a')
-      multihash.validate(longBuffer)
+    test('get from buffer', async () => {
+      const hash = await multihash.hash(Buffer.from('test'), 'sha2-256')
+      const { code, name } = multihash.get(hash)
+      same({ code, name }, { code: 18, name: 'sha2-256' })
     })
   })
-  */
+  describe('validate', () => {
+    test('invalid hash sha2-256', async () => {
+      const hash = await multihash.hash(Buffer.from('test'), name)
+      const msg = 'Buffer does not match hash'
+      testThrow(() => validate(hash, Buffer.from('tes2t')), msg)
+    })
+    test('invalid fixtures', () => {
+      for (const test of invalid) {
+        const buff = Buffer.from(test.hex, 'hex')
+        testThrow(() => validate(buff), test.message)
+      }
+    })
+  })
 })

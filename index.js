@@ -16,7 +16,7 @@ const varint = {
 }
 
 const createMultihash = multiformats => {
-  const { get, parse, add } = multiformats
+  const { get, has, parse, add } = multiformats
   const decode = digest => {
     const [info, len] = parse(digest)
     digest = digest.slice(len)
@@ -25,7 +25,12 @@ const createMultihash = multiformats => {
     return { code: info.code, name: info.name, length, digest }
   }
   const encode = (digest, id) => {
-    const info = get(id)
+    let info
+    if (typeof id === 'number') {
+      info = { code: id }
+    } else {
+      info = get(id)
+    }
     const code = varint.encode(info.code)
     const length = varint.encode(digest.length)
     return Buffer.concat([code, length, digest])
@@ -109,19 +114,18 @@ module.exports = (table = []) => {
   }
   const get = obj => {
     if (typeof obj === 'string') {
-      let code, encode, decode
       if (nameMap.has(obj)) {
-        ;[code, encode, decode] = nameMap.get(obj)
+        const [code, encode, decode] = nameMap.get(obj)
         return { code, name: obj, encode, decode }
       }
       throw new Error(`Do not have multiformat entry for "${obj}"`)
     }
     if (typeof obj === 'number') {
-      let name, encode, decode
       if (intMap.has(obj)) {
-        ;[name, encode, decode] = intMap.get(obj)
+        const [name, encode, decode] = intMap.get(obj)
+        return { code: obj, name, encode, decode }
       }
-      return { code: obj, name, encode, decode }
+      throw new Error(`Do not have multiformat entry for "${obj}"`)
     }
     if (Buffer.isBuffer(obj)) {
       return parse(obj)[0]

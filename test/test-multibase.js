@@ -28,4 +28,18 @@ describe('multibase', () => {
     const buffer = multibase.decode(string)
     same(buffer, Buffer.from('test'))
   })
+  test('get fails', () => {
+    let msg = 'Missing multibase implementation for "f"'
+    testThrow(() => multibase.get('f'), msg)
+    msg = 'Missing multibase implementation for "notfound"'
+    testThrow(() => multibase.get('notfound'), msg)
+  })
+  test('encode string failure', () => {
+    const msg = 'Can only multibase encode buffer instances'
+    testThrow(() => multibase.encode('asdf'), msg)
+  })
+  test('decode int failure', () => {
+    const msg = 'Can only multibase decode strings'
+    testThrow(() => multibase.decode(1), msg)
+  })
 })

@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "mocha test/test-*.js",
+    "pre:test": "standard",
+    "test:node": "hundreds mocha test/test-*.js",
+    "test:browser": "polendina --cleanup test/test-*.js",
+    "test": "npm run test:node && npm run test:browser",
     "coverage": "nyc --reporter=html mocha test/test-*.js && npx http-server coverage"
   },
   "keywords": [],
