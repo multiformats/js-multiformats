@@ -91,3 +91,36 @@ It will not include any of the codec or hash function implementations.
 ## multibase.add
 
 # CID
+
+```
+/*
+* Create a new CID.
+*
+* The algorithm for argument input is roughly:
+* ```
+* if (cid)
+*   -> create a copy
+* else if (str)
+*   if (1st char is on multibase table) -> CID String
+*   else -> bs58 encoded multihash
+* else if (Buffer)
+*   if (1st byte is 0 or 1) -> CID
+*   else -> multihash
+* else if (Number)
+*   -> construct CID by parts
+* ```
+*
+* @param {string|Buffer|CID} version
+* @param {string} [codec]
+* @param {Buffer} [multihash]
+* @param {string} [multibaseName]
+*
+* @example
+* new CID(<version>, <codec>, <multihash>, <multibaseName>)
+* new CID(<cidStr>)
+* new CID(<cid.buffer>)
+* new CID(<multihash>)
+* new CID(<bs58 encoded multihash>)
+* new CID(<cid>)
+*/
+```

@@ -1,5 +1,6 @@
 const { Buffer } = require('buffer')
 const varints = require('varint')
+const createCID = require('./cid')
 
 const cache = new Map()
 const varint = {
@@ -50,10 +51,6 @@ const createMultihash = multiformats => {
     return true
   }
   return { encode, decode, hash, validate, add, get }
-}
-
-const createCID = multiformats => {
-  // const { multibase, multicodec } = multiformats
 }
 
 const createMultibase = () => {
@@ -146,6 +143,7 @@ module.exports = (table = []) => {
     _add(code, name, encode, decode)
   }
   const multiformats = { parse, add, get, encode, decode }
+  multiformats.varint = varint
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)

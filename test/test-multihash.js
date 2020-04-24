@@ -44,6 +44,7 @@ describe('multihash', () => {
   const { multihash } = multiformat(table)
   const name = 'sha2-256'
   const { code } = multihash.get(name)
+  console.log({code})
   multihash.add([{ code, name, encode }])
   const { validate } = multihash
 
