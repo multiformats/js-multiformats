@@ -79,7 +79,7 @@ const createMultibase = () => {
   const encode = (buffer, id) => {
     if (!Buffer.isBuffer(buffer)) throw new Error('Can only multibase encode buffer instances')
     const { prefix, encode } = get(id)
-    return encode(prefix + encode(buffer))
+    return prefix + encode(buffer)
   }
   const decode = string => {
     if (typeof string !== 'string') throw new Error('Can only multibase decode strings')

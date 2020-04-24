@@ -42,4 +42,27 @@ describe('multibase', () => {
     const msg = 'Can only multibase decode strings'
     testThrow(() => multibase.decode(1), msg)
   })
+  const buff = Buffer.from('test')
+  const baseTest = obj => {
+    if (Array.isArray(obj)) return obj.forEach(o => baseTest(o))
+    const { multibase } = multiformat()
+    multibase.add(obj)
+    test(`encode/decode ${obj.name}`, () => {
+      const encoded = multibase.encode(buff, obj.name)
+      const decoded = multibase.decode(encoded)
+      same(decoded, buff)
+    })
+  }
+  describe('base16', () => {
+    baseTest(require('../bases/base16'))
+  })
+  describe('base32', () => {
+    baseTest(require('../bases/base32'))
+  })
+  describe('base58', () => {
+    baseTest(require('../bases/base58'))
+  })
+  describe('base64', () => {
+    baseTest(require('../bases/base64'))
+  })
 })
