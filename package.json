@@ -14,10 +14,11 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
+    "cids": "^0.8.0",
     "hundreds": "0.0.2",
     "mocha": "^7.1.1",
-    "multicodec": "^1.0.1",
     "multibase": "^0.7.0",
+    "multicodec": "^1.0.1",
     "polendina": "^1.0.0",
     "standard": "^14.3.3"
   },

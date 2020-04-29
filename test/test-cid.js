@@ -1,6 +1,7 @@
 /* eslint describe, it */
 'use strict'
 const crypto = require('crypto')
+const OLDCID = require('cids')
 const test = it
 const assert = require('assert')
 const same = assert.deepStrictEqual
@@ -14,15 +15,31 @@ const testThrow = async (fn, message) => {
   }
   throw new Error('Test failed to throw')
 }
+const testThrowAny = async fn => {
+  try {
+    await fn()
+  } catch (e) {
+    return
+  }
+  throw new Error('Test failed to throw')
+}
 
 describe('CID', () => {
   const { CID, multihash, multibase } = require('../')()
   multibase.add(require('../bases/base58'))
   multibase.add(require('../bases/base32'))
-  const encode = data => crypto.createHash('sha256').update(data).digest()
-  const name = 'sha2-256'
-  const code = 18
-  multihash.add([{ code, name, encode }])
+  multibase.add(require('../bases/base64'))
+  const hashes = [
+    { encode: data => crypto.createHash('sha256').update(data).digest(),
+      name: 'sha2-256',
+      code: 0x12
+    },
+    { encode: data => crypto.createHash('sha512').update(data).digest(),
+      name: 'sha2-512',
+      code: 0x13
+    }
+  ]
+  multihash.add(hashes)
   const b58 = multibase.get('base58btc')
   let hash
 
@@ -117,11 +134,11 @@ describe('CID', () => {
       same(cid.multihash, hash)
     })
 
-    test('can roundtrip through cid.toBaseEncodedString()', () => {
+    test('can roundtrip through cid.toString()', () => {
       const cid1 = new CID(1, 0x71, hash)
       const cid2 = new CID(cid1.toString())
 
-      same(cid1.codec, cid2.codec)
+      same(cid1.code, cid2.code)
       same(cid1.version, cid2.version)
       same(cid1.multihash, cid2.multihash)
     })
@@ -133,14 +150,13 @@ describe('CID', () => {
       const cid1 = new CID(1, 'eth-block', mh)
       const cid2 = new CID(cid1.toBaseEncodedString())
 
-      same(cid1).to.have.property('codec', 'eth-block')
-      same(cid1).to.have.property('version', 1)
-      same(cid1).to.have.property('multihash').that.eql(mh)
-      same(cid1).to.have.property('multibaseName', 'base32')
-      same(cid2).to.have.property('codec', 'eth-block')
-      same(cid2).to.have.property('version', 1)
-      same(cid2).to.have.property('multihash').that.eql(mh)
-      same(cid2).to.have.property('multibaseName', 'base32')
+      same(cid1.codec, 'eth-block')
+      same(cid1.version, 1)
+      same(cid1.multihash, mh)
+      same(cid1.multibaseName, 'base32')
+      same(cid2.code, )
+      same(cid2.version, 1)
+      same(cid2.multihash, mh)
     })
     */
 
@@ -149,7 +165,6 @@ describe('CID', () => {
       const cid = new CID(1, code, hash)
       const buffer = cid.buffer
       assert.ok(buffer)
-      same(buffer).to.exist()
       const str = buffer.toString('hex')
       same(str, '01711220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
     })
@@ -167,8 +182,8 @@ describe('CID', () => {
     const h2 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1o'
 
     test('.equals v0 to v0', () => {
-      same(new CID(h1).equals(new CID(h1))).to.equal(true)
-      same(new CID(h1).equals(new CID(h2))).to.equal(false)
+      same(new CID(h1).equals(new CID(h1)), true)
+      same(new CID(h1).equals(new CID(h2)), false)
     })
 
     test('.equals v0 to v1 and vice versa', () => {
@@ -176,31 +191,21 @@ describe('CID', () => {
       const cidV1 = new CID(cidV1Str)
       const cidV0 = cidV1.toV0()
 
-      same(cidV0.equals(cidV1)).to.equal(false)
-      same(cidV1.equals(cidV0)).to.equal(false)
-      same(cidV1.multihash).to.eql(cidV0.multihash)
+      same(cidV0.equals(cidV1), false)
+      same(cidV1.equals(cidV0), false)
+      same(cidV1.multihash, cidV0.multihash)
     })
 
     test('.isCid', () => {
-      same(
-        CID.isCID(new CID(h1))
-      ).to.equal(true)
+      assert.ok(CID.isCID(new CID(h1)))
 
-      same(
-        CID.isCID(false)
-      ).to.equal(false)
+      assert.ok(!CID.isCID(false))
 
-      same(
-        CID.isCID(Buffer.from('hello world'))
-      ).to.equal(false)
+      assert.ok(!CID.isCID(Buffer.from('hello world')))
 
-      same(
-        CID.isCID(new CID(h1).toV0())
-      ).to.equal(true)
+      assert.ok(CID.isCID(new CID(h1).toV0()))
 
-      same(
-        CID.isCID(new CID(h1).toV1())
-      ).to.equal(true)
+      assert.ok(CID.isCID(new CID(h1).toV1()))
     })
   })
 
@@ -212,22 +217,30 @@ describe('CID', () => {
       Buffer.from('QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT')
     ]
 
-    invalid.forEach((i) => test(`new CID(${Buffer.isBuffer(i) ? 'buffer' : 'string'}<${i.toString()}>)`, () => {
-      same(() => new CID(i)).to.throw()
-    }))
+    let mapper = i => {
+      const name = `new CID(${Buffer.isBuffer(i) ? 'buffer' : 'string'}<${i.toString()}>)`
+      test(name, () => testThrowAny(() => new CID(i)))
+    }
+    invalid.forEach(mapper)
 
-    invalid.forEach((i) => test(`new CID(0, 'dag-pb', ${Buffer.isBuffer(i) ? 'buffer' : 'string'}<${i.toString()}>)`, () => {
-      same(() => new CID(0, 'dag-pb', i)).to.throw()
-    }))
+    mapper = i => {
+      const name = `new CID(0, 112, ${Buffer.isBuffer(i) ? 'buffer' : 'string'}<${i.toString()}>)`
+      test(name, () => testThrowAny(() => new CID(0, 112, i)))
+    }
+    invalid.forEach(mapper)
 
-    invalid.forEach((i) => test(`new CID(1, 'dag-pb', ${Buffer.isBuffer(i) ? 'buffer' : 'string'}<${i.toString()}>)`, () => {
-      same(() => new CID(1, 'dag-pb', i)).to.throw()
-    }))
+    mapper = i => {
+      const name = `new CID(1, 112, ${Buffer.isBuffer(i) ? 'buffer' : 'string'}<${i.toString()}>)`
+      test(name, () => testThrowAny(() => new CID(1, 112, i)))
+    }
+    invalid.forEach(mapper)
 
     const invalidVersions = [-1, 2]
-    invalidVersions.forEach((i) => test(`new CID(${i}, 'dag-pb', buffer)`, () => {
-      same(() => new CID(i, 'dag-pb', hash)).to.throw()
-    }))
+    mapper = i => {
+      const name = `new CID(${i}, 112, buffer)`
+      test(name, () => testThrowAny(new CID(i, 112, hash)))
+    }
+    invalidVersions.forEach(mapper)
   })
 
   describe('idempotence', () => {
@@ -236,82 +249,73 @@ describe('CID', () => {
     const cid2 = new CID(cid1)
 
     test('constructor accept constructed instance', () => {
-      same(cid1.equals(cid2)).to.equal(true)
-      same(cid1 === cid2).to.equal(false)
+      same(cid1.equals(cid2), true)
+      same(cid1 === cid2, false)
     })
   })
 
   describe('conversion v0 <-> v1', () => {
     test('should convert v0 to v1', async () => {
-      const hash = await multihashing(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
-      const cid = new CID(0, 'dag-pb', hash).toV1()
-      same(cid.version).to.equal(1)
+      const hash = await multihash.hash(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
+      const cid = (new CID(0, 112, hash)).toV1()
+      same(cid.version, 1)
     })
 
     test('should convert v1 to v0', async () => {
-      const hash = await multihashing(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
-      const cid = new CID(1, 'dag-pb', hash).toV0()
-      same(cid.version).to.equal(0)
+      const hash = await multihash.hash(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
+      const cid = (new CID(1, 112, hash)).toV0()
+      same(cid.version, 0)
     })
 
     test('should not convert v1 to v0 if not dag-pb codec', async () => {
-      const hash = await multihashing(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
-      const cid = new CID(1, 'dag-cbor', hash)
-      same(() => cid.toV0()).to.throw('Cannot convert a non dag-pb CID to CIDv0')
+      const hash = await multihash.hash(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
+      const cid = new CID(1, 0x71, hash)
+      await testThrow(() => cid.toV0(), 'Cannot convert a non dag-pb CID to CIDv0')
     })
 
     test('should not convert v1 to v0 if not sha2-256 multihash', async () => {
-      const hash = await multihashing(Buffer.from(`TEST${Date.now()}`), 'sha2-512')
-      const cid = new CID(1, 'dag-pb', hash)
-      same(() => cid.toV0()).to.throw('Cannot convert non sha2-256 multihash CID to CIDv0')
-    })
-
-    test('should not convert v1 to v0 if not 32 byte multihash', async () => {
-      const hash = await multihashing(Buffer.from(`TEST${Date.now()}`), 'sha2-256', 31)
-      const cid = new CID(1, 'dag-pb', hash)
-      same(() => cid.toV0()).to.throw('Cannot convert non 32 byte multihash CID to CIDv0')
+      const hash = await multihash.hash(Buffer.from(`TEST${Date.now()}`), 'sha2-512')
+      const cid = new CID(1, 112, hash)
+      await testThrow(() => cid.toV0(), 'Cannot convert non sha2-256 multihash CID to CIDv0')
     })
   })
 
   describe('caching', () => {
     test('should cache CID as buffer', async () => {
-      const hash = await multihashing(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
-      const cid = new CID(1, 'dag-pb', hash)
-      same(cid.buffer).to.equal(cid.buffer)
-      // Make sure custom implementation detail properties don't leak into
-      // the prototype
-      same(Object.prototype.hasOwnProperty.call(cid, 'buffer')).to.be.false()
+      const hash = await multihash.hash(Buffer.from(`TEST${Date.now()}`), 'sha2-256')
+      const cid = new CID(1, 112, hash)
+      assert.ok(cid.buffer)
+      same(cid.buffer, cid.buffer)
     })
     test('should cache string representation when it matches the multibaseName it was constructed with', () => {
-      // not string to cache yet
-      const cid = new CID(1, 'dag-pb', hash, 'base32')
-      same(cid.string).to.be.undefined()
+      const cid = new CID(1, 112, hash)
+      same(cid._baseCache.size, 0)
 
-      // we dont cache alternate base encodings yet.
-      same(cid.toBaseEncodedString('base64')).to.equal('mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
-      same(cid.string).to.be.undefined()
+      same(cid.toString('base64'), 'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
+      same(cid._baseCache.get('base64'), 'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
+
+      same(cid._baseCache.has('base32'), false)
 
       const base32String = 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
-      same(cid.toBaseEncodedString()).to.equal(base32String)
+      same(cid.toString(), base32String)
 
-      // it cached!
-      same(cid.string).to.equal(base32String)
-      // Make sure custom implementation detail properties don't leak into
-      // the prototype
-      same(Object.prototype.hasOwnProperty.call(cid, '_string')).to.be.false()
-      same(cid.toBaseEncodedString()).to.equal(base32String)
-      same(cid.toBaseEncodedString('base64')).to.equal('mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
-
-      // alternate base not cached!
-      same(cid.string).to.equal(base32String)
+      same(cid._baseCache.get('base32'), base32String)
+      same(cid.toString('base64'), 'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
     })
     test('should cache string representation when constructed with one', () => {
       const base32String = 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
       const cid = new CID(base32String)
-      same(cid.string).to.equal(base32String)
-      same(cid.toBaseEncodedString('base64')).to.equal('mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
-      same(cid.string).to.equal(base32String)
-      same(cid.toBaseEncodedString()).to.equal(base32String)
+      same(cid._baseCache.get('base32'), base32String)
     })
+  })
+
+  test('toJSON()', () => {
+    const cid = new CID(1, 112, hash)
+    same(cid.toJSON(), { code: 112, version: 1, hash })
+  })
+
+  test('isCID', () => {
+    const cid = new CID(1, 112, hash)
+    assert.ok(OLDCID.isCID(cid))
   })
 })

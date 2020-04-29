@@ -88,7 +88,8 @@ const createMultibase = () => {
     const { decode } = get(prefix)
     return decode(string)
   }
-  return { add, get, encode, decode }
+  const encoding = string => get(string[0])
+  return { add, get, encode, decode, encoding }
 }
 
 module.exports = (table = []) => {
