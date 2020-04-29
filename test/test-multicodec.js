@@ -3,7 +3,7 @@
 const { Buffer } = require('buffer')
 const assert = require('assert')
 const same = assert.deepStrictEqual
-const multiformat = require('../')
+const multiformats = require('../basics')
 const test = it
 
 const testThrow = (fn, message) => {
@@ -15,21 +15,20 @@ const testThrow = (fn, message) => {
   }
   throw new Error('Test failed to throw')
 }
-
-const raw = buff => {
-  if (!Buffer.isBuffer(buff)) throw new Error('Only buffer instances can be used w/ raw codec')
-  return buff
-}
-const encode = raw
-const decode = raw
-
 describe('multicodec', () => {
-  const { multicodec } = multiformat()
-  multicodec.add([{ code: 85, name: 'raw', encode, decode }])
+  const { multicodec } = multiformats
   test('encode/decode raw', () => {
     const buff = multicodec.encode(Buffer.from('test'), 'raw')
     same(buff, Buffer.from('test'))
     same(multicodec.decode(buff, 'raw'), Buffer.from('test'))
+  })
+  test('encode/decode json', () => {
+    const buff = multicodec.encode({ hello: 'world' }, 'json')
+    same(buff, Buffer.from(JSON.stringify({ hello: 'world' })))
+    same(multicodec.decode(buff, 'json'), { hello: 'world' })
+  })
+  test('raw cannot encode string', () => {
+    testThrow(() => multicodec.encode('asdf', 'raw'), 'Only buffer instances can be used w/ raw codec')
   })
   test('get failure', () => {
     testThrow(() => multicodec.get(true), 'Unknown key type')
