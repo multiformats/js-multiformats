@@ -37,16 +37,18 @@ const createMultihash = multiformats => {
     return Buffer.concat([code, length, digest])
   }
   const hash = async (buff, key) => {
+    if (!Buffer.isBuffer(buff)) throw new Error('Can only hash Buffer instances')
     const info = get(key)
     if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
-    return encode(info.encode(buff), key)
+    return encode(await info.encode(buff), key)
   }
-  const validate = (_hash, buff) => {
+  const validate = async (_hash, buff) => {
     const { length, digest, code } = decode(_hash)
     if (digest.length !== length) throw new Error('Incorrect length')
     if (buff) {
       const { encode } = get(code)
-      if (encode(buff).compare(digest)) throw new Error('Buffer does not match hash')
+      buff = await encode(buff)
+      if (buff.compare(digest)) throw new Error('Buffer does not match hash')
     }
     return true
   }

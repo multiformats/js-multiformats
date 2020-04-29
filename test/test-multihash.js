@@ -19,15 +19,6 @@ const sample = (code, size, hex) => {
   return Buffer.from(`${toHex(code)}${toHex(size)}${hex}`, 'hex')
 }
 
-const testThrow = (fn, message) => {
-  try {
-    fn()
-  } catch (e) {
-    if (e.message !== message) throw e
-    return
-  }
-  throw new Error('Test failed to throw')
-}
 const testThrowAsync = async (fn, message) => {
   try {
     await fn()
@@ -37,15 +28,13 @@ const testThrowAsync = async (fn, message) => {
   }
   throw new Error('Test failed to throw')
 }
+
 const crypto = require('crypto')
-const encode = data => crypto.createHash('sha256').update(data).digest()
+const encode = name => data => crypto.createHash(name).update(data).digest()
 
 describe('multihash', () => {
   const { multihash } = multiformat(table)
-  const name = 'sha2-256'
-  const { code } = multihash.get(name)
-  console.log({ code })
-  multihash.add([{ code, name, encode }])
+  multihash.add(require('../hashes/sha2'))
   const { validate } = multihash
 
   describe('encode', () => {
@@ -59,12 +48,20 @@ describe('multihash', () => {
       }
     })
     test('hash sha2-256', async () => {
-      const hash = await multihash.hash(Buffer.from('test'), name)
+      const hash = await multihash.hash(Buffer.from('test'), 'sha2-256')
       const { digest, code } = multihash.decode(hash)
       same(code, multihash.get('sha2-256').code)
-      same(encode(Buffer.from('test')).compare(digest), 0)
-      same(validate(hash), true)
-      same(validate(hash, Buffer.from('test')), true)
+      same(encode('sha256')(Buffer.from('test')).compare(digest), 0)
+      same(await validate(hash), true)
+      same(await validate(hash, Buffer.from('test')), true)
+    })
+    test('hash sha2-512', async () => {
+      const hash = await multihash.hash(Buffer.from('test'), 'sha2-512')
+      const { digest, code } = multihash.decode(hash)
+      same(code, multihash.get('sha2-512').code)
+      same(encode('sha512')(Buffer.from('test')).compare(digest), 0)
+      same(await validate(hash), true)
+      same(await validate(hash, Buffer.from('test')), true)
     })
     test('no such hash', async () => {
       let msg = 'Do not have multiformat entry for "notfound"'
@@ -89,17 +86,26 @@ describe('multihash', () => {
       same({ code, name }, { code: 18, name: 'sha2-256' })
     })
   })
-  describe('validate', () => {
+  describe('validate', async () => {
     test('invalid hash sha2-256', async () => {
-      const hash = await multihash.hash(Buffer.from('test'), name)
+      const hash = await multihash.hash(Buffer.from('test'), 'sha2-256')
       const msg = 'Buffer does not match hash'
-      testThrow(() => validate(hash, Buffer.from('tes2t')), msg)
+      await testThrowAsync(() => validate(hash, Buffer.from('tes2t')), msg)
     })
-    test('invalid fixtures', () => {
+    test('invalid fixtures', async () => {
       for (const test of invalid) {
         const buff = Buffer.from(test.hex, 'hex')
-        testThrow(() => validate(buff), test.message)
+        await testThrowAsync(() => validate(buff), test.message)
       }
     })
   })
+  test('throw on hashing non-buffer', async () => {
+    await testThrowAsync(() => multihash.hash('asdf'), 'Can only hash Buffer instances')
+  })
+  if (process.browser) {
+    test('browser bundle', () => {
+      const mod = require('../hashes/sha2')
+      same(mod.___browser, true)
+    })
+  }
 })

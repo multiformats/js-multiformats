@@ -62,7 +62,8 @@ module.exports = multiformats => {
     }
 
     set _multihash (hash) {
-      multihash.validate(hash)
+      const { length, digest } = multihash.decode(hash)
+      if (digest.length !== length) throw new Error('Incorrect length')
       readonly(this, 'multihash', hash)
     }
 
