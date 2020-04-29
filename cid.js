@@ -1,0 +1,141 @@
+'use strict'
+
+const { Buffer } = require('buffer')
+const withIs = require('class-is')
+
+const readonly = (object, key, value) => {
+  Object.defineProperty(object, key, { value, writable: false })
+}
+
+module.exports = multiformats => {
+  const { multibase, varint, multihash } = multiformats
+  const parse = buff => {
+    const [code, length] = varint.decode(buff)
+    return [code, buff.slice(length)]
+  }
+  const encode = (version, codec, multihash) => {
+    return Buffer.concat([varint.encode(version), varint.encode(codec), multihash])
+  }
+  class CID {
+    constructor (cid, ...args) {
+      this._baseCache = new Map()
+      if (_CID.isCID(cid)) {
+        readonly(this, 'version', cid.version)
+        readonly(this, 'code', cid.code)
+        readonly(this, 'multihash', cid.multihash)
+        readonly(this, 'buffer', cid.buffer)
+        return
+      }
+      if (args.length > 0) {
+        if (typeof args[0] !== 'number') throw new Error('String codecs are no longer supported')
+        readonly(this, 'version', cid)
+        readonly(this, 'code', args.shift())
+        if (this.version === 0 && this.code !== 112) {
+          throw new Error('Version 0 CID must be 112 codec (dag-cbor)')
+        }
+        this._multihash = args.shift()
+        if (args.length) throw new Error('No longer supported, cannot specify base encoding in instantiation')
+        if (this.version === 0) readonly(this, 'buffer', this.multihash)
+        else readonly(this, 'buffer', encode(this.version, this.code, this.multihash))
+        return
+      }
+      if (typeof cid === 'string') {
+        if (cid.startsWith('Q')) {
+          readonly(this, 'version', 0)
+          readonly(this, 'code', 0x70)
+          const { decode } = multibase.get('base58btc')
+          this._multihash = decode(cid)
+          readonly(this, 'buffer', this.multihash)
+          return
+        }
+        const { name } = multibase.encoding(cid)
+        this._baseCache.set(name, cid)
+        cid = multibase.decode(cid)
+      }
+      readonly(this, 'buffer', cid)
+      let code
+      ;[code, cid] = parse(cid)
+      readonly(this, 'version', code)
+      ;[code, cid] = parse(cid)
+      readonly(this, 'code', code)
+      this._multihash = cid
+    }
+
+    set _multihash (hash) {
+      multihash.validate(hash)
+      readonly(this, 'multihash', hash)
+    }
+
+    get codec () {
+      throw new Error('"codec" property is deprecated, use integer "code" property instead')
+    }
+
+    get multibaseName () {
+      throw new Error('"multibaseName" property is deprecated')
+    }
+
+    get prefix () {
+      throw new Error('"prefix" property is deprecated')
+    }
+
+    toV0 () {
+      if (this.code !== 0x70 /* dag-pb */) {
+        throw new Error('Cannot convert a non dag-pb CID to CIDv0')
+      }
+
+      const { name } = multihash.decode(this.multihash)
+
+      if (name !== 'sha2-256') {
+        throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
+      }
+
+      return new _CID(0, this.code, this.multihash)
+    }
+
+    toV1 () {
+      return new _CID(1, this.code, this.multihash)
+    }
+
+    get toBaseEncodedString () {
+      throw new Error('Deprecated, use .toString()')
+    }
+
+    [Symbol.for('nodejs.util.inspect.custom')] () {
+      return 'CID(' + this.toString() + ')'
+    }
+
+    toString (base) {
+      if (this.version === 0) {
+        if (base && base !== 'base58btc') {
+          throw new Error(`Cannot string encode V0 in ${base} encoding`)
+        }
+        const { encode } = multibase.get('base58btc')
+        return encode(this.buffer, 'base58btc')
+      }
+      if (!base) base = 'base32'
+      if (this._baseCache.has(base)) return this._baseCache.get(base)
+      this._baseCache.set(base, multibase.encode(this.buffer, base))
+      return this._baseCache.get(base)
+    }
+
+    toJSON () {
+      return {
+        code: this.code,
+        version: this.version,
+        hash: this.multihash
+      }
+    }
+
+    equals (other) {
+      return this.code === other.code &&
+        this.version === other.version &&
+        this.multihash.equals(other.multihash)
+    }
+  }
+
+  const _CID = withIs(CID, {
+    className: 'CID',
+    symbolName: '@ipld/js-cid/CID'
+  })
+  return _CID
+}

@@ -91,3 +91,75 @@ It will not include any of the codec or hash function implementations.
 ## multibase.add
 
 # CID
+
+Changes from `cids`:
+
+* All base encodings are cached indefinitely.
+* CID's can be created without any multiformat data.
+  * The new API is entirely based on parsing the varints
+    so it doesn't need the table metadata in order to associate
+    string names.
+
+There are also numerous deprecations. These deprecations all stem from the
+fact that we no longer know the full set of available multicodec information.
+It's actually quite possible to provide a CID interface without this, you can
+still do everything you used to do, you just need to use ints instead of strings
+and do some of the fancier V0 coercions outside this library.
+
+Deprection List:
+  * the multibase encoding is no longer cached during instantiation.
+    * this being indeterministic was causing some nasty problems downstream
+      since `toString()` needs to be used as a cache key and it's not possible
+      to encode V1 into anything but base58btc. this means that you can't have
+      deterministic hash keys without also requiring base58btc support unless
+      we remove this feature.
+  * no longer accept bare multihash buffers as V0, only base58btc encoded strings
+    or the complete set of parts with the multihash as the third argument.
+    * The logic for treating these as V0 was problematic and could lead to
+      unwanted errors. In practice, the places we need to handle V0 are known
+      and we can move this logic there if necessary and then instantiate a CID
+      with all the necessary args.
+    * Some of the prior code relied on knowing the full set of possible base
+      prefixes, which we can no longer do.
+  * no more .toBaseEncodedString(), just toString()
+  * no more .multiBase
+  * no more .prefix()
+  * no more .codec
+    * new property ".code" is the multiformat integer.
+    * this is going to be a painful transition but we have to get off of using
+      the string if we ever want to drop the full table. while the DX for this is
+      nice it forces into bloating the bundle and makes using new codecs very
+      painful.
+
+```
+/*
+* Create a new CID.
+*
+* The algorithm for argument input is roughly:
+* ```
+* if (cid)
+*   -> create a copy
+* else if (str)
+*   if (1st char is on multibase table) -> CID String
+*   else -> bs58 encoded multihash
+* else if (Buffer)
+*   if (1st byte is 0 or 1) -> CID
+*   else -> multihash
+* else if (Number)
+*   -> construct CID by parts
+* ```
+*
+* @param {string|Buffer|CID} version
+* @param {string} [codec]
+* @param {Buffer} [multihash]
+* @param {string} [multibaseName]
+*
+* @example
+* new CID(<version>, <codec>, <multihash>, <multibaseName>)
+* new CID(<cidStr>)
+* new CID(<cid.buffer>)
+* new CID(<multihash>)
+* new CID(<bs58 encoded multihash>)
+* new CID(<cid>)
+*/
+```

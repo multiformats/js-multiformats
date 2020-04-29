@@ -8,21 +8,22 @@
     "test:node": "hundreds mocha test/test-*.js",
     "test:browser": "polendina --cleanup test/test-*.js",
     "test": "npm run test:node && npm run test:browser",
-    "coverage": "nyc --reporter=html mocha test/test-*.js && npx http-server coverage"
+    "coverage": "nyc --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "devDependencies": {
+    "cids": "^0.8.0",
     "hundreds": "0.0.2",
     "mocha": "^7.1.1",
-    "multicodec": "^1.0.1",
-    "multibase": "^0.7.0",
     "polendina": "^1.0.0",
     "standard": "^14.3.3"
   },
   "dependencies": {
+    "base-x": "^3.0.8",
     "buffer": "^5.6.0",
+    "class-is": "^1.1.0",
     "varint": "^5.0.0"
   }
 }

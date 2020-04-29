@@ -1,5 +1,6 @@
 const { Buffer } = require('buffer')
 const varints = require('varint')
+const createCID = require('./cid')
 
 const cache = new Map()
 const varint = {
@@ -49,11 +50,7 @@ const createMultihash = multiformats => {
     }
     return true
   }
-  return { encode, decode, hash, validate, add, get }
-}
-
-const createCID = multiformats => {
-  // const { multibase, multicodec } = multiformats
+  return { encode, has, decode, hash, validate, add, get }
 }
 
 const createMultibase = () => {
@@ -82,7 +79,7 @@ const createMultibase = () => {
   const encode = (buffer, id) => {
     if (!Buffer.isBuffer(buffer)) throw new Error('Can only multibase encode buffer instances')
     const { prefix, encode } = get(id)
-    return encode(prefix + encode(buffer))
+    return prefix + encode(buffer)
   }
   const decode = string => {
     if (typeof string !== 'string') throw new Error('Can only multibase decode strings')
@@ -91,7 +88,8 @@ const createMultibase = () => {
     const { decode } = get(prefix)
     return decode(string)
   }
-  return { add, get, encode, decode }
+  const encoding = string => get(string[0])
+  return { add, get, encode, decode, encoding }
 }
 
 module.exports = (table = []) => {
@@ -146,6 +144,7 @@ module.exports = (table = []) => {
     _add(code, name, encode, decode)
   }
   const multiformats = { parse, add, get, encode, decode }
+  multiformats.varint = varint
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
