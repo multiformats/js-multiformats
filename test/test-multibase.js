@@ -16,21 +16,37 @@ const testThrow = (fn, message) => {
   throw new Error('Test failed to throw')
 }
 
-const encode = buffer => buffer.toString('base64')
-const decode = string => Buffer.from(string, 'base64')
-
 describe('multibase', () => {
   const { multibase } = multiformat()
-  multibase.add([{ prefix: 'm', name: 'base64', encode, decode }])
-  test('encode/decode base64', () => {
-    const string = multibase.encode(Buffer.from('test'), 'base64')
-    same(string[0], 'm')
-    const buffer = multibase.decode(string)
-    same(buffer, Buffer.from('test'))
+  multibase.add(require('../bases/base16'))
+  multibase.add(require('../bases/base32'))
+  multibase.add(require('../bases/base58'))
+  multibase.add(require('../bases/base64'))
+
+  describe('basics', () => {
+    for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
+      test('encode/decode', () => {
+        const string = multibase.encode(Buffer.from('test'), base)
+        same(string[0], multibase.get(base).prefix)
+        const buffer = multibase.decode(string)
+        same(buffer, Buffer.from('test'))
+      })
+      test('empty', () => {
+        const str = multibase.encode(Buffer.from(''), base)
+        same(str, multibase.get(base).prefix)
+        same(multibase.decode(str), Buffer.from(''))
+      })
+      test('bad chars', () => {
+        const str = multibase.get(base).prefix + '#$%^&*&^%$#'
+        const msg = base === 'base58btc' ? 'Non-base58 character' : `invalid ${base} character`
+        testThrow(() => multibase.decode(str), msg)
+      })
+    }
   })
+
   test('get fails', () => {
-    let msg = 'Missing multibase implementation for "f"'
-    testThrow(() => multibase.get('f'), msg)
+    let msg = 'Missing multibase implementation for "x"'
+    testThrow(() => multibase.get('x'), msg)
     msg = 'Missing multibase implementation for "notfound"'
     testThrow(() => multibase.get('notfound'), msg)
   })

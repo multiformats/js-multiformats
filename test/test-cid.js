@@ -1,4 +1,4 @@
-/* eslint describe, it */
+/* globals before, describe, it */
 'use strict'
 const crypto = require('crypto')
 const OLDCID = require('cids')
@@ -30,11 +30,13 @@ describe('CID', () => {
   multibase.add(require('../bases/base32'))
   multibase.add(require('../bases/base64'))
   const hashes = [
-    { encode: data => crypto.createHash('sha256').update(data).digest(),
+    {
+      encode: data => crypto.createHash('sha256').update(data).digest(),
       name: 'sha2-256',
       code: 0x12
     },
-    { encode: data => crypto.createHash('sha512').update(data).digest(),
+    {
+      encode: data => crypto.createHash('sha512').update(data).digest(),
       name: 'sha2-512',
       code: 0x13
     }
@@ -317,5 +319,33 @@ describe('CID', () => {
   test('isCID', () => {
     const cid = new CID(1, 112, hash)
     assert.ok(OLDCID.isCID(cid))
+  })
+
+  if (!process.browser) {
+    test('util.inspect', () => {
+      const cid = new CID(1, 112, hash)
+      const util = require('util')
+      same(util.inspect(cid), 'CID(bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu)')
+    })
+  }
+
+  describe('deprecations', () => {
+    test('codec', async () => {
+      const cid = new CID(1, 112, hash)
+      await testThrow(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
+      await testThrow(() => new CID(1, 'dag-pb', hash), 'String codecs are no longer supported')
+    })
+    test('multibaseName', async () => {
+      const cid = new CID(1, 112, hash)
+      await testThrow(() => cid.multibaseName, '"multibaseName" property is deprecated')
+    })
+    test('prefix', async () => {
+      const cid = new CID(1, 112, hash)
+      await testThrow(() => cid.prefix, '"prefix" property is deprecated')
+    })
+    test('toBaseEncodedString()', async () => {
+      const cid = new CID(1, 112, hash)
+      await testThrow(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
+    })
   })
 })

@@ -50,7 +50,7 @@ const createMultihash = multiformats => {
     }
     return true
   }
-  return { encode, decode, hash, validate, add, get }
+  return { encode, has, decode, hash, validate, add, get }
 }
 
 const createMultibase = () => {

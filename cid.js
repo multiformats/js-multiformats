@@ -10,8 +10,8 @@ const readonly = (object, key, value) => {
 module.exports = multiformats => {
   const { multibase, varint, multihash } = multiformats
   const parse = buff => {
-    const [ code, length ] = varint.decode(buff)
-    return [ code, buff.slice(length) ]
+    const [code, length] = varint.decode(buff)
+    return [code, buff.slice(length)]
   }
   const encode = (version, codec, multihash) => {
     return Buffer.concat([varint.encode(version), varint.encode(codec), multihash])
@@ -27,8 +27,8 @@ module.exports = multiformats => {
         return
       }
       if (args.length > 0) {
-        readonly(this, 'version', cid)
         if (typeof args[0] !== 'number') throw new Error('String codecs are no longer supported')
+        readonly(this, 'version', cid)
         readonly(this, 'code', args.shift())
         if (this.version === 0 && this.code !== 112) {
           throw new Error('Version 0 CID must be 112 codec (dag-cbor)')
@@ -54,9 +54,9 @@ module.exports = multiformats => {
       }
       readonly(this, 'buffer', cid)
       let code
-      ;[ code, cid ] = parse(cid)
+      ;[code, cid] = parse(cid)
       readonly(this, 'version', code)
-      ;[ code, cid ] = parse(cid)
+      ;[code, cid] = parse(cid)
       readonly(this, 'code', code)
       this._multihash = cid
     }
@@ -69,6 +69,7 @@ module.exports = multiformats => {
     get codec () {
       throw new Error('"codec" property is deprecated, use integer "code" property instead')
     }
+
     get multibaseName () {
       throw new Error('"multibaseName" property is deprecated')
     }
@@ -82,14 +83,10 @@ module.exports = multiformats => {
         throw new Error('Cannot convert a non dag-pb CID to CIDv0')
       }
 
-      const { name, length } = multihash.decode(this.multihash)
+      const { name } = multihash.decode(this.multihash)
 
       if (name !== 'sha2-256') {
         throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
-      }
-
-      if (length !== 32) {
-        throw new Error('Cannot convert non 32 byte multihash CID to CIDv0')
       }
 
       return new _CID(0, this.code, this.multihash)

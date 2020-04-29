@@ -12,13 +12,7 @@ const create = alphabet => {
 
   return {
     encode (input) {
-      let output = ''
-
-      if (typeof input === 'string') {
-        output = Buffer.from(input).toString('base64')
-      } else {
-        output = input.toString('base64')
-      }
+      let output = input.toString('base64')
 
       if (url) {
         output = output.replace(/\+/g, '-').replace(/\//g, '_')

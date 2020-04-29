@@ -62,13 +62,7 @@ function encode (buffer, alphabet) {
 
 const create = alphabet => {
   return {
-    encode (input) {
-      if (typeof input === 'string') {
-        return encode(Uint8Array.from(input), alphabet)
-      }
-
-      return encode(input, alphabet)
-    },
+    encode: input => encode(input, alphabet),
     decode (input) {
       for (const char of input) {
         if (alphabet.indexOf(char) < 0) {

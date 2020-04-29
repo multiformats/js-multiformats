@@ -3,12 +3,7 @@ const { Buffer } = require('buffer')
 
 const create = function base16 (alphabet) {
   return {
-    encode (input) {
-      if (typeof input === 'string') {
-        return Buffer.from(input).toString('hex')
-      }
-      return input.toString('hex')
-    },
+    encode: input => input.toString('hex'),
     decode (input) {
       for (const char of input) {
         if (alphabet.indexOf(char) < 0) {
