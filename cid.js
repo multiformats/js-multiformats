@@ -21,9 +21,10 @@ module.exports = multiformats => {
       this._baseCache = new Map()
       if (_CID.isCID(cid)) {
         readonly(this, 'version', cid.version)
-        readonly(this, 'code', cid.code)
         readonly(this, 'multihash', cid.multihash)
         readonly(this, 'buffer', cid.buffer)
+        if (cid.code) readonly(this, 'code', cid.code)
+        else readonly(this, 'code', multiformats.get(cid.codec).code)
         return
       }
       if (args.length > 0) {

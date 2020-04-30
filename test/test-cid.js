@@ -25,7 +25,7 @@ const testThrowAny = async fn => {
 }
 
 describe('CID', () => {
-  const { CID, multihash, multibase } = require('../')()
+  const { CID, multihash, multibase } = require('../basics')
   multibase.add(require('../bases/base58'))
   multibase.add(require('../bases/base32'))
   multibase.add(require('../bases/base64'))
@@ -319,6 +319,12 @@ describe('CID', () => {
   test('isCID', () => {
     const cid = new CID(1, 112, hash)
     assert.ok(OLDCID.isCID(cid))
+  })
+  test('new CID from old CID', () => {
+    const cid = new CID(new OLDCID(1, 'raw', hash))
+    same(cid.version, 1)
+    same(cid.multihash, hash)
+    same(cid.code, 85)
   })
 
   if (!process.browser) {
