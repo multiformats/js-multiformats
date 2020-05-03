@@ -33,7 +33,7 @@ const crypto = require('crypto')
 const encode = name => data => crypto.createHash(name).update(data).digest()
 
 describe('multihash', () => {
-  const { multihash } = multiformat(table)
+  const { multihash } = multiformat(table).bufferApi
   multihash.add(require('../hashes/sha2'))
   const { validate } = multihash
 

@@ -71,7 +71,7 @@ const createMultihash = multiformats => {
     return Uint8Array.from([...code, ...length, ...digest])
   }
   const hash = async (buff, key) => {
-    if (!isUint8Array) throw new Error('Can only hash Uint8Array instances')
+    if (!isUint8Array(buff)) throw new Error('Can only hash Uint8Array instances')
     const info = get(key)
     if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
     return encode(await info.encode(buff), key)
@@ -83,7 +83,7 @@ const createMultihash = multiformats => {
       const { encode } = get(code)
       buff = await encode(buff)
       debugger
-      if (uint8ArrayEquals(buff, digest)) throw new Error('Buffer does not match hash')
+      if (!uint8ArrayEquals(buff, digest)) throw new Error('Buffer does not match hash')
     }
     return true
   }
@@ -207,6 +207,36 @@ module.exports = (table = []) => {
           return Buffer.from(decoded)
         } else {
           return decoded
+        }
+      }
+    },
+    multihash: {
+      add,
+      get,
+      parse,
+      hash: async (valueBuffer, key) => {
+        if (!Buffer.isBuffer(valueBuffer)) {
+          throw new Error('Can only hash Buffer instances')
+        }
+        const value = bufferToUint8Array(valueBuffer)
+        return multiformats.multihash.hash(value, key)
+      },
+      encode: (digestBuffer, id) => {
+        const digest = bufferToUint8Array(digestBuffer)
+        return Buffer.from(multiformats.multihash.encode(digest, id))
+      },
+      decode: (digestBuffer) => {
+        const digest = bufferToUint8Array(digestBuffer)
+        const decoded = multiformats.multihash.decode(digest)
+        decoded.digest = Buffer.from(decoded.digest)
+        return decoded
+      },
+      validate: async (hash, digestBuffer) => {
+        if (digestBuffer !== undefined) {
+          const digest = bufferToUint8Array(digestBuffer)
+          return multiformats.multihash.validate(hash, digest)
+        } else {
+          return multiformats.multihash.validate(hash)
         }
       }
     }
