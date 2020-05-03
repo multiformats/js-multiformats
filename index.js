@@ -1,7 +1,7 @@
 const varints = require('varint')
 const createCID = require('./cid')
 
-const Buffer = null
+const { Buffer } = require('buffer')
 
 // From https://stackoverflow.com/questions/38987784/how-to-convert-a-hexadecimal-string-to-uint8array-and-back-in-javascript/50868276#50868276
 const toHex = (data) =>
@@ -30,6 +30,10 @@ const uint8ArrayEquals = (aa, bb) => {
   }
 
   return true
+}
+
+const bufferToUint8Array = (buffer) => {
+  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength)
 }
 
 const cache = new Map()
@@ -182,6 +186,32 @@ module.exports = (table = []) => {
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
+
+  multiformats.bufferApi = {
+    multicodec: {
+      add,
+      get,
+      encode: (value, id) => {
+        debugger
+        if (Buffer.isBuffer(value)) {
+          value = bufferToUint8Array(value)
+        }
+        const encoded = multiformats.encode(value, id)
+        const encodedBuffer = Buffer.from(encoded)
+        return encodedBuffer
+      },
+      decode: (valueBuffer, id) => {
+        const value = bufferToUint8Array(valueBuffer)
+        const decoded = multiformats.decode(value, id)
+        if (isUint8Array(decoded)) {
+          return Buffer.from(decoded)
+        } else {
+          return decoded
+        }
+      }
+    }
+  }
+
   return multiformats
 }
 module.exports.fromHex = fromHex

@@ -3,7 +3,7 @@
 const { Buffer } = require('buffer')
 const assert = require('assert')
 const same = assert.deepStrictEqual
-const multiformats = require('../basics')
+const multiformats = require('../basics').bufferApi
 const test = it
 
 const testThrow = (fn, message) => {
@@ -28,7 +28,7 @@ describe('multicodec', () => {
     same(multicodec.decode(buff, 'json'), { hello: 'world' })
   })
   test('raw cannot encode string', () => {
-    testThrow(() => multicodec.encode('asdf', 'raw'), 'Only buffer instances can be used w/ raw codec')
+    testThrow(() => multicodec.encode('asdf', 'raw'), 'Only Uint8Array instances can be used w/ raw codec')
   })
   test('get failure', () => {
     testThrow(() => multicodec.get(true), 'Unknown key type')
