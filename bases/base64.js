@@ -1,5 +1,4 @@
 'use strict'
-const { Buffer } = require('buffer')
 
 const create = alphabet => {
   // The alphabet is only used to know:

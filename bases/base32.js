@@ -1,5 +1,4 @@
 'use strict'
-const { Buffer } = require('buffer')
 
 function decode (input, alphabet) {
   input = input.replace(new RegExp('=', 'g'), '')
@@ -21,7 +20,7 @@ function decode (input, alphabet) {
     }
   }
 
-  return Buffer.from(output.buffer)
+  return output
 }
 
 function encode (buffer, alphabet) {

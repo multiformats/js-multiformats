@@ -1,7 +1,7 @@
 const crypto = require('crypto')
 
-const sha256 = async data => crypto.createHash('sha256').update(data).digest()
-const sha512 = async data => crypto.createHash('sha512').update(data).digest()
+const sha256 = async data => crypto.createHash('sha256').update(data).digest().buffer
+const sha512 = async data => crypto.createHash('sha512').update(data).digest().buffer
 
 module.exports = [
   {
