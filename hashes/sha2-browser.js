@@ -1,5 +1,4 @@
-const { Buffer } = require('buffer')
-const sha = name => async data => Buffer.from(await window.crypto.subtle.digest(name, data))
+const sha = name => async data => Uint8Array.from(await window.crypto.subtle.digest(name, data))
 
 module.exports = [
   {

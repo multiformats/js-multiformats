@@ -1,7 +1,7 @@
-const { Buffer } = require('buffer')
-
 const raw = buff => {
-  if (!Buffer.isBuffer(buff)) throw new Error('Only buffer instances can be used w/ raw codec')
+  if (Object.prototype.toString.call(buff) !== '[object Uint8Array]') {
+    throw new Error('Only Uint8Array instances can be used w/ raw codec')
+  }
   return buff
 }
 

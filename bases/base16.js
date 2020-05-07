@@ -1,5 +1,11 @@
 'use strict'
-const { Buffer } = require('buffer')
+
+// TODO 2020-05-03: This is slow, but simple
+const fromHex = (hex) => {
+  return new Uint8Array(hexString.match(/.{1,2}/g).map((byte) => {
+    return parseInt(byte, 16)
+  }))
+}
 
 const create = function base16 (alphabet) {
   return {
@@ -10,7 +16,7 @@ const create = function base16 (alphabet) {
           throw new Error('invalid base16 character')
         }
       }
-      return Buffer.from(input, 'hex')
+      return fromHex(input)
     }
   }
 }

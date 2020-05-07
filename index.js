@@ -1,6 +1,40 @@
-const { Buffer } = require('buffer')
 const varints = require('varint')
 const createCID = require('./cid')
+
+const { Buffer } = require('buffer')
+
+// From https://stackoverflow.com/questions/38987784/how-to-convert-a-hexadecimal-string-to-uint8array-and-back-in-javascript/50868276#50868276
+const toHex = (data) =>
+  data.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
+// TODO 2020-05-03: This is slow, but simple
+const fromHex = (hex) => {
+  return new Uint8Array(hexString.match(/.{1,2}/g).map((byte) => {
+    return parseInt(byte, 16)
+  }))
+}
+
+
+const isUint8Array = (data) => {
+  return Object.prototype.toString.call(data) === '[object Uint8Array]'
+}
+
+const uint8ArrayEquals = (aa, bb) => {
+  if (aa.byteLength != bb.byteLength) {
+    return false
+  }
+
+  for (let ii = 0; ii < aa.byteLength; ii++) {
+    if (aa[ii] !== bb[ii]) {
+      return false
+    }
+  }
+
+  return true
+}
+
+const bufferToUint8Array = (buffer) => {
+  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength)
+}
 
 const cache = new Map()
 const varint = {
@@ -10,7 +44,7 @@ const varint = {
   },
   encode: int => {
     if (cache.has(int)) return cache.get(int)
-    const buff = Buffer.from(varints.encode(int))
+    const buff = Uint8Array.from(varints.encode(int))
     cache.set(int, buff)
     return buff
   }
@@ -34,10 +68,10 @@ const createMultihash = multiformats => {
     }
     const code = varint.encode(info.code)
     const length = varint.encode(digest.length)
-    return Buffer.concat([code, length, digest])
+    return Uint8Array.from([...code, ...length, ...digest])
   }
   const hash = async (buff, key) => {
-    if (!Buffer.isBuffer(buff)) throw new Error('Can only hash Buffer instances')
+    if (!isUint8Array(buff)) throw new Error('Can only hash Uint8Array instances')
     const info = get(key)
     if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
     return encode(await info.encode(buff), key)
@@ -48,7 +82,8 @@ const createMultihash = multiformats => {
     if (buff) {
       const { encode } = get(code)
       buff = await encode(buff)
-      if (buff.compare(digest)) throw new Error('Buffer does not match hash')
+      debugger
+      if (!uint8ArrayEquals(buff, digest)) throw new Error('Buffer does not match hash')
     }
     return true
   }
@@ -82,7 +117,7 @@ const createMultibase = () => {
     }
   }
   const encode = (buffer, id) => {
-    if (!Buffer.isBuffer(buffer)) throw new Error('Can only multibase encode buffer instances')
+    if (!isUint8Array(buffer)) throw new Error('Can only multibase encode buffer instances')
     const { prefix, encode } = get(id)
     return prefix + encode(buffer)
   }
@@ -142,7 +177,7 @@ module.exports = (table = []) => {
       }
       throw new Error(`Do not have multiformat entry for "${obj}"`)
     }
-    if (Buffer.isBuffer(obj)) {
+    if (isUint8Array(obj)) {
       return parse(obj)[0]
     }
     throw new Error('Unknown key type')
@@ -166,13 +201,13 @@ module.exports = (table = []) => {
     }
   }
 
-  const multiformats = { parse, add, get, encode, decode }
-  multiformats.varint = varint
+  const multiformats = { parse, add, get, encode, decode, varint }
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
-
   return multiformats
 }
+module.exports.fromHex = fromHex
+module.exports.toHex = toHex
 module.exports.varint = varint

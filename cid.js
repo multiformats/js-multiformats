@@ -1,6 +1,5 @@
 'use strict'
 
-const { Buffer } = require('buffer')
 const withIs = require('class-is')
 
 const readonly = (object, key, value) => {
@@ -14,7 +13,11 @@ module.exports = multiformats => {
     return [code, buff.slice(length)]
   }
   const encode = (version, codec, multihash) => {
-    return Buffer.concat([varint.encode(version), varint.encode(codec), multihash])
+    return Uint8Array.from([
+      ...varint.encode(version),
+      ...varint.encode(codec),
+      ...multihash
+    ])
   }
   class CID {
     constructor (cid, ...args) {

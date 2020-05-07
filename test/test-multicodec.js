@@ -22,7 +22,7 @@ describe('multicodec', () => {
   })
 
   test('raw cannot encode string', () => {
-    assert.throws(() => multicodec.encode('asdf', 'raw'), /^Error: Only buffer instances can be used w\/ raw codec$/)
+    testThrow(() => multicodec.encode('asdf', 'raw'), 'Only Uint8Array instances can be used w/ raw codec')
   })
 
   test('get failure', () => {
