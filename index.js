@@ -158,17 +158,21 @@ module.exports = (table = []) => {
   const add = obj => {
     if (Array.isArray(obj)) {
       obj.forEach(add)
+    } else if (typeof obj === 'function') {
+      add(obj(multiformats))
     } else {
       const { code, name, encode, decode } = obj
       _add(code, name, encode, decode)
     }
   }
+
   const multiformats = { parse, add, get, encode, decode }
   multiformats.varint = varint
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
+
   return multiformats
 }
 module.exports.varint = varint

@@ -23,7 +23,7 @@ describe('multicodec', async () => {
   multiformats.multicodec.add({
     name: 'custom',
     code: 6787678,
-    encode: o => json.util.serialize({o, l: link.toString() }),
+    encode: o => json.util.serialize({ o, l: link.toString() }),
     decode: buff => {
       const obj = json.util.deserialize(buff)
       obj.l = link
@@ -68,6 +68,6 @@ describe('multicodec', async () => {
     const arr = a => Array.from(a)
     const links = ['/o', '/o/one', '/o/one/two', '/o/one/two/hello', '/o/one/three', '/l']
     same(arr(custom.resolver.tree(fixture)), links)
-    same(arr(json.resolver.tree(json.util.serialize("asdf"))), [])
+    same(arr(json.resolver.tree(json.util.serialize('asdf'))), [])
   })
 })
