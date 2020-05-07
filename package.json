@@ -1,5 +1,5 @@
 {
-  "name": "js-multiformats",
+  "name": "multiformats",
   "version": "0.0.0",
   "description": "",
   "main": "index.js",
@@ -7,7 +7,7 @@
     "pre:test": "standard",
     "test:node": "hundreds mocha test/test-*.js",
     "test:browser": "polendina --cleanup test/test-*.js",
-    "test": "npm run test:node && npm run test:browser",
+    "test": "npm run pre:test && npm run test:node && npm run test:browser",
     "coverage": "nyc --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],

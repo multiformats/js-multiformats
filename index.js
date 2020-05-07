@@ -63,9 +63,12 @@ const createMultibase = () => {
     nameMap.set(name, [prefix, encode, decode])
   }
   const add = obj => {
-    if (Array.isArray(obj)) obj.forEach(o => add(o))
-    const { prefix, name, encode, decode } = obj
-    _add(prefix, name, encode, decode)
+    if (Array.isArray(obj)) {
+      obj.forEach(add)
+    } else {
+      const { prefix, name, encode, decode } = obj
+      _add(prefix, name, encode, decode)
+    }
   }
   const get = id => {
     if (id.length === 1) {
@@ -98,6 +101,18 @@ module.exports = (table = []) => {
   const intMap = new Map()
   const nameMap = new Map()
   const _add = (code, name, encode, decode) => {
+    if (!Number.isInteger(code)) {
+      throw new TypeError('multicodec entry must have an integer code')
+    }
+    if (typeof name !== 'string') {
+      throw new TypeError('multicodec entry must have a string name')
+    }
+    if (encode != null && typeof encode !== 'function') {
+      throw new TypeError('multicodec entry encode parameter must be a function')
+    }
+    if (decode != null && typeof decode !== 'function') {
+      throw new TypeError('multicodec entry decode parameter must be a function')
+    }
     intMap.set(code, [name, encode, decode])
     nameMap.set(name, [code, encode, decode])
   }
@@ -141,16 +156,23 @@ module.exports = (table = []) => {
     return decode(value)
   }
   const add = obj => {
-    if (Array.isArray(obj)) obj.forEach(o => add(o))
-    const { code, name, encode, decode } = obj
-    _add(code, name, encode, decode)
+    if (Array.isArray(obj)) {
+      obj.forEach(add)
+    } else if (typeof obj === 'function') {
+      add(obj(multiformats))
+    } else {
+      const { code, name, encode, decode } = obj
+      _add(code, name, encode, decode)
+    }
   }
+
   const multiformats = { parse, add, get, encode, decode }
   multiformats.varint = varint
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
+
   return multiformats
 }
 module.exports.varint = varint
