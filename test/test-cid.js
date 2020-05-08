@@ -210,6 +210,11 @@ describe('CID', () => {
 
       assert.ok(CID.isCID(new CID(h1).toV1()))
     })
+
+    test('works with deepEquals', () => {
+      assert.deepStrictEqual(new CID(h1), new CID(h1))
+      assert.notDeepStrictEqual(new CID(h1), new CID(h2))
+    })
   })
 
   describe('throws on invalid inputs', () => {
