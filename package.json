@@ -14,7 +14,8 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "browser": {
-    "./hashes/sha2.js": "./hashes/sha2-browser.js"
+    "./hashes/sha2.js": "./hashes/sha2-browser.js",
+    "./bases/_base64.js": "./bases/_base64-browser.js"
   },
   "devDependencies": {
     "hundreds": "0.0.2",

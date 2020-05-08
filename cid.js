@@ -135,7 +135,7 @@ module.exports = multiformats => {
     equals (other) {
       return this.code === other.code &&
         this.version === other.version &&
-        this.multihash.equals(other.multihash)
+        bytes.equals(this.multihash, other.multihash)
     }
   }
 
