@@ -4,7 +4,11 @@ const { Buffer } = require('buffer')
 const withIs = require('class-is')
 
 const readonly = (object, key, value) => {
-  Object.defineProperty(object, key, { value, writable: false })
+  Object.defineProperty(object, key, {
+    value,
+    writable: false,
+    enumerable: true
+  })
 }
 
 module.exports = multiformats => {
