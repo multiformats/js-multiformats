@@ -1,5 +1,4 @@
 'use strict'
-const { fromString } = require('../bytes')
 const b64 = require('./_base64')
 
 const create = alphabet => {
@@ -13,7 +12,7 @@ const create = alphabet => {
 
   return {
     encode (input) {
-      let output = b64(input)
+      let output = b64.encode(input)
 
       if (url) {
         output = output.replace(/\+/g, '-').replace(/\//g, '_')
@@ -33,7 +32,7 @@ const create = alphabet => {
         }
       }
 
-      return fromString(input, 'base64')
+      return b64.decode(input)
     }
   }
 }

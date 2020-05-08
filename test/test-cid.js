@@ -5,9 +5,7 @@ const OLDCID = require('cids')
 const test = it
 const assert = require('assert')
 const same = assert.deepStrictEqual
-const toHex = (data) => {
-  return data.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
-}
+const { toHex } = require('../bytes')
 
 const testThrow = async (fn, message) => {
   try {

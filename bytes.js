@@ -1,15 +1,8 @@
-/*
-// From https://stackoverflow.com/questions/38987784/how-to-convert-a-hexadecimal-string-to-uint8array-and-back-in-javascript/50868276#50868276
-const toHex = (data) => {
-  return data.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
+const toHex = d => d.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
+const fromHex = hex => {
+  if (!hex.length) return new Uint8Array(0)
+  return new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)))
 }
-// TODO 2020-05-03: This is slow, but simple
-const isUint8Array = (data) => {
-  return Object.prototype.toString.call(data) === '[object Uint8Array]'
-}
-*/
-
-const fromHex = hex => new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)))
 
 const equals = (aa, bb) => {
   if (aa.byteLength !== bb.byteLength) {
@@ -51,4 +44,5 @@ exports.equals = equals
 exports.coerce = coerce
 exports.isBinary = isBinary
 exports.fromHex = fromHex
+exports.toHex = toHex
 exports.fromString = fromString

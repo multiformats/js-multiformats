@@ -1,4 +1,4 @@
-/* globals describe, it */
+/* globals before, describe, it */
 'use strict'
 const { Buffer } = require('buffer')
 const assert = require('assert')
@@ -16,21 +16,28 @@ const testThrow = (fn, message) => {
   }
   throw new Error('Test failed to throw')
 }
-describe('multicodec', async () => {
-  const raw = legacy(multiformats, 'raw')
-  const json = legacy(multiformats, 'json')
-  const link = await raw.util.cid(Buffer.from('test'))
-  multiformats.multicodec.add({
-    name: 'custom',
-    code: 6787678,
-    encode: o => json.util.serialize({ o, l: link.toString() }),
-    decode: buff => {
-      const obj = json.util.deserialize(buff)
-      obj.l = link
-      return obj
-    }
+describe('multicodec', () => {
+  let raw
+  let json
+  let custom
+  let link
+  before(async () => {
+    raw = legacy(multiformats, 'raw')
+    json = legacy(multiformats, 'json')
+    link = await raw.util.cid(Buffer.from('test'))
+
+    multiformats.multicodec.add({
+      name: 'custom',
+      code: 6787678,
+      encode: o => json.util.serialize({ o, l: link.toString() }),
+      decode: buff => {
+        const obj = json.util.deserialize(buff)
+        obj.l = link
+        return obj
+      }
+    })
+    custom = legacy(multiformats, 'custom')
   })
-  const custom = legacy(multiformats, 'custom')
   test('encode/decode raw', () => {
     const buff = raw.util.serialize(Buffer.from('test'))
     same(buff, Buffer.from('test'))
@@ -45,17 +52,17 @@ describe('multicodec', async () => {
     const cid = await raw.util.cid(Buffer.from('test'))
     same(cid.version, 1)
     same(cid.codec, 'raw')
-    same(cid.multihash, await multiformats.multihash.hash(Buffer.from('test'), 'sha2-256'))
-  })
-  const fixture = custom.util.serialize({
-    one: {
-      two: {
-        hello: 'world'
-      },
-      three: 3
-    }
+    same(cid.multihash, Buffer.from(await multiformats.multihash.hash(Buffer.from('test'), 'sha2-256')))
   })
   test('resolve', () => {
+    const fixture = custom.util.serialize({
+      one: {
+        two: {
+          hello: 'world'
+        },
+        three: 3
+      }
+    })
     let value = { hello: 'world' }
     same(custom.resolver.resolve(fixture, 'o/one/two'), { value })
     value = 'world'
@@ -65,6 +72,14 @@ describe('multicodec', async () => {
     testThrow(() => custom.resolver.resolve(fixture, 'o/two'), 'Not found')
   })
   test('tree', () => {
+    const fixture = custom.util.serialize({
+      one: {
+        two: {
+          hello: 'world'
+        },
+        three: 3
+      }
+    })
     const arr = a => Array.from(a)
     const links = ['/o', '/o/one', '/o/one/two', '/o/one/two/hello', '/o/one/three', '/l']
     same(arr(custom.resolver.tree(fixture)), links)

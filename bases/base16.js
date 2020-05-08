@@ -1,9 +1,10 @@
 'use strict'
 const { fromHex } = require('../bytes')
+const bytes = require('../bytes')
 
 const create = function base16 (alphabet) {
   return {
-    encode: input => input.toString('hex'),
+    encode: input => bytes.toHex(input),
     decode (input) {
       for (const char of input) {
         if (alphabet.indexOf(char) < 0) {

@@ -1,6 +1,6 @@
 /* globals describe, it */
 'use strict'
-const { Buffer } = require('buffer')
+const bytes = require('../bytes')
 const assert = require('assert')
 const same = assert.deepStrictEqual
 const multiformat = require('../')
@@ -23,26 +23,26 @@ describe('multibase', () => {
   multibase.add(require('../bases/base58'))
   multibase.add(require('../bases/base64'))
 
-  describe('basics', () => {
-    for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
+  for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
+    describe(`basics ${base}`, () => {
       test('encode/decode', () => {
-        const string = multibase.encode(Buffer.from('test'), base)
+        const string = multibase.encode(bytes.fromString('test'), base)
         same(string[0], multibase.get(base).prefix)
         const buffer = multibase.decode(string)
-        same(buffer, Buffer.from('test'))
+        same(buffer, bytes.fromString('test'))
       })
       test('empty', () => {
-        const str = multibase.encode(Buffer.from(''), base)
+        const str = multibase.encode(bytes.fromString(''), base)
         same(str, multibase.get(base).prefix)
-        same(multibase.decode(str), Buffer.from(''))
+        same(multibase.decode(str), bytes.fromString(''))
       })
       test('bad chars', () => {
         const str = multibase.get(base).prefix + '#$%^&*&^%$#'
         const msg = base === 'base58btc' ? 'Non-base58 character' : `invalid ${base} character`
         testThrow(() => multibase.decode(str), msg)
       })
-    }
-  })
+    })
+  }
 
   test('get fails', () => {
     let msg = 'Missing multibase implementation for "x"'
@@ -51,14 +51,14 @@ describe('multibase', () => {
     testThrow(() => multibase.get('notfound'), msg)
   })
   test('encode string failure', () => {
-    const msg = 'Can only multibase encode buffer instances'
+    const msg = 'Unknown type, must be binary type'
     testThrow(() => multibase.encode('asdf'), msg)
   })
   test('decode int failure', () => {
     const msg = 'Can only multibase decode strings'
     testThrow(() => multibase.decode(1), msg)
   })
-  const buff = Buffer.from('test')
+  const buff = bytes.fromString('test')
   const baseTest = obj => {
     if (Array.isArray(obj)) return obj.forEach(o => baseTest(o))
     const { multibase } = multiformat()

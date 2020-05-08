@@ -91,6 +91,7 @@ const createMultibase = () => {
     if (typeof string !== 'string') throw new Error('Can only multibase decode strings')
     const prefix = string[0]
     string = string.slice(1)
+    if (string.length === 0) return new Uint8Array(0)
     const { decode } = get(prefix)
     return decode(string)
   }
