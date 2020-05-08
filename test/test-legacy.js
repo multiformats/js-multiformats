@@ -32,7 +32,7 @@ describe('multicodec', () => {
       encode: o => {
         if (o.link) {
           assert.ok(o.link.code)
-          o.link = 'test'
+          o.link = true
         }
         return json.util.serialize({ o, l: link.toString() })
       },
@@ -82,7 +82,7 @@ describe('multicodec', () => {
     const fixture = custom.util.serialize({
       one: {
         two: {
-          hello: 'world',
+          hello: 'world'
         },
         three: 3
       }
@@ -93,9 +93,9 @@ describe('multicodec', () => {
     same(arr(json.resolver.tree(json.util.serialize('asdf'))), [])
   })
   test('cid API change', () => {
-    const fixture = custom.util.serialize({ link: new multiformats.CID(link) })
+    const fixture = { link }
     const buff = custom.util.serialize(fixture)
-    const decoded = custom.util.deserialize(fixture)
+    const decoded = custom.util.deserialize(buff)
     same(decoded.link, link)
   })
 })

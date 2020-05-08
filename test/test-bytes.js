@@ -1,5 +1,5 @@
 /* globals describe, it */
-test = it
+const test = it
 const bytes = require('../bytes')
 const assert = require('assert')
 const same = assert.deepStrictEqual
