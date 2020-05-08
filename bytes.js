@@ -23,9 +23,8 @@ const isTypedArray = obj => obj instanceof TypedArray
 
 const coerce = o => {
   if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') return o
-  if (o instanceof DataView) return o.getUint8()
-  if (o instanceof ArrayBuffer) return new Uint8Array(o.buffer)
-  if (isTypedArray(o)) {
+  if (o instanceof ArrayBuffer) return new Uint8Array(o)
+  if (o instanceof DataView || isTypedArray(o)) {
     return new Uint8Array(o.buffer, o.byteOffset, o.byteLength)
   }
   throw new Error('Unknown type, must be binary type')

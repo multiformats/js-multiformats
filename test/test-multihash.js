@@ -31,7 +31,7 @@ const testThrowAsync = async (fn, message) => {
 }
 
 const crypto = require('crypto')
-const encode = name => data => crypto.createHash(name).update(data).digest()
+const encode = name => data => bytes.coerce(crypto.createHash(name).update(data).digest())
 
 describe('multihash', () => {
   const { multihash } = multiformat(table)
@@ -53,7 +53,7 @@ describe('multihash', () => {
       const hash = await multihash.hash(bytes.fromString('test'), 'sha2-256')
       const { digest, code } = multihash.decode(hash)
       same(code, multihash.get('sha2-256').code)
-      same(encode('sha256')(bytes.fromString('test')).compare(digest), 0)
+      same(digest, encode('sha256')(bytes.fromString('test')))
       same(await validate(hash), true)
       same(await validate(hash, bytes.fromString('test')), true)
     })
@@ -61,7 +61,7 @@ describe('multihash', () => {
       const hash = await multihash.hash(bytes.fromString('test'), 'sha2-512')
       const { digest, code } = multihash.decode(hash)
       same(code, multihash.get('sha2-512').code)
-      same(encode('sha512')(bytes.fromString('test')).compare(digest), 0)
+      same(digest, encode('sha512')(bytes.fromString('test')))
       same(await validate(hash), true)
       same(await validate(hash, bytes.fromString('test')), true)
     })

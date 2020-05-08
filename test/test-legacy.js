@@ -29,10 +29,17 @@ describe('multicodec', () => {
     multiformats.multicodec.add({
       name: 'custom',
       code: 6787678,
-      encode: o => json.util.serialize({ o, l: link.toString() }),
+      encode: o => {
+        if (o.link) {
+          assert.ok(o.link.code)
+          o.link = 'test'
+        }
+        return json.util.serialize({ o, l: link.toString() })
+      },
       decode: buff => {
         const obj = json.util.deserialize(buff)
         obj.l = link
+        if (obj.o.link) obj.link = new multiformats.CID(link)
         return obj
       }
     })
@@ -75,7 +82,7 @@ describe('multicodec', () => {
     const fixture = custom.util.serialize({
       one: {
         two: {
-          hello: 'world'
+          hello: 'world',
         },
         three: 3
       }
@@ -84,5 +91,11 @@ describe('multicodec', () => {
     const links = ['/o', '/o/one', '/o/one/two', '/o/one/two/hello', '/o/one/three', '/l']
     same(arr(custom.resolver.tree(fixture)), links)
     same(arr(json.resolver.tree(json.util.serialize('asdf'))), [])
+  })
+  test('cid API change', () => {
+    const fixture = custom.util.serialize({ link: new multiformats.CID(link) })
+    const buff = custom.util.serialize(fixture)
+    const decoded = custom.util.deserialize(fixture)
+    same(decoded.link, link)
   })
 })
