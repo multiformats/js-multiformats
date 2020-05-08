@@ -6,6 +6,16 @@ const same = assert.deepStrictEqual
 const multiformats = require('../basics')
 const test = it
 
+const testThrow = async (fn, message) => {
+  try {
+    await fn()
+  } catch (e) {
+    if (e.message !== message) throw e
+    return
+  }
+  throw new Error('Test failed to throw')
+}
+
 describe('multicodec', () => {
   const { multicodec } = multiformats
 

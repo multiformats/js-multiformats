@@ -1,4 +1,5 @@
 const CID = require('cids')
+const { Buffer } = require('buffer')
 
 const legacy = (multiformats, name) => {
   const format = multiformats.multicodec.get(name)

@@ -1,40 +1,6 @@
 const varints = require('varint')
 const createCID = require('./cid')
-
-const { Buffer } = require('buffer')
-
-// From https://stackoverflow.com/questions/38987784/how-to-convert-a-hexadecimal-string-to-uint8array-and-back-in-javascript/50868276#50868276
-const toHex = (data) =>
-  data.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
-// TODO 2020-05-03: This is slow, but simple
-const fromHex = (hex) => {
-  return new Uint8Array(hexString.match(/.{1,2}/g).map((byte) => {
-    return parseInt(byte, 16)
-  }))
-}
-
-
-const isUint8Array = (data) => {
-  return Object.prototype.toString.call(data) === '[object Uint8Array]'
-}
-
-const uint8ArrayEquals = (aa, bb) => {
-  if (aa.byteLength != bb.byteLength) {
-    return false
-  }
-
-  for (let ii = 0; ii < aa.byteLength; ii++) {
-    if (aa[ii] !== bb[ii]) {
-      return false
-    }
-  }
-
-  return true
-}
-
-const bufferToUint8Array = (buffer) => {
-  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength)
-}
+const bytes = require('./bytes')
 
 const cache = new Map()
 const varint = {
@@ -71,19 +37,19 @@ const createMultihash = multiformats => {
     return Uint8Array.from([...code, ...length, ...digest])
   }
   const hash = async (buff, key) => {
-    if (!isUint8Array(buff)) throw new Error('Can only hash Uint8Array instances')
+    buff = bytes.coerce(buff)
     const info = get(key)
     if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
     return encode(await info.encode(buff), key)
   }
   const validate = async (_hash, buff) => {
+    _hash = bytes.coerce(_hash)
     const { length, digest, code } = decode(_hash)
     if (digest.length !== length) throw new Error('Incorrect length')
     if (buff) {
       const { encode } = get(code)
       buff = await encode(buff)
-      debugger
-      if (!uint8ArrayEquals(buff, digest)) throw new Error('Buffer does not match hash')
+      if (!bytes.equals(buff, digest)) throw new Error('Buffer does not match hash')
     }
     return true
   }
@@ -117,7 +83,7 @@ const createMultibase = () => {
     }
   }
   const encode = (buffer, id) => {
-    if (!isUint8Array(buffer)) throw new Error('Can only multibase encode buffer instances')
+    buffer = bytes.coerce(buffer)
     const { prefix, encode } = get(id)
     return prefix + encode(buffer)
   }
@@ -155,6 +121,7 @@ module.exports = (table = []) => {
     _add(code, name, encode, decode)
   }
   const parse = buff => {
+    buff = bytes.coerce(buff)
     const [code, len] = varint.decode(buff)
     let name, encode, decode
     if (intMap.has(code)) {
@@ -177,18 +144,20 @@ module.exports = (table = []) => {
       }
       throw new Error(`Do not have multiformat entry for "${obj}"`)
     }
-    if (isUint8Array(obj)) {
-      return parse(obj)[0]
+    if (bytes.isBinary(obj)) {
+      return parse(bytes.coerce(obj))[0]
     }
     throw new Error('Unknown key type')
   }
+  // Ideally we can remove the coercion here once
+  // all the codecs have been updated to use Uint8Array
   const encode = (value, id) => {
     const { encode } = get(id)
-    return encode(value)
+    return bytes.coerce(encode(value))
   }
   const decode = (value, id) => {
     const { decode } = get(id)
-    return decode(value)
+    return decode(bytes.coerce(value))
   }
   const add = obj => {
     if (Array.isArray(obj)) {
@@ -201,13 +170,12 @@ module.exports = (table = []) => {
     }
   }
 
-  const multiformats = { parse, add, get, encode, decode, varint }
+  const multiformats = { parse, add, get, encode, decode, varint, bytes }
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
   return multiformats
 }
-module.exports.fromHex = fromHex
-module.exports.toHex = toHex
+module.exports.bytes = bytes
 module.exports.varint = varint

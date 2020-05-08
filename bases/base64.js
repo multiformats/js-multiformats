@@ -1,4 +1,5 @@
 'use strict'
+const { fromString } = require('../bytes')
 
 const create = alphabet => {
   // The alphabet is only used to know:
@@ -31,7 +32,7 @@ const create = alphabet => {
         }
       }
 
-      return Buffer.from(input, 'base64')
+      return fromString(input, 'base64')
     }
   }
 }

@@ -1,5 +1,5 @@
 'use strict'
-
+const bytes = require('./bytes')
 const withIs = require('class-is')
 
 const readonly = (object, key, value) => {
@@ -21,15 +21,11 @@ module.exports = multiformats => {
   }
   class CID {
     constructor (cid, ...args) {
-      Object.defineProperty(this, '_baseCache', {
-        value: new Map(),
-        writable: false,
-        enumerable: false
-      })
+      readonly(this, '_baseCache', new Map())
       if (_CID.isCID(cid)) {
         readonly(this, 'version', cid.version)
-        readonly(this, 'multihash', cid.multihash)
-        readonly(this, 'buffer', cid.buffer)
+        readonly(this, 'multihash', bytes.coerce(cid.multihash))
+        readonly(this, 'buffer', bytes.coerce(cid.buffer))
         if (cid.code) readonly(this, 'code', cid.code)
         else readonly(this, 'code', multiformats.get(cid.codec).code)
         return
@@ -60,6 +56,7 @@ module.exports = multiformats => {
         this._baseCache.set(name, cid)
         cid = multibase.decode(cid)
       }
+      cid = bytes.coerce(cid)
       readonly(this, 'buffer', cid)
       let code
       ;[code, cid] = parse(cid)
@@ -119,7 +116,7 @@ module.exports = multiformats => {
           throw new Error(`Cannot string encode V0 in ${base} encoding`)
         }
         const { encode } = multibase.get('base58btc')
-        return encode(this.buffer, 'base58btc')
+        return encode(this.buffer)
       }
       if (!base) base = 'base32'
       if (this._baseCache.has(base)) return this._baseCache.get(base)

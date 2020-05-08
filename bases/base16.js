@@ -1,11 +1,5 @@
 'use strict'
-
-// TODO 2020-05-03: This is slow, but simple
-const fromHex = (hex) => {
-  return new Uint8Array(hexString.match(/.{1,2}/g).map((byte) => {
-    return parseInt(byte, 16)
-  }))
-}
+const { fromHex } = require('../bytes')
 
 const create = function base16 (alphabet) {
   return {

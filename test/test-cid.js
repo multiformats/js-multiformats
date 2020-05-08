@@ -5,6 +5,9 @@ const OLDCID = require('cids')
 const test = it
 const assert = require('assert')
 const same = assert.deepStrictEqual
+const toHex = (data) => {
+  return data.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
+}
 
 const testThrow = async (fn, message) => {
   try {
@@ -98,7 +101,7 @@ describe('CID', () => {
       const cid = new CID(0, codec, hash)
       const buffer = cid.buffer
       assert.ok(buffer)
-      const str = buffer.toString('hex')
+      const str = toHex(buffer)
       same(str, '1220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
     })
 
@@ -167,7 +170,7 @@ describe('CID', () => {
       const cid = new CID(1, code, hash)
       const buffer = cid.buffer
       assert.ok(buffer)
-      const str = buffer.toString('hex')
+      const str = toHex(buffer)
       same(str, '01711220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
     })
 
@@ -321,7 +324,7 @@ describe('CID', () => {
     assert.ok(OLDCID.isCID(cid))
   })
   test('new CID from old CID', () => {
-    const cid = new CID(new OLDCID(1, 'raw', hash))
+    const cid = new CID(new OLDCID(1, 'raw', Buffer.from(hash)))
     same(cid.version, 1)
     same(cid.multihash, hash)
     same(cid.code, 85)
