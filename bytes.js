@@ -5,6 +5,7 @@ const fromHex = hex => {
 }
 
 const equals = (aa, bb) => {
+  if (aa === bb) return true
   if (aa.byteLength !== bb.byteLength) {
     return false
   }

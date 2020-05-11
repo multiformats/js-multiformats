@@ -1,6 +1,7 @@
 'use strict'
 const baseX = require('base-x')
 const bytes = require('../bytes')
+const { Buffer } = require('buffer')
 
 const wrap = obj => ({
   encode: b => obj.encode(Buffer.from(b)),
