@@ -1,7 +1,7 @@
 {
   "name": "multiformats",
-  "version": "0.0.0",
-  "description": "",
+  "version": "0.0.0-dev",
+  "description": "Interface for multihash, multicodec, multibase and CID.",
   "main": "index.js",
   "scripts": {
     "pre:test": "standard",
@@ -28,5 +28,16 @@
     "buffer": "^5.6.0",
     "class-is": "^1.1.0",
     "varint": "^5.0.0"
-  }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/multiformats/js-multiformats.git"
+  },
+  "bugs": {
+    "url": "https://github.com/multiformats/js-multiformats/issues"
+  },
+  "homepage": "https://github.com/multiformats/js-multiformats#readme"
 }
