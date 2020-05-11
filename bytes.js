@@ -1,7 +1,7 @@
 const toHex = d => d.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
 const fromHex = hex => {
   if (!hex.length) return new Uint8Array(0)
-  return new Uint8Array(hex.match(/.{1,2}/g).map(b => parseInt(b, 16)))
+  return new Uint8Array(hex.match(/../g).map(b => parseInt(b, 16)))
 }
 
 const equals = (aa, bb) => {
