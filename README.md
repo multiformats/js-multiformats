@@ -1,7 +1,3 @@
-# WIP
-
-Most of what is documented below is not yet implemented.
-
 # multiformats
 
 This library is for building an interface for working with various
@@ -33,12 +29,11 @@ However, if you're doing this much you should probably use multiformats
 with the `Block` API.
 
 ```js
-const multiformats = require('multiformats')()
-const sha2 = require('@multiformats/sha2')
+// Import basics package with dep-free codecs, hashes, and base encodings
+const multiformats = require('multiformats/basics')
 const dagcbor = require('@ipld/dag-cbor')
-multiformats.multihash.add(sha2)
 multiformats.multicodec.add(dagcbor)
-const Block = require('@ipld/block/bare')(multiformats)
+const Block = require('@ipld/block')(multiformats)
 const block = Block.encoder({ hello: world }, 'dag-cbor')
 const cid = await block.cid()
 ```
