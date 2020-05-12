@@ -26,7 +26,7 @@ const testThrowAny = async fn => {
 }
 
 describe('CID', () => {
-  const { CID, multihash, multibase } = require('../basics')
+  const { CID, multihash, multibase, varint } = require('../basics')
   multibase.add(require('../bases/base58'))
   multibase.add(require('../bases/base32'))
   multibase.add(require('../bases/base64'))
@@ -359,5 +359,10 @@ describe('CID', () => {
       const cid = new CID(1, 112, hash)
       await testThrow(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
     })
+  })
+
+  test('invalid CID version', async () => {
+    const encoded = varint.encode(18)
+    await testThrow(() => new CID(encoded), 'Invalid CID version 18')
   })
 })
