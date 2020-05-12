@@ -64,6 +64,7 @@ module.exports = multiformats => {
       readonly(this, 'buffer', cid)
       let code
       ;[code, cid] = parse(cid)
+      if (code > 1) throw new Error(`Invalid CID version ${code}`)
       readonly(this, 'version', code)
       ;[code, cid] = parse(cid)
       readonly(this, 'code', code)
