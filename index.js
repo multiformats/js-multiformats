@@ -82,6 +82,12 @@ const createMultibase = () => {
       return { prefix, name: id, encode, decode }
     }
   }
+  const has = id => {
+    if (id.length === 1) {
+      return prefixMap.has(id)
+    }
+    return nameMap.has(id)
+  }
   const encode = (buffer, id) => {
     buffer = bytes.coerce(buffer)
     const { prefix, encode } = get(id)
@@ -96,7 +102,7 @@ const createMultibase = () => {
     return decode(string)
   }
   const encoding = string => get(string[0])
-  return { add, get, encode, decode, encoding }
+  return { add, has, get, encode, decode, encoding }
 }
 
 module.exports = (table = []) => {
@@ -150,6 +156,14 @@ module.exports = (table = []) => {
     }
     throw new Error('Unknown key type')
   }
+  const has = id => {
+    if (typeof id === 'string') {
+      return nameMap.has(id)
+    } else if (typeof id === 'number') {
+      return intMap.has(id)
+    }
+    throw new Error('Unknown type')
+  }
   // Ideally we can remove the coercion here once
   // all the codecs have been updated to use Uint8Array
   const encode = (value, id) => {
@@ -171,8 +185,8 @@ module.exports = (table = []) => {
     }
   }
 
-  const multiformats = { parse, add, get, encode, decode, varint, bytes }
-  multiformats.multicodec = { add, get, encode, decode }
+  const multiformats = { parse, add, get, has, encode, decode, varint, bytes }
+  multiformats.multicodec = { add, get, has, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)

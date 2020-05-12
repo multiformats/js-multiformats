@@ -81,4 +81,11 @@ describe('multibase', () => {
   describe('base64', () => {
     baseTest(require('../bases/base64'))
   })
+  test('has', () => {
+    const { multibase } = require('../basics')
+    same(multibase.has('E'), false)
+    same(multibase.has('baseNope'), false)
+    same(multibase.has('base32'), true)
+    same(multibase.has('c'), true)
+  })
 })

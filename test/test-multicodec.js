@@ -35,12 +35,12 @@ describe('multicodec', () => {
     await testThrow(() => multicodec.encode('asdf', 'raw'), 'Unknown type, must be binary type')
   })
 
-  test('get failure', () => {
-    assert.throws(() => multicodec.get(true), /^Error: Unknown key type$/)
-    let msg = /^Error: Do not have multiformat entry for "8237440"$/
-    assert.throws(() => multicodec.get(8237440), msg)
-    msg = /^Error: Do not have multiformat entry for "notfound"$/
-    assert.throws(() => multicodec.get('notfound'), msg)
+  test('get failure', async () => {
+    await testThrow(() => multicodec.get(true), 'Unknown key type')
+    let msg = 'Do not have multiformat entry for "8237440"'
+    await testThrow(() => multicodec.get(8237440), msg)
+    msg = 'Do not have multiformat entry for "notfound"'
+    await testThrow(() => multicodec.get('notfound'), msg)
   })
 
   test('add with function', () => {
@@ -56,5 +56,10 @@ describe('multicodec', () => {
     const three = bytes.fromString('three')
     same(multicodec.encode(['one', two, three], 'blip'), two, 'new codec encoder was added')
     same(multicodec.decode(three, 200), three, 'new codec decoder was added')
+  })
+  test('has', async () => {
+    same(multicodec.has('json'), true)
+    same(multicodec.has(0x0200), true)
+    await testThrow(() => multicodec.has({}), 'Unknown type')
   })
 })
