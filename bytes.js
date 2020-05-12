@@ -39,6 +39,7 @@ const isBinary = o => {
 }
 
 const fromString = str => (new TextEncoder()).encode(str)
+const toString = b => (new TextDecoder()).decode(b)
 
 exports.equals = equals
 exports.coerce = coerce
@@ -46,3 +47,4 @@ exports.isBinary = isBinary
 exports.fromHex = fromHex
 exports.toHex = toHex
 exports.fromString = fromString
+exports.toString = toString

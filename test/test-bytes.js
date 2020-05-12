@@ -18,4 +18,8 @@ describe('bytes', () => {
     const fixture = bytes.fromString('test')
     same(bytes.equals(fixture, bytes.fromString('asdfadf')), false)
   })
+  test('toString()', () => {
+    const fixture = 'hello world'
+    same(bytes.toString(bytes.fromString(fixture)), fixture)
+  })
 })
