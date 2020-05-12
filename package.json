@@ -14,7 +14,8 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "browser": {
-    "./hashes/sha2.js": "./hashes/sha2-browser.js"
+    "./hashes/sha2.js": "./hashes/sha2-browser.js",
+    "./bases/_base64.js": "./bases/_base64-browser.js"
   },
   "devDependencies": {
     "hundreds": "0.0.2",
@@ -23,9 +24,9 @@
     "standard": "^14.3.3"
   },
   "dependencies": {
-    "cids": "^0.8.0",
     "base-x": "^3.0.8",
     "buffer": "^5.6.0",
+    "cids": "^0.8.0",
     "class-is": "^1.1.0",
     "varint": "^5.0.0"
   },

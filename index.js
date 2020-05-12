@@ -1,6 +1,6 @@
-const { Buffer } = require('buffer')
 const varints = require('varint')
 const createCID = require('./cid')
+const bytes = require('./bytes')
 
 const cache = new Map()
 const varint = {
@@ -10,7 +10,7 @@ const varint = {
   },
   encode: int => {
     if (cache.has(int)) return cache.get(int)
-    const buff = Buffer.from(varints.encode(int))
+    const buff = Uint8Array.from(varints.encode(int))
     cache.set(int, buff)
     return buff
   }
@@ -34,21 +34,22 @@ const createMultihash = multiformats => {
     }
     const code = varint.encode(info.code)
     const length = varint.encode(digest.length)
-    return Buffer.concat([code, length, digest])
+    return Uint8Array.from([...code, ...length, ...digest])
   }
   const hash = async (buff, key) => {
-    if (!Buffer.isBuffer(buff)) throw new Error('Can only hash Buffer instances')
+    buff = bytes.coerce(buff)
     const info = get(key)
     if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
     return encode(await info.encode(buff), key)
   }
   const validate = async (_hash, buff) => {
+    _hash = bytes.coerce(_hash)
     const { length, digest, code } = decode(_hash)
     if (digest.length !== length) throw new Error('Incorrect length')
     if (buff) {
       const { encode } = get(code)
       buff = await encode(buff)
-      if (buff.compare(digest)) throw new Error('Buffer does not match hash')
+      if (!bytes.equals(buff, digest)) throw new Error('Buffer does not match hash')
     }
     return true
   }
@@ -82,7 +83,7 @@ const createMultibase = () => {
     }
   }
   const encode = (buffer, id) => {
-    if (!Buffer.isBuffer(buffer)) throw new Error('Can only multibase encode buffer instances')
+    buffer = bytes.coerce(buffer)
     const { prefix, encode } = get(id)
     return prefix + encode(buffer)
   }
@@ -90,6 +91,7 @@ const createMultibase = () => {
     if (typeof string !== 'string') throw new Error('Can only multibase decode strings')
     const prefix = string[0]
     string = string.slice(1)
+    if (string.length === 0) return new Uint8Array(0)
     const { decode } = get(prefix)
     return decode(string)
   }
@@ -120,6 +122,7 @@ module.exports = (table = []) => {
     _add(code, name, encode, decode)
   }
   const parse = buff => {
+    buff = bytes.coerce(buff)
     const [code, len] = varint.decode(buff)
     let name, encode, decode
     if (intMap.has(code)) {
@@ -142,18 +145,20 @@ module.exports = (table = []) => {
       }
       throw new Error(`Do not have multiformat entry for "${obj}"`)
     }
-    if (Buffer.isBuffer(obj)) {
-      return parse(obj)[0]
+    if (bytes.isBinary(obj)) {
+      return parse(bytes.coerce(obj))[0]
     }
     throw new Error('Unknown key type')
   }
+  // Ideally we can remove the coercion here once
+  // all the codecs have been updated to use Uint8Array
   const encode = (value, id) => {
     const { encode } = get(id)
-    return encode(value)
+    return bytes.coerce(encode(value))
   }
   const decode = (value, id) => {
     const { decode } = get(id)
-    return decode(value)
+    return decode(bytes.coerce(value))
   }
   const add = obj => {
     if (Array.isArray(obj)) {
@@ -166,13 +171,12 @@ module.exports = (table = []) => {
     }
   }
 
-  const multiformats = { parse, add, get, encode, decode }
-  multiformats.varint = varint
+  const multiformats = { parse, add, get, encode, decode, varint, bytes }
   multiformats.multicodec = { add, get, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
-
   return multiformats
 }
+module.exports.bytes = bytes
 module.exports.varint = varint

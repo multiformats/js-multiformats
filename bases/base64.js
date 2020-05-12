@@ -1,5 +1,5 @@
 'use strict'
-const { Buffer } = require('buffer')
+const b64 = require('./_base64')
 
 const create = alphabet => {
   // The alphabet is only used to know:
@@ -12,7 +12,7 @@ const create = alphabet => {
 
   return {
     encode (input) {
-      let output = input.toString('base64')
+      let output = b64.encode(input)
 
       if (url) {
         output = output.replace(/\+/g, '-').replace(/\//g, '_')
@@ -32,7 +32,7 @@ const create = alphabet => {
         }
       }
 
-      return Buffer.from(input, 'base64')
+      return b64.decode(input)
     }
   }
 }

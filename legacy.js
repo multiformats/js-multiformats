@@ -1,14 +1,40 @@
 const CID = require('cids')
+const bytes = require('./bytes')
+const { Buffer } = require('buffer')
 
 const legacy = (multiformats, name) => {
+  const toLegacy = obj => {
+    if (CID.isCID(obj)) {
+      if (!obj.code) return obj
+      const { name } = multiformats.multicodec.get(obj.code)
+      return new CID(obj.version, name, Buffer.from(obj.multihash))
+    }
+    if (bytes.isBinary(obj)) return Buffer.from(obj)
+    if (obj && typeof obj === 'object') {
+      for (const [key, value] of Object.entries(obj)) {
+        obj[key] = toLegacy(value)
+      }
+    }
+    return obj
+  }
+  const fromLegacy = obj => {
+    if (CID.isCID(obj)) return new multiformats.CID(obj)
+    if (bytes.isBinary(obj)) return bytes.coerce(obj)
+    if (obj && typeof obj === 'object') {
+      for (const [key, value] of Object.entries(obj)) {
+        obj[key] = fromLegacy(value)
+      }
+    }
+    return obj
+  }
   const format = multiformats.multicodec.get(name)
-  const serialize = format.encode
-  const deserialize = format.decode
+  const serialize = o => Buffer.from(format.encode(fromLegacy(o)))
+  const deserialize = b => toLegacy(format.decode(bytes.coerce(b)))
   const cid = async (buff, opts) => {
     const defaults = { cidVersion: 1, hashAlg: 'sha2-256' }
     const { cidVersion, hashAlg } = { ...defaults, ...opts }
     const hash = await multiformats.multihash.hash(buff, hashAlg)
-    return new CID(cidVersion, name, hash)
+    return new CID(cidVersion, name, Buffer.from(hash))
   }
   const resolve = (buff, path) => {
     let value = format.decode(buff)

@@ -1,6 +1,5 @@
 'use strict'
-
-const { Buffer } = require('buffer')
+const bytes = require('./bytes')
 const withIs = require('class-is')
 
 const readonly = (object, key, value) => {
@@ -18,19 +17,19 @@ module.exports = multiformats => {
     return [code, buff.slice(length)]
   }
   const encode = (version, codec, multihash) => {
-    return Buffer.concat([varint.encode(version), varint.encode(codec), multihash])
+    return Uint8Array.from([
+      ...varint.encode(version),
+      ...varint.encode(codec),
+      ...multihash
+    ])
   }
   class CID {
     constructor (cid, ...args) {
-      Object.defineProperty(this, '_baseCache', {
-        value: new Map(),
-        writable: false,
-        enumerable: false
-      })
+      readonly(this, '_baseCache', new Map())
       if (_CID.isCID(cid)) {
         readonly(this, 'version', cid.version)
-        readonly(this, 'multihash', cid.multihash)
-        readonly(this, 'buffer', cid.buffer)
+        readonly(this, 'multihash', bytes.coerce(cid.multihash))
+        readonly(this, 'buffer', bytes.coerce(cid.buffer))
         if (cid.code) readonly(this, 'code', cid.code)
         else readonly(this, 'code', multiformats.get(cid.codec).code)
         return
@@ -61,6 +60,7 @@ module.exports = multiformats => {
         this._baseCache.set(name, cid)
         cid = multibase.decode(cid)
       }
+      cid = bytes.coerce(cid)
       readonly(this, 'buffer', cid)
       let code
       ;[code, cid] = parse(cid)
@@ -120,7 +120,7 @@ module.exports = multiformats => {
           throw new Error(`Cannot string encode V0 in ${base} encoding`)
         }
         const { encode } = multibase.get('base58btc')
-        return encode(this.buffer, 'base58btc')
+        return encode(this.buffer)
       }
       if (!base) base = 'base32'
       if (this._baseCache.has(base)) return this._baseCache.get(base)
@@ -139,7 +139,7 @@ module.exports = multiformats => {
     equals (other) {
       return this.code === other.code &&
         this.version === other.version &&
-        this.multihash.equals(other.multihash)
+        bytes.equals(this.multihash, other.multihash)
     }
   }
 

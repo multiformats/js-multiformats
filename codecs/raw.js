@@ -1,9 +1,6 @@
-const { Buffer } = require('buffer')
+const { coerce } = require('../bytes')
 
-const raw = buff => {
-  if (!Buffer.isBuffer(buff)) throw new Error('Only buffer instances can be used w/ raw codec')
-  return buff
-}
+const raw = buff => coerce(buff)
 
 module.exports = {
   encode: raw,

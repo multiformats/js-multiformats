@@ -1,16 +1,17 @@
 'use strict'
-const { Buffer } = require('buffer')
+const { fromHex } = require('../bytes')
+const bytes = require('../bytes')
 
 const create = function base16 (alphabet) {
   return {
-    encode: input => input.toString('hex'),
+    encode: input => bytes.toHex(input),
     decode (input) {
       for (const char of input) {
         if (alphabet.indexOf(char) < 0) {
           throw new Error('invalid base16 character')
         }
       }
-      return Buffer.from(input, 'hex')
+      return fromHex(input)
     }
   }
 }
