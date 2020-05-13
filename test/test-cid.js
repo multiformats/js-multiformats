@@ -212,8 +212,10 @@ describe('CID', () => {
     })
 
     test('works with deepEquals', () => {
-      assert.deepStrictEqual(new CID(h1), new CID(h1))
-      assert.notDeepStrictEqual(new CID(h1), new CID(h2))
+      const ch1 = new CID(h1)
+      ch1._baseCache.set('herp', 'derp')
+      assert.deepStrictEqual(ch1, new CID(h1))
+      assert.notDeepStrictEqual(ch1, new CID(h2))
     })
   })
 
