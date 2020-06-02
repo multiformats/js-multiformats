@@ -25,7 +25,11 @@ module.exports = multiformats => {
   }
   class CID {
     constructor (cid, ...args) {
-      readonly(this, '_baseCache', new Map())
+      Object.defineProperty(this, '_baseCache', {
+        value: new Map(),
+        writable: false,
+        enumerable: false
+      })
       if (_CID.isCID(cid)) {
         readonly(this, 'version', cid.version)
         readonly(this, 'multihash', bytes.coerce(cid.multihash))
