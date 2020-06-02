@@ -35,18 +35,41 @@ module.exports = multiformats => {
         return
       }
       if (args.length > 0) {
-        if (typeof args[0] !== 'number') throw new Error('String codecs are no longer supported')
+        if (args.length > 2) {
+          throw new Error('No longer supported, cannot specify base encoding in instantiation')
+        }
+
+        if (typeof cid !== 'number') {
+          throw new Error(`Invalid CID version (must be a number) ${cid}`)
+        }
+        if (cid < 0 || cid > 1) {
+          throw new Error(`Invalid CID version ${cid}`)
+        }
         readonly(this, 'version', cid)
-        readonly(this, 'code', args.shift())
+
+        if (typeof args[0] === 'string') {
+          const codec = multiformats.get(args[0])
+          readonly(this, 'code', codec.code)
+        } else if (typeof args[0] === 'number') {
+          readonly(this, 'code', args[0])
+        } else {
+          throw new Error(`Invalid CID codec (must be a string or number) ${args[0]}`)
+        }
+
         if (this.version === 0 && this.code !== 112) {
           throw new Error('Version 0 CID must be 112 codec (dag-cbor)')
         }
-        this._multihash = args.shift()
-        if (args.length) throw new Error('No longer supported, cannot specify base encoding in instantiation')
-        if (this.version === 0) readonly(this, 'buffer', this.multihash)
-        else readonly(this, 'buffer', encode(this.version, this.code, this.multihash))
+
+        this._multihash = args[1]
+        if (this.version === 0) {
+          readonly(this, 'buffer', this.multihash)
+        } else {
+          readonly(this, 'buffer', encode(this.version, this.code, this.multihash))
+        }
+
         return
       }
+
       if (typeof cid === 'string') {
         if (cid.startsWith('Q')) {
           readonly(this, 'version', 0)

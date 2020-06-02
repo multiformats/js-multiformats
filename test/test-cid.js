@@ -26,7 +26,7 @@ const testThrowAny = async fn => {
 }
 
 describe('CID', () => {
-  const { CID, multihash, multibase, varint } = require('../basics')
+  const { CID, multihash, multibase, varint, add } = require('../basics')
   multibase.add(require('../bases/base58'))
   multibase.add(require('../bases/base32'))
   multibase.add(require('../bases/base64'))
@@ -43,6 +43,7 @@ describe('CID', () => {
     }
   ]
   multihash.add(hashes)
+  add({ code: 1001, name: 'dag-foo', encode: () => {}, decode: () => {} })
   const b58 = multibase.get('base58btc')
   let hash
 
@@ -133,6 +134,13 @@ describe('CID', () => {
     test('create by parts', () => {
       const cid = new CID(1, 0x71, hash)
       same(cid.code, 0x71)
+      same(cid.version, 1)
+      same(cid.multihash, hash)
+    })
+
+    test('create by parts (with codec name)', () => {
+      const cid = new CID(1, 'dag-foo', hash)
+      same(cid.code, 1001)
       same(cid.version, 1)
       same(cid.multihash, hash)
     })
@@ -243,12 +251,19 @@ describe('CID', () => {
     }
     invalid.forEach(mapper)
 
-    const invalidVersions = [-1, 2]
+    const invalidVersions = [-1, 2, 'one', false, null, {}, []]
     mapper = i => {
       const name = `new CID(${i}, 112, buffer)`
-      test(name, () => testThrowAny(new CID(i, 112, hash)))
+      test(name, () => testThrowAny(() => new CID(i, 112, hash)))
     }
     invalidVersions.forEach(mapper)
+
+    const invalidCodecs = ['no-such-codec', false, null, {}, []]
+    mapper = codec => {
+      const name = `new CID(1, ${codec}, buffer)`
+      test(name, () => testThrowAny(() => new CID(1, codec, hash)))
+    }
+    invalidCodecs.forEach(mapper)
   })
 
   describe('idempotence', () => {
@@ -345,7 +360,7 @@ describe('CID', () => {
     test('codec', async () => {
       const cid = new CID(1, 112, hash)
       await testThrow(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
-      await testThrow(() => new CID(1, 'dag-pb', hash), 'String codecs are no longer supported')
+      await testThrow(() => new CID(1, 'dag-pb', hash), 'Do not have multiformat entry for "dag-pb"')
     })
     test('multibaseName', async () => {
       const cid = new CID(1, 112, hash)
