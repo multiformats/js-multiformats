@@ -31,6 +31,13 @@ describe('multibase', () => {
         const buffer = multibase.decode(string)
         same(buffer, bytes.fromString('test'))
       })
+      test('pristine backing buffer', () => {
+        // some deepEqual() libraries go as deep as the backing buffer, make sure it's pristine
+        const string = multibase.encode(bytes.fromString('test'), base)
+        const buffer = multibase.decode(string)
+        const expected = bytes.fromString('test')
+        same(new Uint8Array(buffer.buffer).join(','), new Uint8Array(expected.buffer).join(','))
+      })
       test('empty', () => {
         const str = multibase.encode(bytes.fromString(''), base)
         same(str, multibase.get(base).prefix)

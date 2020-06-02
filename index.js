@@ -99,7 +99,7 @@ const createMultibase = () => {
     string = string.slice(1)
     if (string.length === 0) return new Uint8Array(0)
     const { decode } = get(prefix)
-    return decode(string)
+    return Uint8Array.from(decode(string))
   }
   const encoding = string => get(string[0])
   return { add, has, get, encode, decode, encoding }
