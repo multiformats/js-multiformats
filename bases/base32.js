@@ -78,6 +78,6 @@ module.exports = [
   { prefix: 'b', name: 'base32', ...create('abcdefghijklmnopqrstuvwxyz234567') },
   { prefix: 'c', name: 'base32pad', ...create('abcdefghijklmnopqrstuvwxyz234567=') },
   { prefix: 'v', name: 'base32hex', ...create('0123456789abcdefghijklmnopqrstuv') },
-  { prefix: 't', name: 'base32expad', ...create('0123456789abcdefghijklmnopqrstuv=') },
+  { prefix: 't', name: 'base32hexpad', ...create('0123456789abcdefghijklmnopqrstuv=') },
   { prefix: 'h', name: 'base32z', ...create('ybndrfg8ejkmcpqxot1uwisza345h769') }
 ]
