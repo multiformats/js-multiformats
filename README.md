@@ -68,6 +68,7 @@ However, you can import the following bundles to get a `multiformats` interface 
 | --- | --- | --- |
 | `raw` | `require('multiformats/codecs/raw')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
 | `json` | `require('multiformats/codecs/json')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+| `dag-cbor` | `require('@ipld/dag-cbor')` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
 
 # API
 
