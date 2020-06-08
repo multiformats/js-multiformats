@@ -38,6 +38,37 @@ const block = Block.encoder({ hello: world }, 'dag-cbor')
 const cid = await block.cid()
 ```
 
+# Plugins
+
+By default, no base encodings, hash functions, or codec implementations are included with `multiformats`.
+However, you can import the following bundles to get a `multiformats` interface with them already configured.
+
+| bundle | bases | hashes | codecs |
+|---|---|---|---|
+| `multiformats/basics` | `base32`, `base64` | `sha2-256`, `sha2-512` | `json`, `raw` |
+
+## Base Encodings (multibase)
+
+| bases | import | repo |
+ --- | --- | --- |
+`base16` | `require('multiformats/bases/base16')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `require('multiformats/bases/base32')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base64`, `base64pad`, `base64url`, `base64urlpad` | `require('multiformats/bases/base64')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base58btc`, `base58flick4` | `require('multiformats/bases/base58')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+
+## Hash Functions (multihash)
+
+| hashes | import | repo |
+| --- | --- | --- |
+| `sha2-256`, `sha2-512` | `require('multiformats/hashes/sha2')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
+
+## Codec Implementations (multicodec)
+
+| codec | import | repo |
+| --- | --- | --- |
+| `raw` | `require('multiformats/codecs/raw')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+| `json` | `require('multiformats/codecs/json')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+
 # API
 
 # multiformats([table])
