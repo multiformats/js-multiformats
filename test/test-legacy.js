@@ -1,10 +1,10 @@
 /* globals before, describe, it */
 'use strict'
-const { Buffer } = require('buffer')
-const assert = require('assert')
+import { Buffer } from 'buffer'
+import assert from 'assert'
+import multiformats from '../basics.js'
+import legacy from '../legacy.js'
 const same = assert.deepStrictEqual
-const multiformats = require('../basics')
-const legacy = require('../legacy')
 const test = it
 
 const testThrow = (fn, message) => {

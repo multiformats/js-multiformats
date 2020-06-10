@@ -1,6 +1,6 @@
-const varints = require('varint')
-const createCID = require('./cid')
-const bytes = require('./bytes')
+import varints from 'varint'
+import createCID from './cid.js'
+import * as bytes from './bytes.js'
 
 const cache = new Map()
 const varint = {
@@ -105,7 +105,7 @@ const createMultibase = () => {
   return { add, has, get, encode, decode, encoding }
 }
 
-module.exports = (table = []) => {
+const create = (table = []) => {
   const intMap = new Map()
   const nameMap = new Map()
   const _add = (code, name, encode, decode) => {
@@ -192,5 +192,4 @@ module.exports = (table = []) => {
   multiformats.CID = createCID(multiformats)
   return multiformats
 }
-module.exports.bytes = bytes
-module.exports.varint = varint
+export { create, bytes, varint }

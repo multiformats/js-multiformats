@@ -1,6 +1,6 @@
 'use strict'
-const bytes = require('./bytes')
-const withIs = require('class-is')
+import * as bytes from './bytes.js'
+import withIs from 'class-is'
 
 const readonly = (object, key, value) => {
   Object.defineProperty(object, key, {
@@ -10,7 +10,7 @@ const readonly = (object, key, value) => {
   })
 }
 
-module.exports = multiformats => {
+export default multiformats => {
   const { multibase, varint, multihash } = multiformats
   const parse = buff => {
     const [code, length] = varint.decode(buff)

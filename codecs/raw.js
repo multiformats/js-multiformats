@@ -1,8 +1,8 @@
-const { coerce } = require('../bytes')
+import { coerce } from '../bytes.js'
 
 const raw = buff => coerce(buff)
 
-module.exports = {
+export default {
   encode: raw,
   decode: raw,
   name: 'raw',

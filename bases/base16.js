@@ -1,10 +1,9 @@
 'use strict'
-const { fromHex } = require('../bytes')
-const bytes = require('../bytes')
+import { fromHex, toHex } from '../bytes.js'
 
 const create = function base16 (alphabet) {
   return {
-    encode: input => bytes.toHex(input),
+    encode: input => toHex(input),
     decode (input) {
       for (const char of input) {
         if (alphabet.indexOf(char) < 0) {
@@ -16,4 +15,4 @@ const create = function base16 (alphabet) {
   }
 }
 
-module.exports = { prefix: 'f', name: 'base16', ...create('0123456789abcdef') }
+export default { prefix: 'f', name: 'base16', ...create('0123456789abcdef') }

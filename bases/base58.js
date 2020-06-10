@@ -1,17 +1,17 @@
 'use strict'
-const baseX = require('base-x')
-const bytes = require('../bytes')
-const { Buffer } = require('buffer')
+import baseX from 'base-x'
+import { coerce } from '../bytes.js'
+import { Buffer } from 'buffer'
 
 const wrap = obj => ({
   encode: b => obj.encode(Buffer.from(b)),
-  decode: s => bytes.coerce(obj.decode(s))
+  decode: s => coerce(obj.decode(s))
 })
 
 const btc = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 const flickr = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
 
-module.exports = [
+export default [
   { name: 'base58btc', prefix: 'z', ...wrap(baseX(btc)) },
   { name: 'base58flickr', prefix: 'Z', ...wrap(baseX(flickr)) }
 ]

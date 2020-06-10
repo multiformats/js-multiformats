@@ -1,6 +1,6 @@
 const sha = name => async data => new Uint8Array(await window.crypto.subtle.digest(name, data))
 
-module.exports = [
+const hashes = [
   {
     name: 'sha2-256',
     encode: sha('SHA-256'),
@@ -12,4 +12,6 @@ module.exports = [
     code: 0x13
   }
 ]
-module.exports.___browser = true
+hashes.___browser = true
+
+export default hashes

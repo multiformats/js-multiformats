@@ -74,7 +74,7 @@ const create = alphabet => {
   }
 }
 
-module.exports = [
+export default [
   { prefix: 'b', name: 'base32', ...create('abcdefghijklmnopqrstuvwxyz234567') },
   { prefix: 'c', name: 'base32pad', ...create('abcdefghijklmnopqrstuvwxyz234567=') },
   { prefix: 'v', name: 'base32hex', ...create('0123456789abcdefghijklmnopqrstuv') },
