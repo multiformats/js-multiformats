@@ -133,13 +133,13 @@ It's actually quite possible to provide a CID interface without this, you can
 still do everything you used to do, you just need to use ints instead of strings
 and do some of the fancier V0 coercions outside this library.
 
-Deprection List:
+Deprecation List:
   * the multibase encoding is no longer cached during instantiation.
     * this being indeterministic was causing some nasty problems downstream
       since `toString()` needs to be used as a cache key and it's not possible
-      to encode V1 into anything but base58btc. this means that you can't have
-      deterministic hash keys without also requiring base58btc support unless
-      we remove this feature.
+      to encode V0 into anything but base58btc. this means that you can't have
+      deterministic hash keys without also requiring base58btc support, so we 
+      removed this feature.
   * no longer accept bare multihash buffers as V0, only base58btc encoded strings
     or the complete set of parts with the multihash as the third argument.
     * The logic for treating these as V0 was problematic and could lead to
@@ -149,7 +149,7 @@ Deprection List:
     * Some of the prior code relied on knowing the full set of possible base
       prefixes, which we can no longer do.
   * no more .toBaseEncodedString(), just toString()
-  * no more .multiBase
+  * no more .multibaseName
   * no more .prefix()
   * no more .codec
     * new property ".code" is the multiformat integer.
