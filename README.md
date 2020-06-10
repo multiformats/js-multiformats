@@ -61,6 +61,7 @@ However, you can import the following bundles to get a `multiformats` interface 
 | hashes | import | repo |
 | --- | --- | --- |
 | `sha2-256`, `sha2-512` | `require('multiformats/hashes/sha2')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
+| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `require('@multiformats/sha3')` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
 
 ## Codec Implementations (multicodec)
 
