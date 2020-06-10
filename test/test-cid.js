@@ -1,11 +1,15 @@
 /* globals before, describe, it */
-'use strict'
-const crypto = require('crypto')
-const OLDCID = require('cids')
+import crypto from 'crypto'
+import OLDCID from 'cids'
+import assert from 'assert'
+import { toHex } from '../bytes.js'
+import multiformats from '../basics.js'
+import base58 from '../bases/base58.js'
+import base32 from '../bases/base32.js'
+import base64 from '../bases/base64.js'
+import util from 'util'
 const test = it
-const assert = require('assert')
 const same = assert.deepStrictEqual
-const { toHex } = require('../bytes')
 
 const testThrow = async (fn, message) => {
   try {
@@ -26,10 +30,10 @@ const testThrowAny = async fn => {
 }
 
 describe('CID', () => {
-  const { CID, multihash, multibase, varint } = require('../basics')
-  multibase.add(require('../bases/base58'))
-  multibase.add(require('../bases/base32'))
-  multibase.add(require('../bases/base64'))
+  const { CID, multihash, multibase, varint } = multiformats
+  multibase.add(base58)
+  multibase.add(base32)
+  multibase.add(base64)
   const hashes = [
     {
       encode: data => crypto.createHash('sha256').update(data).digest(),
@@ -338,7 +342,6 @@ describe('CID', () => {
   if (!process.browser) {
     test('util.inspect', () => {
       const cid = new CID(1, 112, hash)
-      const util = require('util')
       same(util.inspect(cid), 'CID(bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu)')
     })
   }

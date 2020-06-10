@@ -1,5 +1,4 @@
 /* globals before, describe, it */
-'use strict'
 import { Buffer } from 'buffer'
 import assert from 'assert'
 import multiformats from '../basics.js'

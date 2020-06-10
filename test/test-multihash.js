@@ -1,14 +1,15 @@
 /* globals describe, it */
-'use strict'
-const bytes = require('../bytes')
-const assert = require('assert')
+import * as bytes from '../bytes.js'
+import assert from 'assert'
+import { create as multiformat } from '../index.js'
+import intTable from 'multicodec/src/int-table.js'
+import valid from './fixtures/valid-multihash.js'
+import invalid from './fixtures/invalid-multihash.js'
+import crypto from 'crypto'
+import sha2 from '../hashes/sha2.js'
 const same = assert.deepStrictEqual
-const multiformat = require('../')
-const intTable = require('multicodec/src/int-table')
-const valid = require('./fixtures/valid-multihash.js')
-const invalid = require('./fixtures/invalid-multihash.js')
 const test = it
-
+const encode = name => data => bytes.coerce(crypto.createHash(name).update(data).digest())
 const table = Array.from(intTable.entries())
 
 const sample = (code, size, hex) => {
@@ -30,12 +31,9 @@ const testThrowAsync = async (fn, message) => {
   throw new Error('Test failed to throw')
 }
 
-const crypto = require('crypto')
-const encode = name => data => bytes.coerce(crypto.createHash(name).update(data).digest())
-
 describe('multihash', () => {
   const { multihash } = multiformat(table)
-  multihash.add(require('../hashes/sha2'))
+  multihash.add(sha2)
   const { validate } = multihash
   const empty = new Uint8Array(0)
 

@@ -1,4 +1,3 @@
-'use strict'
 import baseX from 'base-x'
 import { coerce } from '../bytes.js'
 import { Buffer } from 'buffer'

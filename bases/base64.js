@@ -1,4 +1,3 @@
-'use strict'
 import * as b64 from './_base64.js'
 
 const create = alphabet => {

@@ -1,5 +1,3 @@
-'use strict'
-
 function decode (input, alphabet) {
   input = input.replace(new RegExp('=', 'g'), '')
   const length = input.length

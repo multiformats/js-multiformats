@@ -1,7 +1,7 @@
 /* globals describe, it */
-'use strict'
-const assert = require('assert')
-const multiformat = require('../')()
+import assert from 'assert'
+import { create } from '../index.js'
+const multiformat = create()
 const test = it
 
 describe('errors and type checking', () => {

@@ -1,9 +1,8 @@
 /* globals describe, it */
-'use strict'
-const bytes = require('../bytes')
-const assert = require('assert')
+import * as bytes from '../bytes.js'
+import assert from 'assert'
+import multiformats from '../basics.js'
 const same = assert.deepStrictEqual
-const multiformats = require('../basics')
 const test = it
 
 const testThrow = async (fn, message) => {

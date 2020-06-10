@@ -1,4 +1,3 @@
-'use strict'
 import { fromHex, toHex } from '../bytes.js'
 
 const create = function base16 (alphabet) {

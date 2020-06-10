@@ -1,4 +1,3 @@
-'use strict'
 import * as bytes from './bytes.js'
 import withIs from 'class-is'
 
