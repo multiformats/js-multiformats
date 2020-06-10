@@ -14,7 +14,7 @@ which can greatly reduce dependencies and bundle size.
 
 ```js
 const { multihash, multicodec, CID } = require('multiformats')()
-const sha2 = require('@multiformats/sha2')
+const sha2 = require('multiformats/hashes/sha2')
 const dagcbor = require('@ipld/dag-cbor')
 multihash.add(sha2)
 multicodec.add(dagcbor)
