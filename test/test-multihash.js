@@ -102,10 +102,7 @@ describe('multihash', () => {
   test('throw on hashing non-buffer', async () => {
     await testThrowAsync(() => multihash.hash('asdf'), 'Unknown type, must be binary type')
   })
-  if (process.browser) {
-    test('browser bundle', () => {
-      const mod = require('../hashes/sha2')
-      same(mod.___browser, true)
-    })
-  }
+  test('browser', () => {
+    same(sha2.__browser, !!process.browser)
+  })
 })

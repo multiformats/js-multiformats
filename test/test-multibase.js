@@ -7,6 +7,7 @@ import base32 from '../bases/base32.js'
 import base58 from '../bases/base58.js'
 import base64 from '../bases/base64.js'
 import basics from '../basics.js'
+import { __browser } from '../bases/_base64.js'
 const basicsMultibase = basics.multibase
 const same = assert.deepStrictEqual
 const test = it
@@ -27,6 +28,9 @@ describe('multibase', () => {
   multibase.add(base32)
   multibase.add(base58)
   multibase.add(base64)
+  test('browser', () => {
+    same(__browser, !!process.browser)
+  })
 
   for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
     describe(`basics ${base}`, () => {

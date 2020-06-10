@@ -12,6 +12,6 @@ const hashes = [
     code: 0x13
   }
 ]
-hashes.___browser = true
+hashes.__browser = true
 
 export default hashes

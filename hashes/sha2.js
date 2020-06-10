@@ -7,7 +7,7 @@ const bufferToUint8Array = (buffer) => {
 const sha256 = async data => bufferToUint8Array(crypto.createHash('sha256').update(data).digest())
 const sha512 = async data => bufferToUint8Array(crypto.createHash('sha512').update(data).digest())
 
-export default [
+const hashes = [
   {
     name: 'sha2-256',
     encode: sha256,
@@ -19,3 +19,5 @@ export default [
     code: 0x13
   }
 ]
+hashes.__browser = false
+export default hashes
