@@ -77,18 +77,7 @@ However, you can import the following bundles to get a `multiformats` interface 
 
 Returns a new multiformats interface.
 
-Can optionally pass in a table of multiformat entries. For instance,
-if you want to add all the metadata entires in the multiformat table
-you can do the following:
-
-```js
-const intTable = require('multicodec/src/int-table')
-const table = Array.from(intTable.entries())
-const multiformat = require('multiformat')(table)
-```
-
-This will give you name properties for any parsed CID's and multihashes.
-It will not include any of the codec or hash function implementations.
+Can optionally pass in a table of multiformat entries.
 
 # multihash
 
