@@ -1,8 +1,8 @@
 /* globals describe, it */
+import * as bytes from '../bytes.js'
+import { deepStrictEqual } from 'assert'
 const test = it
-const bytes = require('../bytes')
-const assert = require('assert')
-const same = assert.deepStrictEqual
+const same = deepStrictEqual
 
 describe('bytes', () => {
   test('isBinary', () => {

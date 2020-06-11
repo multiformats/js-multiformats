@@ -1,9 +1,15 @@
 /* globals describe, it */
-'use strict'
-const bytes = require('../bytes')
-const assert = require('assert')
+import * as bytes from '../bytes.js'
+import assert from 'assert'
+import { create as multiformat } from '../index.js'
+import base16 from '../bases/base16.js'
+import base32 from '../bases/base32.js'
+import base58 from '../bases/base58.js'
+import base64 from '../bases/base64.js'
+import basics from '../basics.js'
+import { __browser } from '../bases/_base64.js'
+const basicsMultibase = basics.multibase
 const same = assert.deepStrictEqual
-const multiformat = require('../')
 const test = it
 
 const testThrow = (fn, message) => {
@@ -18,10 +24,13 @@ const testThrow = (fn, message) => {
 
 describe('multibase', () => {
   const { multibase } = multiformat()
-  multibase.add(require('../bases/base16'))
-  multibase.add(require('../bases/base32'))
-  multibase.add(require('../bases/base58'))
-  multibase.add(require('../bases/base64'))
+  multibase.add(base16)
+  multibase.add(base32)
+  multibase.add(base58)
+  multibase.add(base64)
+  test('browser', () => {
+    same(__browser, !!process.browser)
+  })
 
   for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
     describe(`basics ${base}`, () => {
@@ -77,22 +86,21 @@ describe('multibase', () => {
     })
   }
   describe('base16', () => {
-    baseTest(require('../bases/base16'))
+    baseTest(base16)
   })
   describe('base32', () => {
-    baseTest(require('../bases/base32'))
+    baseTest(base32)
   })
   describe('base58', () => {
-    baseTest(require('../bases/base58'))
+    baseTest(base58)
   })
   describe('base64', () => {
-    baseTest(require('../bases/base64'))
+    baseTest(base64)
   })
   test('has', () => {
-    const { multibase } = require('../basics')
-    same(multibase.has('E'), false)
-    same(multibase.has('baseNope'), false)
-    same(multibase.has('base32'), true)
-    same(multibase.has('c'), true)
+    same(basicsMultibase.has('E'), false)
+    same(basicsMultibase.has('baseNope'), false)
+    same(basicsMultibase.has('base32'), true)
+    same(basicsMultibase.has('c'), true)
   })
 })

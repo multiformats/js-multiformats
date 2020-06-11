@@ -13,16 +13,17 @@ This allows you to pass around an interface containing only the code you need
 which can greatly reduce dependencies and bundle size.
 
 ```js
-const { multihash, multicodec, CID } = require('multiformats')()
-const sha2 = require('multiformats/hashes/sha2')
-const dagcbor = require('@ipld/dag-cbor')
+import { create } from 'multiformats'
+import sha2 from 'multiformats/hashes/sha2'
+import dagcbor from '@ipld/dag-cbor'
+const { multihash, multicodec, CID } = create()
 multihash.add(sha2)
 multicodec.add(dagcbor)
 
 const buffer = multicodec.encode({ hello, 'world' }, 'dag-cbor')
-const hash = await multiformats.multihash.hash(buffer, 'sha2-256')
+const hash = await multihash.hash(buffer, 'sha2-256')
 // raw codec is the only codec that is there by default
-const cid = new multiformats.CID(1, 'raw', hash)
+const cid = new CID(1, 'raw', hash)
 ```
 
 However, if you're doing this much you should probably use multiformats
@@ -30,10 +31,11 @@ with the `Block` API.
 
 ```js
 // Import basics package with dep-free codecs, hashes, and base encodings
-const multiformats = require('multiformats/basics')
-const dagcbor = require('@ipld/dag-cbor')
+import multiformats from 'multiformats/basics'
+import dagcbor from '@ipld/dag-cbor'
+import { create } from '@ipld/block' // Yet to be released Block interface
 multiformats.multicodec.add(dagcbor)
-const Block = require('@ipld/block')(multiformats)
+const Block = create(multiformats)
 const block = Block.encoder({ hello: world }, 'dag-cbor')
 const cid = await block.cid()
 ```
@@ -51,25 +53,25 @@ However, you can import the following bundles to get a `multiformats` interface 
 
 | bases | import | repo |
  --- | --- | --- |
-`base16` | `require('multiformats/bases/base16')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `require('multiformats/bases/base32')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base64`, `base64pad`, `base64url`, `base64urlpad` | `require('multiformats/bases/base64')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base58btc`, `base58flick4` | `require('multiformats/bases/base58')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base16` | `'multiformats/bases/base16'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `'multiformats/bases/base32'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base64`, `base64pad`, `base64url`, `base64urlpad` | `'multiformats/bases/base64'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base58btc`, `base58flick4` | `'multiformats/bases/base58'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 
 ## Hash Functions (multihash)
 
 | hashes | import | repo |
 | --- | --- | --- |
-| `sha2-256`, `sha2-512` | `require('multiformats/hashes/sha2')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
-| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `require('@multiformats/sha3')` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
+| `sha2-256`, `sha2-512` | `'multiformats/hashes/sha2'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
+| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `'@multiformats/sha3'` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
 
 ## Codec Implementations (multicodec)
 
 | codec | import | repo |
 | --- | --- | --- |
-| `raw` | `require('multiformats/codecs/raw')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
-| `json` | `require('multiformats/codecs/json')` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
-| `dag-cbor` | `require('@ipld/dag-cbor')` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
+| `raw` | `'multiformats/codecs/raw'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+| `json` | `'multiformats/codecs/json'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+| `dag-cbor` | `'@ipld/dag-cbor'` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
 
 # API
 

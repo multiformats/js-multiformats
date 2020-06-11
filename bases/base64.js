@@ -1,5 +1,4 @@
-'use strict'
-const b64 = require('./_base64')
+import * as b64 from './_base64.js'
 
 const create = alphabet => {
   // The alphabet is only used to know:
@@ -42,7 +41,7 @@ const base64pad = create('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01
 const base64url = create('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_')
 const base64urlpad = create('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=')
 
-module.exports = [
+export default [
   { prefix: 'm', name: 'base64', ...base64 },
   { prefix: 'M', name: 'base64pad', ...base64pad },
   { prefix: 'u', name: 'base64url', ...base64url },

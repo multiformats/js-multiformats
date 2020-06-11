@@ -1,6 +1,6 @@
-const CID = require('cids')
-const bytes = require('./bytes')
-const { Buffer } = require('buffer')
+import CID from 'cids'
+import * as bytes from './bytes.js'
+import { Buffer } from 'buffer'
 
 const legacy = (multiformats, name) => {
   const toLegacy = obj => {
@@ -68,4 +68,4 @@ const legacy = (multiformats, name) => {
   return { defaultHashAlg, codec, util, resolver }
 }
 
-module.exports = legacy
+export default legacy
