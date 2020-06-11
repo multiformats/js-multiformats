@@ -53,26 +53,26 @@ However, you can import the following bundles to get a `multiformats` interface 
 
 | bases | import | repo |
  --- | --- | --- |
-`base16` | `'multiformats/bases/base16'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `'multiformats/bases/base32'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base64`, `base64pad`, `base64url`, `base64urlpad` | `'multiformats/bases/base64'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base58btc`, `base58flick4` | `'multiformats/bases/base58'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base16` | `multiformats/bases/base16` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `multiformats/bases/base32` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base64`, `base64pad`, `base64url`, `base64urlpad` | `multiformats/bases/base64` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+`base58btc`, `base58flick4` | `multiformats/bases/base58` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 
 ## Hash Functions (multihash)
 
 | hashes | import | repo |
 | --- | --- | --- |
-| `sha2-256`, `sha2-512` | `'multiformats/hashes/sha2'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
-| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `'@multiformats/sha3'` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
+| `sha2-256`, `sha2-512` | `multiformats/hashes/sha2` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
+| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `@multiformats/sha3` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
 | `murmur3-128`, `murmur3-32` | `@multiformats/murmur3` | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3) |
 
 ## Codec Implementations (multicodec)
 
 | codec | import | repo |
 | --- | --- | --- |
-| `raw` | `'multiformats/codecs/raw'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
-| `json` | `'multiformats/codecs/json'` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
-| `dag-cbor` | `'@ipld/dag-cbor'` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
+| `raw` | `multiformats/codecs/raw` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+| `json` | `multiformats/codecs/json` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
+| `dag-cbor` | `@ipld/dag-cbor` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
 
 # API
 
