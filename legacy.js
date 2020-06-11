@@ -34,6 +34,8 @@ const legacy = (multiformats, name) => {
     const defaults = { cidVersion: 1, hashAlg: 'sha2-256' }
     const { cidVersion, hashAlg } = { ...defaults, ...opts }
     const hash = await multiformats.multihash.hash(buff, hashAlg)
+    // https://github.com/bcoe/c8/issues/135
+    /* c8 ignore next */
     return new CID(cidVersion, name, Buffer.from(hash))
   }
   const resolve = (buff, path) => {

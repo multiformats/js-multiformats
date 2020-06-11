@@ -40,6 +40,8 @@ const createMultihash = multiformats => {
     buff = bytes.coerce(buff)
     const info = get(key)
     if (!info || !info.encode) throw new Error(`Missing hash implementation for "${key}"`)
+    // https://github.com/bcoe/c8/issues/135
+    /* c8 ignore next */
     return encode(await info.encode(buff), key)
   }
   const validate = async (_hash, buff) => {
@@ -51,6 +53,8 @@ const createMultihash = multiformats => {
       buff = await encode(buff)
       if (!bytes.equals(buff, digest)) throw new Error('Buffer does not match hash')
     }
+    // https://github.com/bcoe/c8/issues/135
+    /* c8 ignore next */
     return true
   }
   return { encode, has, decode, hash, validate, add, get }

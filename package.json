@@ -9,7 +9,7 @@
     "test:node": "hundreds mocha test/test-*.js",
     "test:browser": "polendina --cleanup test/test-*.js",
     "test": "npm run pre:test && npm run test:node && npm run test:browser",
-    "coverage": "nyc --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
+    "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
@@ -19,15 +19,16 @@
     "./bases/_base64.js": "./bases/_base64-browser.js"
   },
   "devDependencies": {
-    "hundreds": "0.0.2",
-    "mocha": "^7.1.1",
+    "c8": "^7.2.0",
+    "hundreds": "0.0.4",
+    "mocha": "^8.0.1",
     "polendina": "^1.0.0",
-    "standard": "^14.3.3"
+    "standard": "^14.3.4"
   },
   "dependencies": {
     "base-x": "^3.0.8",
     "buffer": "^5.6.0",
-    "cids": "^0.8.0",
+    "cids": "^0.8.1",
     "class-is": "^1.1.0",
     "varint": "^5.0.0"
   },
