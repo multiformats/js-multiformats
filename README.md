@@ -14,7 +14,7 @@ which can greatly reduce dependencies and bundle size.
 
 ```js
 import { create } from 'multiformats'
-import sha2 from 'multiformats/hashes/sha2'
+import sha2 from 'multiformats/hashes/sha2.js'
 import dagcbor from '@ipld/dag-cbor'
 const { multihash, multicodec, CID } = create()
 multihash.add(sha2)
@@ -31,7 +31,7 @@ with the `Block` API.
 
 ```js
 // Import basics package with dep-free codecs, hashes, and base encodings
-import multiformats from 'multiformats/basics'
+import multiformats from 'multiformats/basics.js'
 import dagcbor from '@ipld/dag-cbor'
 import { create } from '@ipld/block' // Yet to be released Block interface
 multiformats.multicodec.add(dagcbor)
