@@ -36,7 +36,7 @@ jobs:
       uses: actions/cache@v1
       with:
         path: node_modules
-        key: 12.x-build-${{ hashFiles('package.json') }}
+        key: 12.x-${{ runner.OS }}-build-${{ hashFiles('package.json') }}
     - name: Build
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
