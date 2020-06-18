@@ -1,5 +1,6 @@
 import varints from 'varint'
 import createCID from './cid.js'
+import legacy from './legacy.js'
 import * as bytes from './bytes.js'
 
 const cache = new Map()
@@ -196,4 +197,4 @@ const create = (table = []) => {
   multiformats.CID = createCID(multiformats)
   return multiformats
 }
-export { create, bytes, varint }
+export { create, bytes, varint, legacy }
