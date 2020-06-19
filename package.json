@@ -5,10 +5,13 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "pre:test": "standard",
+    "build": "rollup --config rollup.config.js",
+    "prepublishOnly": "npm run build",
+    "lint": "standard",
+    "test:cjs": "npm run build && mocha test/cjs/test.cjs",
     "test:node": "hundreds mocha test/test-*.js",
     "test:browser": "polendina --cleanup test/test-*.js",
-    "test": "npm run pre:test && npm run test:node && npm run test:browser",
+    "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
@@ -18,12 +21,19 @@
     "./hashes/sha2.js": "./hashes/sha2-browser.js",
     "./bases/_base64.js": "./bases/_base64-browser.js"
   },
+  "exports": {
+    "require": "./dist/bundle.cjs"
+  },
   "devDependencies": {
     "c8": "^7.2.0",
     "hundreds": "0.0.4",
     "mocha": "^8.0.1",
     "polendina": "^1.0.0",
+    "rollup": "^2.17.1",
     "standard": "^14.3.4"
+  },
+  "standard": {
+    "ignore": [ "dist" ]
   },
   "dependencies": {
     "base-x": "^3.0.8",

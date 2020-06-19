@@ -1,5 +1,6 @@
 .nyc_output
 build
+dist
 coverage
 package-lock.json
 node_modules
