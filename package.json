@@ -8,7 +8,7 @@
     "build": "rollup --config rollup.config.js",
     "prepublishOnly": "npm run build",
     "lint": "standard",
-    "test:cjs": "npm run build && mocha test/cjs/test.cjs",
+    "test:cjs": "npm run build && mocha dist/test/test-*.cjs",
     "test:node": "hundreds mocha test/test-*.js",
     "test:browser": "polendina --cleanup test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
@@ -41,6 +41,11 @@
     "./legacy.js": {
       "import": "./legacy.js",
       "require": "./dist/legacy.cjs"
+    },
+    "./bases/_base64.js": {
+      "import": "./bases/_base64.js",
+      "require": "./dist/bases/_base64.cjs",
+      "browser": "./bases/_base64-browser.js"
     },
     "./bases/base16.js": {
       "import": "./bases/base16.js",
