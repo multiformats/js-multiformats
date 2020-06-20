@@ -40,6 +40,9 @@ const block = Block.encoder({ hello: world }, 'dag-cbor')
 const cid = await block.cid()
 ```
 
+If you cannot use `import` because your module is still using CJS you
+can use `require()` and the module is the interface from `multiformats/basics.js`.
+
 # Plugins
 
 By default, no base encodings, hash functions, or codec implementations are included with `multiformats`.
