@@ -22,23 +22,77 @@
     "./bases/_base64.js": "./bases/_base64-browser.js"
   },
   "exports": {
-    "require": "./dist/bundle.cjs"
+    ".": {
+      "import": "./index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./basics.js": {
+      "import": "./basics.js",
+      "require": "./dist/basics.cjs"
+    },
+    "./bytes.js": {
+      "import": "./bytes.js",
+      "require": "./dist/bytes.cjs"
+    },
+    "./cid.js": {
+      "import": "./cid.js",
+      "require": "./dist/cid.cjs"
+    },
+    "./legacy.js": {
+      "import": "./legacy.js",
+      "require": "./dist/legacy.cjs"
+    },
+    "./bases/base16.js": {
+      "import": "./bases/base16.js",
+      "require": "./dist/bases/base16.cjs"
+    },
+    "./bases/base32.js": {
+      "import": "./bases/base32.js",
+      "require": "./dist/bases/base32.cjs"
+    },
+    "./bases/base58.js": {
+      "import": "./bases/base58.js",
+      "require": "./dist/bases/base58.cjs"
+    },
+    "./bases/base64.js": {
+      "import": "./bases/base64.js",
+      "require": "./dist/bases/base64.cjs"
+    },
+    "./hashes/sha2-browser.js": {
+      "import": "./hashes/sha2-browser.js",
+      "require": "./dist/hashes/sha2-browser.cjs"
+    },
+    "./hashes/sha2.js": {
+      "import": "./hashes/sha2.js",
+      "require": "./dist/hashes/sha2.cjs"
+    },
+    "./codecs/json.js": {
+      "import": "./codecs/json.js.js",
+      "require": "./dist/codecs/json.cjs"
+    },
+    "./codecs/raw.js": {
+      "import": "./codecs/raw.js.js",
+      "require": "./dist/codecs/raw.cjs"
+    }
   },
   "devDependencies": {
     "c8": "^7.2.0",
-    "hundreds": "0.0.4",
+    "globby": "^11.0.1",
+    "hundreds": "0.0.7",
     "mocha": "^8.0.1",
     "polendina": "^1.0.0",
     "rollup": "^2.17.1",
     "standard": "^14.3.4"
   },
   "standard": {
-    "ignore": [ "dist" ]
+    "ignore": [
+      "dist"
+    ]
   },
   "dependencies": {
     "base-x": "^3.0.8",
     "buffer": "^5.6.0",
-    "cids": "^0.8.1",
+    "cids": "^0.8.3",
     "class-is": "^1.1.0",
     "varint": "^5.0.0"
   },
