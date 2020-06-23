@@ -69,7 +69,8 @@
     },
     "./hashes/sha2.js": {
       "import": "./hashes/sha2.js",
-      "require": "./dist/hashes/sha2.cjs"
+      "require": "./dist/hashes/sha2.cjs",
+      "browser": "./hashes/sha2-browser.js"
     },
     "./codecs/json.js": {
       "import": "./codecs/json.js.js",
