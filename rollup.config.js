@@ -10,11 +10,17 @@ const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json')))
 const relativeToMain = name => ({
   name: 'relative-to-main',
   renderChunk: source => {
-    while (source.includes("require('../index.js')")) {
-      source = source.replace("require('../index.js')", `require('${name}')`)
-    }
-    while (source.includes("require('../')")) {
-      source = source.replace("require('../", `require('${name}/`)
+    const lines = source.split('\n')
+    source = ''
+    for (let line of lines) {
+      if (line.includes("require('../index.cjs')")) {
+        line = line.replace("require('../index.cjs')", `require('${name}')`)
+      }
+      if (line.includes("require('../")) {
+        line = line.replace("require('../", `require('${name}/`)
+        line = line.replace('.cjs', '.js')
+      }
+      source += line + '\n'
     }
     return source
   }
@@ -22,6 +28,7 @@ const relativeToMain = name => ({
 
 const plugins = [relativeToMain(pkg.name)]
 const dir = 'dist'
+const preserveModules = true
 const output = { dir, plugins, format: 'cjs', entryFileNames: '[name].cjs' }
 const testdir = join(__dirname, 'test')
 const filter = name => name.startsWith('test-')
