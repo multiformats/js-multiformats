@@ -29,7 +29,7 @@ describe('multibase', () => {
   multibase.add(base58)
   multibase.add(base64)
   test('browser', () => {
-    same(__browser, !!process.browser)
+    same(!!__browser, !!process.browser)
   })
 
   for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
