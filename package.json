@@ -10,7 +10,7 @@
     "lint": "standard",
     "test:cjs": "npm run build && mocha dist/test/test-*.cjs",
     "test:node": "hundreds mocha test/test-*.js",
-    "test:browser": "polendina --cleanup test/test-*.js",
+    "test:browser": "polendina --webpack-config polendina.webpack.config.cjs --cleanup test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
