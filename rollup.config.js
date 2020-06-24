@@ -1,40 +1,34 @@
-import globby from 'globby'
-import path from 'path'
+import { readdirSync, readFileSync } from 'fs'
+import { fileURLToPath } from 'url'
+import { dirname, join } from 'path'
 
-let configs = []
+const __filename = fileURLToPath(import.meta.url)
+const __dirname = dirname(__filename)
 
-const _filter = p => !p.includes('/_') && !p.includes('rollup.config')
+const pkg = JSON.parse(readFileSync(join(__dirname, 'package.json')))
 
 const relativeToMain = name => ({
   name: 'relative-to-main',
   renderChunk: source => {
     while (source.includes("require('../index.js')")) {
-      source = source.replace("require('../index.js')", "require('multiformats')")
+      source = source.replace("require('../index.js')", `require('${name}')`)
     }
-    while (source.includes("require('../")) {
-      source = source.replace('require(\'../', 'require(\'multiformats/')
+    while (source.includes("require('../')")) {
+      source = source.replace("require('../", `require('${name}/`)
     }
     return source
   }
 })
 
-const plugins = [relativeToMain('multiformats')]
-const add = (pattern) => {
-  configs = configs.concat(globby.sync(pattern).filter(_filter).map(inputFile => ({
-    input: inputFile,
-    output: {
-      plugins: pattern.startsWith('test') ? plugins : null,
-      file: path.join('dist', inputFile).replace('.js', '.cjs'),
-      format: 'cjs'
-    }
-  })))
-}
-add('*.js')
-add('bases/*.js')
-add('hashes/*.js')
-add('codecs/*.js')
-add('test/*.js')
-add('test/fixtures/*.js')
+const plugins = [relativeToMain(pkg.name)]
+const dir = 'dist'
+const output = { dir, plugins, format: 'cjs', entryFileNames: '[name].cjs' }
+const testdir = join(__dirname, 'test')
+const filter = name => name.startsWith('test-')
+const createConfig = f => ({ input: join('test', f), output })
+
+const configs = readdirSync(testdir).filter(filter).map(createConfig)
+
 console.log(configs)
 
 export default configs
