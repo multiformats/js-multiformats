@@ -2,11 +2,11 @@
 import crypto from 'crypto'
 import OLDCID from 'cids'
 import assert from 'assert'
-import { toHex } from '../bytes.js'
-import multiformats from '../basics.js'
-import base58 from '../bases/base58.js'
-import base32 from '../bases/base32.js'
-import base64 from '../bases/base64.js'
+import { toHex } from 'multiformats/bytes.js'
+import multiformats from 'multiformats/basics.js'
+import base58 from 'multiformats/bases/base58.js'
+import base32 from 'multiformats/bases/base32.js'
+import base64 from 'multiformats/bases/base64.js'
 import util from 'util'
 const test = it
 const same = assert.deepStrictEqual

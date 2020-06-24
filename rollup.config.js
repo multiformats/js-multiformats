@@ -3,7 +3,7 @@ import path from 'path'
 
 let configs = []
 
-const _filter = p => !p.includes('/_') && !p.includes('rollup.config')
+const _filter = p => !p.includes('rollup.config')
 
 const relativeToMain = name => ({
   name: 'relative-to-main',
