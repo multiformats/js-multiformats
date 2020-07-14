@@ -29,6 +29,7 @@ export default multiformats => {
         writable: false,
         enumerable: false
       })
+      readonly(this, 'asCID', this)
       if (_CID.isCID(cid)) {
         readonly(this, 'version', cid.version)
         readonly(this, 'multihash', bytes.coerce(cid.multihash))
