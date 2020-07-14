@@ -157,6 +157,29 @@ export default multiformats => {
       return true
     }
 
+    /**
+     * Takes any input `value` and returns a `CID` instance if it was
+     * a `CID` otherwise returns `null`. If `value` is instanceof `CID`
+     * it will return value back. If `value` is not instance of this CID
+     * class, but is compatible CID it will return new instance of this
+     * `CID` class. Otherwise returs null.
+     *
+     * This allows two different incompatible versions of CID library to
+     * co-exist and interop as long as binary interface is compatible.
+     * @param {any} value
+     * @returns {CID|null}
+     */
+    static asCID (value) {
+      if (value instanceof CID) {
+        return value
+      } else if (value != null && value.asCID === value) {
+        const { version, code, multihash } = value
+        return new CID(version, code, multihash)
+      } else {
+        return null
+      }
+    }
+
     static isCID (value) {
       return !!(value && value[cidSymbol])
     }

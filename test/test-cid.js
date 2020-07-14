@@ -332,6 +332,51 @@ describe('CID', () => {
     const cid = new CID(1, 112, hash)
     assert.ok(OLDCID.isCID(cid))
   })
+
+  test('asCID', () => {
+    class IncompatibleCID {
+      constructor (version, code, multihash) {
+        this.version = version
+        this.code = code
+        this.multihash = multihash
+        this.asCID = this
+      }
+
+      get [Symbol.for('@ipld/js-cid/CID')] () {
+        return true
+      }
+    }
+
+    const version = 1
+    const code = 112
+    const multihash = hash
+
+    const incompatibleCID = new IncompatibleCID(version, code, multihash)
+    assert.ok(CID.isCID(incompatibleCID))
+    assert.strictEqual(incompatibleCID.toString(), '[object Object]')
+    assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
+
+    const cid1 = CID.asCID(incompatibleCID)
+    assert.ok(cid1 instanceof CID)
+    assert.strictEqual(cid1.code, code)
+    assert.strictEqual(cid1.version, version)
+    assert.strictEqual(cid1.multihash, multihash)
+
+    const cid2 = CID.asCID({ version, code, multihash })
+    assert.strictEqual(cid2, null)
+
+    const duckCID = { version, code, multihash }
+    duckCID.asCID = duckCID
+    const cid3 = CID.asCID(duckCID)
+    assert.ok(cid3 instanceof CID)
+    assert.strictEqual(cid3.code, code)
+    assert.strictEqual(cid3.version, version)
+    assert.strictEqual(cid3.multihash, multihash)
+
+    const cid4 = CID.asCID(cid3)
+    assert.strictEqual(cid3, cid4)
+  })
+
   test('new CID from old CID', () => {
     const cid = new CID(new OLDCID(1, 'raw', Buffer.from(hash)))
     same(cid.version, 1)
