@@ -8,6 +8,18 @@ const readonly = (object, key, value) => {
   })
 }
 
+// ESM does not support importing package.json where this version info
+// should come from. To workaround it version is copied here.
+const version = '0.0.0-dev'
+// Start throwing exceptions on major version bump
+const deprecate = (range, message) => {
+  if (range.test(version)) {
+    console.warn(message)
+  } else {
+    throw new Error(message)
+  }
+}
+
 export default multiformats => {
   const { multibase, varint, multihash } = multiformats
   const parse = buff => {
@@ -181,6 +193,21 @@ export default multiformats => {
     }
 
     static isCID (value) {
+      deprecate(/^0\.0/, `CID.isCID(v) is deprecated and will be removed in the next major release.
+Following code pattern:
+
+if (CID.isCID(value)) {
+  doSomethingWithCID(value)
+} 
+
+Is replaced with:
+
+const cid = CID.asCID(value)
+if (cid) {
+  // Make sure to use cid instead of value
+  doSomethingWithCID(cid)
+}
+`)
       return !!(value && value[cidSymbol])
     }
   }
