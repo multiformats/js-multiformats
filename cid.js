@@ -1,5 +1,4 @@
 import * as bytes from './bytes.js'
-import withIs from 'class-is'
 
 const readonly = (object, key, value) => {
   Object.defineProperty(object, key, {
@@ -22,6 +21,9 @@ export default multiformats => {
       ...multihash
     ])
   }
+
+  const cidSymbol = Symbol.for('@ipld/js-cid/CID')
+
   class CID {
     constructor (cid, ...args) {
       Object.defineProperty(this, '_baseCache', {
@@ -29,7 +31,7 @@ export default multiformats => {
         writable: false,
         enumerable: false
       })
-      if (_CID.isCID(cid)) {
+      if (CID.isCID(cid)) {
         readonly(this, 'version', cid.version)
         readonly(this, 'multihash', bytes.coerce(cid.multihash))
         readonly(this, 'buffer', bytes.coerce(cid.buffer))
@@ -103,11 +105,11 @@ export default multiformats => {
         throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
       }
 
-      return new _CID(0, this.code, this.multihash)
+      return new CID(0, this.code, this.multihash)
     }
 
     toV1 () {
-      return new _CID(1, this.code, this.multihash)
+      return new CID(1, this.code, this.multihash)
     }
 
     get toBaseEncodedString () {
@@ -145,11 +147,19 @@ export default multiformats => {
         this.version === other.version &&
         bytes.equals(this.multihash, other.multihash)
     }
+
+    get [Symbol.toStringTag] () {
+      return 'CID'
+    }
+
+    get [cidSymbol] () {
+      return true
+    }
+
+    static isCID (value) {
+      return !!(value && value[cidSymbol])
+    }
   }
 
-  const _CID = withIs(CID, {
-    className: 'CID',
-    symbolName: '@ipld/js-cid/CID'
-  })
-  return _CID
+  return CID
 }
