@@ -10,7 +10,7 @@
     "lint": "standard",
     "test:cjs": "npm run build && mocha dist/test/test-*.cjs",
     "test:node": "hundreds mocha test/test-*.js",
-    "test:browser": "polendina --cleanup test/test-*.js",
+    "test:browser": "polendina --webpack-config polendina.webpack.config.cjs --cleanup test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
@@ -23,6 +23,10 @@
   },
   "exports": {
     ".": {
+      "import": "./index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./index.js": {
       "import": "./index.js",
       "require": "./dist/index.cjs"
     },
@@ -43,9 +47,9 @@
       "require": "./dist/legacy.cjs"
     },
     "./bases/_base64.js": {
+      "browser": "./bases/_base64-browser.js",
       "import": "./bases/_base64.js",
-      "require": "./dist/bases/_base64.cjs",
-      "browser": "./bases/_base64-browser.js"
+      "require": "./dist/bases/_base64.cjs"
     },
     "./bases/base16.js": {
       "import": "./bases/base16.js",
@@ -63,21 +67,17 @@
       "import": "./bases/base64.js",
       "require": "./dist/bases/base64.cjs"
     },
-    "./hashes/sha2-browser.js": {
-      "import": "./hashes/sha2-browser.js",
-      "require": "./dist/hashes/sha2-browser.cjs"
-    },
     "./hashes/sha2.js": {
+      "browser": "./hashes/sha2-browser.js",
       "import": "./hashes/sha2.js",
-      "require": "./dist/hashes/sha2.cjs",
-      "browser": "./hashes/sha2-browser.js"
+      "require": "./dist/hashes/sha2.cjs"
     },
     "./codecs/json.js": {
-      "import": "./codecs/json.js.js",
+      "import": "./codecs/json.js",
       "require": "./dist/codecs/json.cjs"
     },
     "./codecs/raw.js": {
-      "import": "./codecs/raw.js.js",
+      "import": "./codecs/raw.js",
       "require": "./dist/codecs/raw.cjs"
     }
   },

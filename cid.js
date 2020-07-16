@@ -1,4 +1,4 @@
-import * as bytes from './bytes.js'
+import * as bytes from 'multiformats/bytes.js'
 import withIs from 'class-is'
 
 const readonly = (object, key, value) => {

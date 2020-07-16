@@ -1,8 +1,8 @@
 /* globals before, describe, it */
 import { Buffer } from 'buffer'
 import assert from 'assert'
-import multiformats from '../basics.js'
-import legacy from '../legacy.js'
+import multiformats from 'multiformats/basics.js'
+import legacy from 'multiformats/legacy.js'
 const same = assert.deepStrictEqual
 const test = it
 
