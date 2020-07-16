@@ -187,6 +187,8 @@ export default multiformats => {
       } else if (value != null && value.asCID === value) {
         const { version, code, multihash } = value
         return new CID(version, code, multihash)
+      } else if (value != null && value[cidSymbol] === true) {
+        return new CID(value)
       } else {
         return null
       }
