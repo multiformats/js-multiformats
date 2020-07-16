@@ -15,10 +15,28 @@ const version = '0.0.0-dev'
 const deprecate = (range, message) => {
   if (range.test(version)) {
     console.warn(message)
+  /* c8 ignore next 3 */
   } else {
     throw new Error(message)
   }
 }
+
+const IS_CID_DEPRECATION =
+`CID.isCID(v) is deprecated and will be removed in the next major release.
+Following code pattern:
+
+if (CID.isCID(value)) {
+  doSomethingWithCID(value)
+} 
+
+Is replaced with:
+
+const cid = CID.asCID(value)
+if (cid) {
+  // Make sure to use cid instead of value
+  doSomethingWithCID(cid)
+}
+`
 
 export default multiformats => {
   const { multibase, varint, multihash } = multiformats
@@ -44,7 +62,7 @@ export default multiformats => {
         enumerable: false
       })
       readonly(this, 'asCID', this)
-      if (CID.isCID(cid)) {
+      if (cid != null && cid[cidSymbol] === true) {
         readonly(this, 'version', cid.version)
         readonly(this, 'multihash', bytes.coerce(cid.multihash))
         readonly(this, 'buffer', bytes.coerce(cid.buffer))
@@ -182,34 +200,31 @@ export default multiformats => {
      * @returns {CID|null}
      */
     static asCID (value) {
+      // If value is instance of CID then we're all set.
       if (value instanceof CID) {
         return value
+      // If value isn't instance of this CID class but `this.asCID === this` is
+      // true it is CID instance coming from a different implemnetation (diff
+      // version or duplicate). In that case we rebase it to this `CID`
+      // implemnetation so caller is guaranteed to get instance with expected
+      // API.
       } else if (value != null && value.asCID === value) {
         const { version, code, multihash } = value
         return new CID(version, code, multihash)
+      // If value is a CID from older implementation that used to be tagged via
+      // symbol we still rebase it to the this `CID` implementation by
+      // delegating that to a constructor.
       } else if (value != null && value[cidSymbol] === true) {
         return new CID(value)
+      // Otherwise value is not a CID (or an incompatible version of it) in
+      // which case we return `null`.
       } else {
         return null
       }
     }
 
     static isCID (value) {
-      deprecate(/^0\.0/, `CID.isCID(v) is deprecated and will be removed in the next major release.
-Following code pattern:
-
-if (CID.isCID(value)) {
-  doSomethingWithCID(value)
-} 
-
-Is replaced with:
-
-const cid = CID.asCID(value)
-if (cid) {
-  // Make sure to use cid instead of value
-  doSomethingWithCID(cid)
-}
-`)
+      deprecate(/^0\.0/, IS_CID_DEPRECATION)
       return !!(value && value[cidSymbol])
     }
   }

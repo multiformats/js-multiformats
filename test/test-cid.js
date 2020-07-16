@@ -376,7 +376,7 @@ describe('CID', () => {
     const cid4 = CID.asCID(cid3)
     assert.strictEqual(cid3, cid4)
 
-    const cid5 = new CID(new OLDCID(1, 'raw', Buffer.from(hash)))
+    const cid5 = CID.asCID(new OLDCID(1, 'raw', Buffer.from(hash)))
     assert.ok(cid5 instanceof CID)
     assert.strictEqual(cid5.version, 1)
     same(cid5.multihash, hash)
