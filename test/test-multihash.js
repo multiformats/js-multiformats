@@ -1,12 +1,12 @@
 /* globals describe, it */
-import * as bytes from '../bytes.js'
+import * as bytes from 'multiformats/bytes.js'
 import assert from 'assert'
-import { create as multiformat } from '../index.js'
+import { create as multiformat } from 'multiformats/index.js'
 import intTable from 'multicodec/src/int-table.js'
 import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
 import crypto from 'crypto'
-import sha2 from '../hashes/sha2.js'
+import sha2 from 'multiformats/hashes/sha2.js'
 const same = assert.deepStrictEqual
 const test = it
 const encode = name => data => bytes.coerce(crypto.createHash(name).update(data).digest())

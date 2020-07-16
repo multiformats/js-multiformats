@@ -1,4 +1,4 @@
-import * as b64 from './_base64.js'
+import * as b64 from 'multiformats/bases/_base64.js'
 
 const create = alphabet => {
   // The alphabet is only used to know:
