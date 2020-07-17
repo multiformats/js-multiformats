@@ -8,7 +8,7 @@
     "build": "rollup --config rollup.config.js",
     "prepublishOnly": "npm run build",
     "lint": "standard",
-    "test:cjs": "npm run build && du -a dist && mocha dist/test/test-*.cjs",
+    "test:cjs": "rm -rf dist && npm run build && mocha dist/test/test-*.cjs",
     "test:node": "hundreds mocha test/test-*.js",
     "test:browser": "polendina --webpack-config polendina.webpack.config.cjs --cleanup test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
