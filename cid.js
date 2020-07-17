@@ -1,5 +1,4 @@
 import * as bytes from 'multiformats/bytes.js'
-import withIs from 'class-is'
 
 const readonly = (object, key, value) => {
   Object.defineProperty(object, key, {
@@ -8,6 +7,36 @@ const readonly = (object, key, value) => {
     enumerable: true
   })
 }
+
+// ESM does not support importing package.json where this version info
+// should come from. To workaround it version is copied here.
+const version = '0.0.0-dev'
+// Start throwing exceptions on major version bump
+const deprecate = (range, message) => {
+  if (range.test(version)) {
+    console.warn(message)
+  /* c8 ignore next 3 */
+  } else {
+    throw new Error(message)
+  }
+}
+
+const IS_CID_DEPRECATION =
+`CID.isCID(v) is deprecated and will be removed in the next major release.
+Following code pattern:
+
+if (CID.isCID(value)) {
+  doSomethingWithCID(value)
+} 
+
+Is replaced with:
+
+const cid = CID.asCID(value)
+if (cid) {
+  // Make sure to use cid instead of value
+  doSomethingWithCID(cid)
+}
+`
 
 export default multiformats => {
   const { multibase, varint, multihash } = multiformats
@@ -22,6 +51,9 @@ export default multiformats => {
       ...multihash
     ])
   }
+
+  const cidSymbol = Symbol.for('@ipld/js-cid/CID')
+
   class CID {
     constructor (cid, ...args) {
       Object.defineProperty(this, '_baseCache', {
@@ -30,7 +62,7 @@ export default multiformats => {
         enumerable: false
       })
       readonly(this, 'asCID', this)
-      if (_CID.isCID(cid)) {
+      if (cid != null && cid[cidSymbol] === true) {
         readonly(this, 'version', cid.version)
         readonly(this, 'multihash', bytes.coerce(cid.multihash))
         readonly(this, 'buffer', bytes.coerce(cid.buffer))
@@ -104,11 +136,11 @@ export default multiformats => {
         throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
       }
 
-      return new _CID(0, this.code, this.multihash)
+      return new CID(0, this.code, this.multihash)
     }
 
     toV1 () {
-      return new _CID(1, this.code, this.multihash)
+      return new CID(1, this.code, this.multihash)
     }
 
     get toBaseEncodedString () {
@@ -146,11 +178,56 @@ export default multiformats => {
         this.version === other.version &&
         bytes.equals(this.multihash, other.multihash)
     }
+
+    get [Symbol.toStringTag] () {
+      return 'CID'
+    }
+
+    get [cidSymbol] () {
+      return true
+    }
+
+    /**
+     * Takes any input `value` and returns a `CID` instance if it was
+     * a `CID` otherwise returns `null`. If `value` is instanceof `CID`
+     * it will return value back. If `value` is not instance of this CID
+     * class, but is compatible CID it will return new instance of this
+     * `CID` class. Otherwise returs null.
+     *
+     * This allows two different incompatible versions of CID library to
+     * co-exist and interop as long as binary interface is compatible.
+     * @param {any} value
+     * @returns {CID|null}
+     */
+    static asCID (value) {
+      // If value is instance of CID then we're all set.
+      if (value instanceof CID) {
+        return value
+      // If value isn't instance of this CID class but `this.asCID === this` is
+      // true it is CID instance coming from a different implemnetation (diff
+      // version or duplicate). In that case we rebase it to this `CID`
+      // implemnetation so caller is guaranteed to get instance with expected
+      // API.
+      } else if (value != null && value.asCID === value) {
+        const { version, code, multihash } = value
+        return new CID(version, code, multihash)
+      // If value is a CID from older implementation that used to be tagged via
+      // symbol we still rebase it to the this `CID` implementation by
+      // delegating that to a constructor.
+      } else if (value != null && value[cidSymbol] === true) {
+        return new CID(value)
+      // Otherwise value is not a CID (or an incompatible version of it) in
+      // which case we return `null`.
+      } else {
+        return null
+      }
+    }
+
+    static isCID (value) {
+      deprecate(/^0\.0/, IS_CID_DEPRECATION)
+      return !!(value && value[cidSymbol])
+    }
   }
 
-  const _CID = withIs(CID, {
-    className: 'CID',
-    symbolName: '@ipld/js-cid/CID'
-  })
-  return _CID
+  return CID
 }
