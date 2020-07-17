@@ -1,4 +1,4 @@
-import * as bytes from './bytes.js'
+import * as bytes from 'multiformats/bytes.js'
 
 const readonly = (object, key, value) => {
   Object.defineProperty(object, key, {

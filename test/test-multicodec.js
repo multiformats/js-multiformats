@@ -1,7 +1,7 @@
 /* globals describe, it */
-import * as bytes from '../bytes.js'
+import * as bytes from 'multiformats/bytes.js'
 import assert from 'assert'
-import multiformats from '../basics.js'
+import multiformats from 'multiformats/basics.js'
 const same = assert.deepStrictEqual
 const test = it
 

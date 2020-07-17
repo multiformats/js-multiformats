@@ -1,4 +1,4 @@
-import { coerce } from '../bytes.js'
+import { coerce } from 'multiformats/bytes.js'
 
 const raw = buff => coerce(buff)
 
