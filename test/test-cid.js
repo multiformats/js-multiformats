@@ -1,4 +1,4 @@
-/* globals before, describe, it */
+/* globals describe, it */
 import crypto from 'crypto'
 import OLDCID from 'cids'
 import assert from 'assert'
@@ -48,11 +48,6 @@ describe('CID', () => {
   ]
   multihash.add(hashes)
   const b58 = multibase.get('base58btc')
-  let hash
-
-  before(async () => {
-    hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
-  })
 
   describe('v0', () => {
     test('handles B58Str multihash', () => {
@@ -66,7 +61,8 @@ describe('CID', () => {
       same(cid.toString(), mhStr)
     })
 
-    test('create by parts', () => {
+    test('create by parts', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(0, 112, hash)
 
       same(cid.code, 112)
@@ -76,17 +72,30 @@ describe('CID', () => {
       same(cid.toString(), b58.encode(hash))
     })
 
-    test('throws on invalid BS58Str multihash ', () => {
+    test('create from multihash', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
+      const cid = new CID(hash)
+
+      same(cid.code, 112)
+      same(cid.version, 0)
+      same(cid.multihash, hash)
+      cid.toString()
+      same(cid.toString(), b58.encode(hash))
+    })
+
+    test('throws on invalid BS58Str multihash ', async () => {
       const msg = 'Non-base58 character'
       testThrow(() => new CID('QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zIII'), msg)
     })
 
-    test('throws on trying to create a CIDv0 with a codec other than dag-pb', () => {
+    test('throws on trying to create a CIDv0 with a codec other than dag-pb', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const msg = 'Version 0 CID must be 112 codec (dag-cbor)'
       testThrow(() => new CID(0, 113, hash), msg)
     })
 
-    test('throws on trying to pass specific base encoding [deprecated]', () => {
+    test('throws on trying to pass specific base encoding [deprecated]', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const msg = 'No longer supported, cannot specify base encoding in instantiation'
       testThrow(() => new CID(0, 112, hash, 'base32'), msg)
     })
@@ -98,7 +107,8 @@ describe('CID', () => {
       testThrow(() => cid.toString('base32'), msg)
     })
 
-    test('.buffer', () => {
+    test('.buffer', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const codec = 112
       const cid = new CID(0, codec, hash)
       const buffer = cid.buffer
@@ -134,14 +144,16 @@ describe('CID', () => {
       same(cid.toString(), cidStr)
     })
 
-    test('create by parts', () => {
+    test('create by parts', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 0x71, hash)
       same(cid.code, 0x71)
       same(cid.version, 1)
       same(cid.multihash, hash)
     })
 
-    test('can roundtrip through cid.toString()', () => {
+    test('can roundtrip through cid.toString()', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid1 = new CID(1, 0x71, hash)
       const cid2 = new CID(cid1.toString())
 
@@ -167,7 +179,8 @@ describe('CID', () => {
     })
     */
 
-    test('.buffer', () => {
+    test('.buffer', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const code = 0x71
       const cid = new CID(1, code, hash)
       const buffer = cid.buffer
@@ -248,13 +261,6 @@ describe('CID', () => {
       test(name, () => testThrowAny(() => new CID(1, 112, i)))
     }
     invalid.forEach(mapper)
-
-    const invalidVersions = [-1, 2]
-    mapper = i => {
-      const name = `new CID(${i}, 112, buffer)`
-      test(name, () => testThrowAny(new CID(i, 112, hash)))
-    }
-    invalidVersions.forEach(mapper)
   })
 
   describe('idempotence', () => {
@@ -301,7 +307,8 @@ describe('CID', () => {
       assert.ok(cid.buffer)
       same(cid.buffer, cid.buffer)
     })
-    test('should cache string representation when it matches the multibaseName it was constructed with', () => {
+    test('should cache string representation when it matches the multibaseName it was constructed with', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 112, hash)
       same(cid._baseCache.size, 0)
 
@@ -323,17 +330,20 @@ describe('CID', () => {
     })
   })
 
-  test('toJSON()', () => {
+  test('toJSON()', async () => {
+    const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
     const cid = new CID(1, 112, hash)
     same(cid.toJSON(), { code: 112, version: 1, hash })
   })
 
-  test('isCID', () => {
+  test('isCID', async () => {
+    const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
     const cid = new CID(1, 112, hash)
     assert.ok(OLDCID.isCID(cid))
   })
 
-  test('asCID', () => {
+  test('asCID', async () => {
+    const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
     class IncompatibleCID {
       constructor (version, code, multihash) {
         this.version = version
@@ -349,9 +359,9 @@ describe('CID', () => {
 
     const version = 1
     const code = 112
-    const multihash = hash
+    const _multihash = hash
 
-    const incompatibleCID = new IncompatibleCID(version, code, multihash)
+    const incompatibleCID = new IncompatibleCID(version, code, _multihash)
     assert.ok(CID.isCID(incompatibleCID))
     assert.strictEqual(incompatibleCID.toString(), '[object Object]')
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
@@ -360,18 +370,18 @@ describe('CID', () => {
     assert.ok(cid1 instanceof CID)
     assert.strictEqual(cid1.code, code)
     assert.strictEqual(cid1.version, version)
-    assert.strictEqual(cid1.multihash, multihash)
+    assert.strictEqual(cid1.multihash, _multihash)
 
-    const cid2 = CID.asCID({ version, code, multihash })
+    const cid2 = CID.asCID({ version, code, _multihash })
     assert.strictEqual(cid2, null)
 
-    const duckCID = { version, code, multihash }
+    const duckCID = { version, code, multihash: _multihash }
     duckCID.asCID = duckCID
     const cid3 = CID.asCID(duckCID)
     assert.ok(cid3 instanceof CID)
     assert.strictEqual(cid3.code, code)
     assert.strictEqual(cid3.version, version)
-    assert.strictEqual(cid3.multihash, multihash)
+    assert.strictEqual(cid3.multihash, _multihash)
 
     const cid4 = CID.asCID(cid3)
     assert.strictEqual(cid3, cid4)
@@ -383,7 +393,8 @@ describe('CID', () => {
     assert.strictEqual(cid5.code, 85)
   })
 
-  test('new CID from old CID', () => {
+  test('new CID from old CID', async () => {
+    const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
     const cid = new CID(new OLDCID(1, 'raw', Buffer.from(hash)))
     same(cid.version, 1)
     same(cid.multihash, hash)
@@ -391,34 +402,39 @@ describe('CID', () => {
   })
 
   if (!process.browser) {
-    test('util.inspect', () => {
+    test('util.inspect', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 112, hash)
       same(util.inspect(cid), 'CID(bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu)')
     })
   }
 
-  describe('deprecations', () => {
+  describe('deprecations', async () => {
     test('codec', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 112, hash)
       await testThrow(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
       await testThrow(() => new CID(1, 'dag-pb', hash), 'String codecs are no longer supported')
     })
     test('multibaseName', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 112, hash)
       await testThrow(() => cid.multibaseName, '"multibaseName" property is deprecated')
     })
     test('prefix', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 112, hash)
       await testThrow(() => cid.prefix, '"prefix" property is deprecated')
     })
     test('toBaseEncodedString()', async () => {
+      const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
       const cid = new CID(1, 112, hash)
       await testThrow(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
     })
   })
 
   test('invalid CID version', async () => {
-    const encoded = varint.encode(18)
-    await testThrow(() => new CID(encoded), 'Invalid CID version 18')
+    const encoded = varint.encode(2)
+    await testThrow(() => new CID(encoded), 'Invalid CID version 2')
   })
 })

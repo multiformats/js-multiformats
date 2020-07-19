@@ -27,7 +27,7 @@ Following code pattern:
 
 if (CID.isCID(value)) {
   doSomethingWithCID(value)
-} 
+}
 
 Is replaced with:
 
@@ -100,6 +100,13 @@ export default multiformats => {
       readonly(this, 'buffer', cid)
       let code
       ;[code, cid] = parse(cid)
+      if (code === 18) {
+        // CIDv0
+        readonly(this, 'version', 0)
+        readonly(this, 'code', 0x70)
+        this._multihash = this.buffer
+        return
+      }
       if (code > 1) throw new Error(`Invalid CID version ${code}`)
       readonly(this, 'version', code)
       ;[code, cid] = parse(cid)
