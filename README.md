@@ -132,16 +132,8 @@ Deprecation List:
     * this being indeterministic was causing some nasty problems downstream
       since `toString()` needs to be used as a cache key and it's not possible
       to encode V0 into anything but base58btc. this means that you can't have
-      deterministic hash keys without also requiring base58btc support, so we 
+      deterministic hash keys without also requiring base58btc support, so we
       removed this feature.
-  * no longer accept bare multihash buffers as V0, only base58btc encoded strings
-    or the complete set of parts with the multihash as the third argument.
-    * The logic for treating these as V0 was problematic and could lead to
-      unwanted errors. In practice, the places we need to handle V0 are known
-      and we can move this logic there if necessary and then instantiate a CID
-      with all the necessary args.
-    * Some of the prior code relied on knowing the full set of possible base
-      prefixes, which we can no longer do.
   * no more .toBaseEncodedString(), just toString()
   * no more .multibaseName
   * no more .prefix()
