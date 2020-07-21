@@ -5,80 +5,100 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "rollup --config rollup.config.js",
+    "build": "npx @mikeal/limbo test/test-*.js",
     "prepublishOnly": "npm run build",
     "lint": "standard",
-    "test:cjs": "rm -rf dist && npm run build && mocha dist/test/test-*.cjs",
+    "test:cjs": "rm -rf dist && npm run build && mocha dist/cjs-node/test/test-*.cjs && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
-    "test:browser": "polendina --webpack-config polendina.webpack.config.cjs --cleanup test/test-*.js",
-    "test": "npm run lint && npm run test:node && npm run test:browser && npm run test:cjs",
+    "test:cjs:browser": "polendina --cleanup dist/cjs-browser/test/test-*.js",
+    "test": "npm run lint && npm run test:node && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "browser": {
-    "./hashes/sha2.js": "./hashes/sha2-browser.js",
-    "./bases/_base64.js": "./bases/_base64-browser.js"
+    "./bases/_base64-browser.js": "./dist/cjs-browser/bases/_base64-browser.js",
+    "./bases/base16.js": "./dist/cjs-browser/bases/base16.js",
+    "./bases/base32.js": "./dist/cjs-browser/bases/base32.js",
+    "./bases/base58.js": "./dist/cjs-browser/bases/base58.js",
+    "./bases/base64.js": "./dist/cjs-browser/bases/base64.js",
+    "./basics.js": "./dist/cjs-browser/basics.js",
+    "./bytes.js": "./dist/cjs-browser/bytes.js",
+    "./cid.js": "./dist/cjs-browser/cid.js",
+    "./codecs/json.js": "./dist/cjs-browser/codecs/json.js",
+    "./codecs/raw.js": "./dist/cjs-browser/codecs/raw.js",
+    "./hashes/sha2-browser.js": "./dist/cjs-browser/hashes/sha2-browser.js",
+    "./index.js": "./dist/cjs-browser/index.js",
+    "./legacy.js": "./dist/cjs-browser/legacy.js",
+    "./test/fixtures/invalid-multihash.js": "./dist/cjs-browser/test/fixtures/invalid-multihash.js",
+    "./test/fixtures/valid-multihash.js": "./dist/cjs-browser/test/fixtures/valid-multihash.js",
+    "./test/test-bytes.js": "./dist/cjs-browser/test/test-bytes.js",
+    "./test/test-cid.js": "./dist/cjs-browser/test/test-cid.js",
+    "./test/test-errors.js": "./dist/cjs-browser/test/test-errors.js",
+    "./test/test-legacy.js": "./dist/cjs-browser/test/test-legacy.js",
+    "./test/test-multibase.js": "./dist/cjs-browser/test/test-multibase.js",
+    "./test/test-multicodec.js": "./dist/cjs-browser/test/test-multicodec.js",
+    "./test/test-multihash.js": "./dist/cjs-browser/test/test-multihash.js"
   },
   "exports": {
     ".": {
       "import": "./index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/cjs-node/index.cjs"
     },
     "./index.js": {
       "import": "./index.js",
-      "require": "./dist/index.cjs"
+      "require": "./dist/cjs-node/index.cjs"
     },
     "./basics.js": {
       "import": "./basics.js",
-      "require": "./dist/basics.cjs"
+      "require": "./dist/cjs-node/basics.cjs"
     },
     "./bytes.js": {
       "import": "./bytes.js",
-      "require": "./dist/bytes.cjs"
+      "require": "./dist/cjs-node/bytes.cjs"
     },
     "./cid.js": {
       "import": "./cid.js",
-      "require": "./dist/cid.cjs"
+      "require": "./dist/cjs-node/cid.cjs"
     },
     "./legacy.js": {
       "import": "./legacy.js",
-      "require": "./dist/legacy.cjs"
+      "require": "./dist/cjs-node/legacy.cjs"
     },
     "./bases/_base64.js": {
       "browser": "./bases/_base64-browser.js",
       "import": "./bases/_base64.js",
-      "require": "./dist/bases/_base64.cjs"
+      "require": "./dist/cjs-node/bases/_base64.cjs"
     },
     "./bases/base16.js": {
       "import": "./bases/base16.js",
-      "require": "./dist/bases/base16.cjs"
+      "require": "./dist/cjs-node/bases/base16.cjs"
     },
     "./bases/base32.js": {
       "import": "./bases/base32.js",
-      "require": "./dist/bases/base32.cjs"
+      "require": "./dist/cjs-node/bases/base32.cjs"
     },
     "./bases/base58.js": {
       "import": "./bases/base58.js",
-      "require": "./dist/bases/base58.cjs"
+      "require": "./dist/cjs-node/bases/base58.cjs"
     },
     "./bases/base64.js": {
       "import": "./bases/base64.js",
-      "require": "./dist/bases/base64.cjs"
+      "require": "./dist/cjs-node/bases/base64.cjs"
     },
     "./hashes/sha2.js": {
       "browser": "./hashes/sha2-browser.js",
       "import": "./hashes/sha2.js",
-      "require": "./dist/hashes/sha2.cjs"
+      "require": "./dist/cjs-node/hashes/sha2.cjs"
     },
     "./codecs/json.js": {
       "import": "./codecs/json.js",
-      "require": "./dist/codecs/json.cjs"
+      "require": "./dist/cjs-node/codecs/json.cjs"
     },
     "./codecs/raw.js": {
       "import": "./codecs/raw.js",
-      "require": "./dist/codecs/raw.cjs"
+      "require": "./dist/cjs-node/codecs/raw.cjs"
     }
   },
   "devDependencies": {

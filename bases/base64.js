@@ -41,9 +41,11 @@ const base64pad = create('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz01
 const base64url = create('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_')
 const base64urlpad = create('ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_=')
 
-export default [
+const ex = [
   { prefix: 'm', name: 'base64', ...base64 },
   { prefix: 'M', name: 'base64pad', ...base64pad },
   { prefix: 'u', name: 'base64url', ...base64url },
   { prefix: 'U', name: 'base64urlpad', ...base64urlpad }
 ]
+ex.b64 = b64
+export default ex
