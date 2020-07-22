@@ -30,16 +30,8 @@
     "./codecs/raw.js": "./dist/cjs-browser/codecs/raw.js",
     "./hashes/sha2-browser.js": "./dist/cjs-browser/hashes/sha2-browser.js",
     "./index.js": "./dist/cjs-browser/index.js",
-    "./legacy.js": "./dist/cjs-browser/legacy.js",
-    "./test/fixtures/invalid-multihash.js": "./dist/cjs-browser/test/fixtures/invalid-multihash.js",
-    "./test/fixtures/valid-multihash.js": "./dist/cjs-browser/test/fixtures/valid-multihash.js",
-    "./test/test-bytes.js": "./dist/cjs-browser/test/test-bytes.js",
-    "./test/test-cid.js": "./dist/cjs-browser/test/test-cid.js",
-    "./test/test-errors.js": "./dist/cjs-browser/test/test-errors.js",
-    "./test/test-legacy.js": "./dist/cjs-browser/test/test-legacy.js",
-    "./test/test-multibase.js": "./dist/cjs-browser/test/test-multibase.js",
-    "./test/test-multicodec.js": "./dist/cjs-browser/test/test-multicodec.js",
-    "./test/test-multihash.js": "./dist/cjs-browser/test/test-multihash.js"
+    "./": "./dist/cjs-browser/index.js",
+    "./legacy.js": "./dist/cjs-browser/legacy.js"
   },
   "exports": {
     ".": {
@@ -99,6 +91,10 @@
     "./codecs/raw.js": {
       "import": "./codecs/raw.js",
       "require": "./dist/cjs-node/codecs/raw.cjs"
+    },
+    "./": {
+      "import": "./",
+      "require": "./dist/cjs-node/index.cjs"
     }
   },
   "devDependencies": {
