@@ -1,12 +1,11 @@
-import * as bytes from 'multiformats/bytes.js'
+import * as Bytes from 'multiformats/bytes.js'
 
-const readonly = (object, key, value) => {
-  Object.defineProperty(object, key, {
-    value,
-    writable: false,
-    enumerable: true
-  })
-}
+const property = (value, { writable = false, enumerable = true, configurable = false } = {}) => ({
+  value,
+  writable,
+  enumerable,
+  configurable
+})
 
 // ESM does not support importing package.json where this version info
 // should come from. To workaround it version is copied here.
@@ -38,86 +37,180 @@ if (cid) {
 }
 `
 
+/**
+ * @param {import('./index').Multiformats} multiformats
+ */
 export default multiformats => {
   const { multibase, varint, multihash } = multiformats
-  const parse = buff => {
-    const [code, length] = varint.decode(buff)
-    return [code, buff.slice(length)]
+
+  /**
+   * @param {number} version
+   * @param {number} codec
+   * @param {Uint8Array} multihash
+   * @returns {Uint8Array}
+   */
+  const encodeCID = (version, codec, multihash) => {
+    const versionBytes = varint.encode(version)
+    const codecBytes = varint.encode(codec)
+    const bytes = new Uint8Array(versionBytes.byteLength + codecBytes.byteLength + multihash.byteLength)
+    bytes.set(versionBytes, 0)
+    bytes.set(codecBytes, versionBytes.byteLength)
+    bytes.set(multihash, versionBytes.byteLength + codecBytes.byteLength)
+    return bytes
   }
-  const encode = (version, codec, multihash) => {
-    return Uint8Array.from([
-      ...varint.encode(version),
-      ...varint.encode(codec),
-      ...multihash
-    ])
+
+  /**
+   * Takes `Uint8Array` representation of `CID` and returns
+   * `[version, codec, multihash]`. Throws error if bytes passed do not
+   * correspond to vaild `CID`.
+   * @param {Uint8Array} bytes
+   * @returns {[number, number, Uint8Array]}
+   */
+  const decodeCID = (bytes) => {
+    const [version, offset] = varint.decode(bytes)
+    switch (version) {
+      // CIDv0
+      case 18: {
+        return [0, 0x70, bytes]
+      }
+      // CIDv1
+      case 1: {
+        const [code, length] = varint.decode(bytes.subarray(offset))
+        return [1, code, decodeMultihash(bytes.subarray(offset + length))]
+      }
+      default: {
+        throw new RangeError(`Invalid CID version ${version}`)
+      }
+    }
   }
 
   const cidSymbol = Symbol.for('@ipld/js-cid/CID')
 
-  class CID {
-    constructor (cid, ...args) {
-      Object.defineProperty(this, '_baseCache', {
-        value: new Map(),
-        writable: false,
-        enumerable: false
-      })
-      readonly(this, 'asCID', this)
-      if (cid != null && cid[cidSymbol] === true) {
-        readonly(this, 'version', cid.version)
-        readonly(this, 'multihash', bytes.coerce(cid.multihash))
-        readonly(this, 'buffer', bytes.coerce(cid.buffer))
-        if (cid.code) readonly(this, 'code', cid.code)
-        else readonly(this, 'code', multiformats.get(cid.codec).code)
-        return
+  /**
+   * Create CID from the string encoded CID.
+   * @param {string} string
+   * @returns {CID}
+   */
+  const fromString = (string) => {
+    switch (string[0]) {
+      // V0
+      case 'Q': {
+        const cid = new CID(multibase.get('base58btc').decode(string))
+        cid._baseCache.set('base58btc', string)
+        return cid
       }
-      if (args.length > 0) {
-        if (typeof args[0] !== 'number') throw new Error('String codecs are no longer supported')
-        readonly(this, 'version', cid)
-        readonly(this, 'code', args.shift())
-        if (this.version === 0 && this.code !== 112) {
-          throw new Error('Version 0 CID must be 112 codec (dag-cbor)')
-        }
-        this._multihash = args.shift()
-        if (args.length) throw new Error('No longer supported, cannot specify base encoding in instantiation')
-        if (this.version === 0) readonly(this, 'buffer', this.multihash)
-        else readonly(this, 'buffer', encode(this.version, this.code, this.multihash))
-        return
+      default: {
+        // CID v1
+        const cid = new CID(multibase.decode(string))
+        cid._baseCache.set(multibase.encoding(string).name, string)
+        return cid
       }
-      if (typeof cid === 'string') {
-        if (cid.startsWith('Q')) {
-          readonly(this, 'version', 0)
-          readonly(this, 'code', 0x70)
-          const { decode } = multibase.get('base58btc')
-          this._multihash = decode(cid)
-          readonly(this, 'buffer', this.multihash)
-          return
-        }
-        const { name } = multibase.encoding(cid)
-        this._baseCache.set(name, cid)
-        cid = multibase.decode(cid)
-      }
-      cid = bytes.coerce(cid)
-      readonly(this, 'buffer', cid)
-      let code
-      ;[code, cid] = parse(cid)
-      if (code === 18) {
-        // CIDv0
-        readonly(this, 'version', 0)
-        readonly(this, 'code', 0x70)
-        this._multihash = this.buffer
-        return
-      }
-      if (code > 1) throw new Error(`Invalid CID version ${code}`)
-      readonly(this, 'version', code)
-      ;[code, cid] = parse(cid)
-      readonly(this, 'code', code)
-      this._multihash = cid
+    }
+  }
+
+  /**
+   * Takes a hashCID multihash and validates the digest. Returns it back if
+   * all good otherwise throws error.
+   * @param {Uint8Array} hash
+   * @returns {Uint8Array}
+   */
+  const decodeMultihash = (hash) => {
+    const { digest, length } = multihash.decode(hash)
+    if (digest.length !== length) {
+      throw new Error('Given multihash has incorrect length')
     }
 
-    set _multihash (hash) {
-      const { length, digest } = multihash.decode(hash)
-      if (digest.length !== length) throw new Error('Incorrect length')
-      readonly(this, 'multihash', hash)
+    return hash
+  }
+
+  /**
+   * @implements {ArrayBufferView}
+   */
+  class CID {
+    /**
+     * Creates new CID from the given value that is either CID, string or an
+     * Uint8Array.
+     * @param {CID|string|Uint8Array} value
+     */
+    static from (value) {
+      if (typeof value === 'string') {
+        return fromString(value)
+      } else if (value instanceof Uint8Array) {
+        return new CID(value)
+      } else {
+        const cid = CID.asCID(value)
+        if (cid) {
+          // If we got the same CID back we create a copy.
+          if (cid === value) {
+            return new CID(cid.bytes)
+          } else {
+            return cid
+          }
+        } else {
+          throw new TypeError(`Can not create CID from given value ${value}`)
+        }
+      }
+    }
+
+    /**
+     * Creates new CID with a given version, codec and a multihash.
+     * @param {number} version
+     * @param {number} code
+     * @param {Uint8Array} multihash
+     */
+    static create (version, code, multihash) {
+      if (typeof code !== 'number') {
+        throw new Error('String codecs are no longer supported')
+      }
+
+      switch (version) {
+        case 0: {
+          if (code !== 112) {
+            throw new Error('Version 0 CID must be 112 codec (dag-cbor)')
+          } else {
+            return new CID(multihash)
+          }
+        }
+        case 1: {
+          // TODO: Figure out why we check digest here but not in v 0
+          return new CID(encodeCID(version, code, decodeMultihash(multihash)))
+        }
+        default: {
+          throw new Error('Invalid version')
+        }
+      }
+    }
+
+    /**
+     *
+     * @param {ArrayBuffer|Uint8Array} buffer
+     * @param {number} [byteOffset=0]
+     * @param {number} [byteLength=buffer.byteLength]
+     */
+    constructor (buffer, byteOffset = 0, byteLength = buffer.byteLength) {
+      const bytes = buffer instanceof Uint8Array
+        ? Bytes.coerce(buffer) // Just in case it's a node Buffer
+        : new Uint8Array(buffer, byteOffset, byteLength)
+
+      const [version, code, multihash] = decodeCID(bytes)
+      Object.defineProperties(this, {
+        // ArrayBufferView
+        buffer: property(bytes.buffer, { enumerable: false }),
+        byteOffset: property(bytes.byteOffset, { enumerable: false }),
+        byteLength: property(bytes.byteLength, { enumerable: false }),
+
+        // CID fields
+        version: property(version),
+        code: property(code),
+        multihash: property(multihash),
+        asCID: property(this),
+
+        // Legacy
+        bytes: property(bytes, { enumerable: false }),
+
+        // Internal
+        _baseCache: property(new Map(), { enumerable: false })
+      })
     }
 
     get codec () {
@@ -143,11 +236,11 @@ export default multiformats => {
         throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
       }
 
-      return new CID(0, this.code, this.multihash)
+      return CID.create(0, this.code, this.multihash)
     }
 
     toV1 () {
-      return new CID(1, this.code, this.multihash)
+      return CID.create(1, this.code, this.multihash)
     }
 
     get toBaseEncodedString () {
@@ -159,17 +252,25 @@ export default multiformats => {
     }
 
     toString (base) {
-      if (this.version === 0) {
+      const { version, bytes } = this
+      if (version === 0) {
         if (base && base !== 'base58btc') {
           throw new Error(`Cannot string encode V0 in ${base} encoding`)
         }
         const { encode } = multibase.get('base58btc')
-        return encode(this.buffer)
+        return encode(bytes)
       }
-      if (!base) base = 'base32'
-      if (this._baseCache.has(base)) return this._baseCache.get(base)
-      this._baseCache.set(base, multibase.encode(this.buffer, base))
-      return this._baseCache.get(base)
+
+      base = base || 'base32'
+      const { _baseCache } = this
+      const string = _baseCache.get(base)
+      if (string == null) {
+        const string = multibase.encode(bytes, base)
+        _baseCache.set(base, string)
+        return string
+      } else {
+        return string
+      }
     }
 
     toJSON () {
@@ -183,15 +284,11 @@ export default multiformats => {
     equals (other) {
       return this.code === other.code &&
         this.version === other.version &&
-        bytes.equals(this.multihash, other.multihash)
+        Bytes.equals(this.multihash, other.multihash)
     }
 
     get [Symbol.toStringTag] () {
       return 'CID'
-    }
-
-    get [cidSymbol] () {
-      return true
     }
 
     /**
@@ -217,12 +314,14 @@ export default multiformats => {
       // API.
       } else if (value != null && value.asCID === value) {
         const { version, code, multihash } = value
-        return new CID(version, code, multihash)
+        return CID.create(version, code, multihash)
       // If value is a CID from older implementation that used to be tagged via
       // symbol we still rebase it to the this `CID` implementation by
       // delegating that to a constructor.
       } else if (value != null && value[cidSymbol] === true) {
-        return new CID(value)
+        const { version, multihash } = value
+        const code = value.code || multiformats.get(value.codec).code
+        return new CID(encodeCID(version, code, multihash))
       // Otherwise value is not a CID (or an incompatible version of it) in
       // which case we return `null`.
       } else {
@@ -232,7 +331,7 @@ export default multiformats => {
 
     static isCID (value) {
       deprecate(/^0\.0/, IS_CID_DEPRECATION)
-      return !!(value && value[cidSymbol])
+      return !!(value && (value[cidSymbol] || value.asCID === value))
     }
   }
 
