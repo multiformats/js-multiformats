@@ -10,7 +10,7 @@
     "lint": "standard",
     "test:cjs": "rm -rf dist && npm run build && mocha dist/cjs-node/test/test-*.cjs && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
-    "test:cjs:browser": "polendina --cleanup --timeout=120 dist/cjs-browser/test/test-*.js",
+    "test:cjs:browser": "polendina --cleanup dist/cjs-browser/test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
