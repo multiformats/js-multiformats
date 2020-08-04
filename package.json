@@ -99,11 +99,9 @@
   },
   "devDependencies": {
     "c8": "^7.3.0",
-    "globby": "^11.0.1",
     "hundreds": "0.0.7",
     "mocha": "^8.1.1",
     "polendina": "^1.0.0",
-    "rollup": "^2.23.0",
     "standard": "^14.3.4"
   },
   "standard": {
@@ -112,7 +110,6 @@
     ]
   },
   "dependencies": {
-    "@rollup/plugin-alias": "^3.1.1",
     "base-x": "^3.0.8",
     "buffer": "^5.6.0",
     "cids": "^1.0.0",
