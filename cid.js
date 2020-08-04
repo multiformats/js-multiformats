@@ -320,7 +320,7 @@ export default multiformats => {
       // delegating that to a constructor.
       } else if (value != null && value[cidSymbol] === true) {
         const { version, multihash } = value
-        const code = value.code || multiformats.get(value.codec).code
+        const code = value.code /* c8 ignore next */ || multiformats.get(value.codec).code
         return new CID(encodeCID(version, code, multihash))
       // Otherwise value is not a CID (or an incompatible version of it) in
       // which case we return `null`.

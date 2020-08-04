@@ -10,7 +10,7 @@
     "lint": "standard",
     "test:cjs": "rm -rf dist && npm run build && mocha dist/cjs-node/test/test-*.cjs && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
-    "test:cjs:browser": "polendina --cleanup dist/cjs-browser/test/test-*.js",
+    "test:cjs:browser": "polendina --cleanup --timeout=120 dist/cjs-browser/test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
@@ -98,12 +98,12 @@
     }
   },
   "devDependencies": {
-    "c8": "^7.2.0",
+    "c8": "^7.3.0",
     "globby": "^11.0.1",
     "hundreds": "0.0.7",
-    "mocha": "^8.0.1",
+    "mocha": "^8.1.1",
     "polendina": "^1.0.0",
-    "rollup": "^2.18.0",
+    "rollup": "^2.23.0",
     "standard": "^14.3.4"
   },
   "standard": {
@@ -115,7 +115,7 @@
     "@rollup/plugin-alias": "^3.1.1",
     "base-x": "^3.0.8",
     "buffer": "^5.6.0",
-    "cids": "^0.8.3",
+    "cids": "^1.0.0",
     "varint": "^5.0.0"
   },
   "directories": {
