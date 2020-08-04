@@ -19,24 +19,17 @@ const equals = (aa, bb) => {
   return true
 }
 
-const TypedArray = Object.getPrototypeOf(Int8Array)
-const isTypedArray = obj => obj instanceof TypedArray
-
 const coerce = o => {
   if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') return o
   if (o instanceof ArrayBuffer) return new Uint8Array(o)
-  if (o instanceof DataView || isTypedArray(o)) {
+  if (ArrayBuffer.isView(o)) {
     return new Uint8Array(o.buffer, o.byteOffset, o.byteLength)
   }
   throw new Error('Unknown type, must be binary type')
 }
 
-const isBinary = o => {
-  if (o instanceof DataView) return true
-  if (o instanceof ArrayBuffer) return true
-  if (isTypedArray(o)) return true
-  return false
-}
+const isBinary = o =>
+  o instanceof ArrayBuffer || ArrayBuffer.isView(o)
 
 const fromString = str => (new TextEncoder()).encode(str)
 const toString = b => (new TextDecoder()).decode(b)

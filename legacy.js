@@ -5,10 +5,17 @@ import { Buffer } from 'buffer'
 const legacy = (multiformats, name) => {
   const toLegacy = obj => {
     if (CID.isCID(obj)) {
-      if (!obj.code) return obj
-      const { name } = multiformats.multicodec.get(obj.code)
-      return new CID(obj.version, name, Buffer.from(obj.multihash))
+      return obj
     }
+
+    const cid = multiformats.CID.asCID(obj)
+    if (cid) {
+      const { version, multihash: { buffer, byteOffset, byteLength } } = cid
+      const { name } = multiformats.multicodec.get(cid.code)
+      const multihash = Buffer.from(buffer, byteOffset, byteLength)
+      return new CID(version, name, Buffer.from(multihash))
+    }
+
     if (bytes.isBinary(obj)) return Buffer.from(obj)
     if (obj && typeof obj === 'object') {
       for (const [key, value] of Object.entries(obj)) {
@@ -18,7 +25,8 @@ const legacy = (multiformats, name) => {
     return obj
   }
   const fromLegacy = obj => {
-    if (CID.isCID(obj)) return new multiformats.CID(obj)
+    const cid = multiformats.CID.asCID(obj)
+    if (cid) return cid
     if (bytes.isBinary(obj)) return bytes.coerce(obj)
     if (obj && typeof obj === 'object') {
       for (const [key, value] of Object.entries(obj)) {

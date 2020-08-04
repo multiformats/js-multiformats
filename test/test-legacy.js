@@ -38,7 +38,7 @@ describe('multicodec', () => {
       decode: buff => {
         const obj = json.util.deserialize(buff)
         obj.l = link
-        if (obj.o.link) obj.link = new multiformats.CID(link)
+        if (obj.o.link) obj.link = multiformats.CID.from(link)
         return obj
       }
     })

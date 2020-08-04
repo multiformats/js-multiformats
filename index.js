@@ -3,6 +3,16 @@ import createCID from 'multiformats/cid.js'
 import * as bytes from 'multiformats/bytes.js'
 
 const cache = new Map()
+
+/**
+ * @typedef {Object} Varint
+ * @property {function(Uint8Array):[number, number]} decode
+ * @property {function(number):Uint8Array} encode
+ */
+
+/**
+ * @type {Varint}
+ */
 const varint = {
   decode: data => {
     const code = varints.decode(data)
@@ -16,8 +26,41 @@ const varint = {
   }
 }
 
-const createMultihash = multiformats => {
-  const { get, has, parse, add } = multiformats
+/**
+ * @template Raw,Encoded
+ * @typedef {(value:Raw) => Encoded} Encode
+ */
+
+/**
+ * @template Raw,Encoded
+ * @typedef {Object} Codec
+ * @property {string} name
+ * @property {number} code
+ * @property {Encode<Raw, Encoded>} encode
+ * @property {Encode<Encoded, Raw>} decode
+ */
+
+/**
+ * @typedef {Codec<Uint8Array, Uint8Array>} MultihashCodec
+ * @typedef {(bytes:Uint8Array) => {name:string, code:number, length:number, digest:Uint8Array}} Multihash$decode
+ * @typedef {(byte:Uint8Array, base:string|name) => Uint8Array} Multihash$encode
+ * @typedef {(bytes:Uint8Array, key:string) => Promise<Uint8Array>} Multihash$hash
+ * @typedef {Object} Multihash
+ * @property {Multihash$encode} encode
+ * @property {Multihash$decode} decode
+ * @property {Multihash$hash} hash
+ * @property {function(number|string):boolean} has
+ * @property {function(number|string):void|MultihashCodec} get
+ * @property {function(MultihashCodec):void} add
+ * @property {function(Uint8Array, Uint8Array):Promise<true>} validate
+ */
+
+/**
+ * @param {MultiformatsUtil & Multicodec} multiformats
+ * @returns {Multihash}
+ */
+const createMultihash = ({ get, has, parse, add }) => {
+  /** @type {Multihash$decode} */
   const decode = digest => {
     const [info, len] = parse(digest)
     digest = digest.slice(len)
@@ -25,6 +68,8 @@ const createMultihash = multiformats => {
     digest = digest.slice(len2)
     return { code: info.code, name: info.name, length, digest }
   }
+
+  /** @type {Multihash$encode} */
   const encode = (digest, id) => {
     let info
     if (typeof id === 'number') {
@@ -36,6 +81,8 @@ const createMultihash = multiformats => {
     const length = varint.encode(digest.length)
     return Uint8Array.from([...code, ...length, ...digest])
   }
+
+  /** @type {Multihash$hash} */
   const hash = async (buff, key) => {
     buff = bytes.coerce(buff)
     const info = get(key)
@@ -44,6 +91,12 @@ const createMultihash = multiformats => {
     /* c8 ignore next */
     return encode(await info.encode(buff), key)
   }
+
+  /**
+   * @param {Uint8Array} _hash
+   * @param {Uint8Array} buff
+   * @returns {Promise<true>}
+   */
   const validate = async (_hash, buff) => {
     _hash = bytes.coerce(_hash)
     const { length, digest, code } = decode(_hash)
@@ -57,9 +110,29 @@ const createMultihash = multiformats => {
     /* c8 ignore next */
     return true
   }
+
   return { encode, has, decode, hash, validate, add, get }
 }
 
+/**
+ * @typedef {Encode<string, Uint8Array>} MultibaseDecode
+ * @typedef {Encode<Uint8Array, string>} MultibaseEncode
+ * @typedef {Object} MultibaseCodec
+ * @property {string} prefix
+ * @property {string} name
+ * @property {MultibaseEncode} encode
+ * @property {MultibaseDecode} decode
+ * @typedef {Object} Multibase
+ * @property {(codec:MultibaseCodec|MultibaseCodec[]) => void} add
+ * @property {(prefex:string) => MultibaseCodec} get
+ * @property {(prefex:string) => boolean} has
+ * @property {(bytes:Uint8Array, prefix:string) => string} encode
+ * @property {MultibaseDecode} decode
+ * @property {(text:string) => MultibaseCodec} encoding
+ *
+ *
+ * @returns {Multibase}
+ */
 const createMultibase = () => {
   const prefixMap = new Map()
   const nameMap = new Map()
@@ -75,6 +148,11 @@ const createMultibase = () => {
       _add(prefix, name, encode, decode)
     }
   }
+
+  /**
+   * @param {string} id
+   * @returns {MultibaseCodec}
+   */
   const get = id => {
     if (id.length === 1) {
       if (!prefixMap.has(id)) throw new Error(`Missing multibase implementation for "${id}"`)
@@ -105,11 +183,37 @@ const createMultibase = () => {
     const { decode } = get(prefix)
     return Uint8Array.from(decode(string))
   }
+  /**
+   * @param {string} string
+   * @returns {MultibaseCodec}
+   */
   const encoding = string => get(string[0])
   return { add, has, get, encode, decode, encoding }
 }
 
+/**
+ * @typedef {Object} MultiformatsUtil
+ * @property {Varint} varint
+ * @property {function(Uint8Array):[MultihashCodec, number]} parse
+ *
+ * @typedef {Object} Multicodec
+ * @property {function(MultihashCodec):void} add
+ * @property {function(string|number|Uint8Array):MultihashCodec} get
+ * @property {function(string):boolean} has
+ *
+ * @typedef {Object} MultiformatsExt
+ * @property {Multicodec} multicodec
+ * @property {Multibase} multibase
+ * @property {Multihash} multihash
+ *
+ * @typedef {MultiformatsUtil & Multicodec & MultiformatsExt} Multiformats
+
+ * @param {Array<[number, string, Function, Function]>} [table]
+ * @returns {Multiformats}
+ */
 const create = (table = []) => {
+  /** @type {Map<number, [string, Encode<Uint8Array, Uint8Array>, Encode<Uint8Array, Uint8Array>]>}
+   */
   const intMap = new Map()
   const nameMap = new Map()
   const _add = (code, name, encode, decode) => {
@@ -131,6 +235,12 @@ const create = (table = []) => {
   for (const [code, name, encode, decode] of table) {
     _add(code, name, encode, decode)
   }
+
+  /**
+   *
+   * @param {Uint8Array} buff
+   * @returns {[MultihashCodec, number]}
+   */
   const parse = buff => {
     buff = bytes.coerce(buff)
     const [code, len] = varint.decode(buff)
@@ -140,6 +250,7 @@ const create = (table = []) => {
     }
     return [{ code, name, encode, decode }, len]
   }
+
   const get = obj => {
     if (typeof obj === 'string') {
       if (nameMap.has(obj)) {
@@ -190,10 +301,12 @@ const create = (table = []) => {
   }
 
   const multiformats = { parse, add, get, has, encode, decode, varint, bytes }
+  /** @type {Multicodec} */
   multiformats.multicodec = { add, get, has, encode, decode }
   multiformats.multibase = createMultibase()
   multiformats.multihash = createMultihash(multiformats)
   multiformats.CID = createCID(multiformats)
+
   return multiformats
 }
 export { create, bytes, varint }
