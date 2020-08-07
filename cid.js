@@ -195,7 +195,6 @@ export default multiformats => {
       const [version, code, multihash] = decodeCID(bytes)
       Object.defineProperties(this, {
         // ArrayBufferView
-        buffer: property(bytes.buffer, { enumerable: false }),
         byteOffset: property(bytes.byteOffset, { enumerable: false }),
         byteLength: property(bytes.byteLength, { enumerable: false }),
 
@@ -211,6 +210,10 @@ export default multiformats => {
         // Internal
         _baseCache: property(new Map(), { enumerable: false })
       })
+    }
+
+    get buffer () {
+      throw new Error('Deprecated .buffer property, use .bytes to get Uint8Array instead')
     }
 
     get codec () {
