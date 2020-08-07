@@ -100,7 +100,7 @@
   "devDependencies": {
     "c8": "^7.3.0",
     "hundreds": "0.0.7",
-    "mocha": "^8.1.1",
+    "mocha": "^7.0.0",
     "polendina": "^1.0.0",
     "standard": "^14.3.4"
   },
