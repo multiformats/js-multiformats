@@ -5,13 +5,14 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "npx ipjs@latest build --tests",
-    "publish": "npx ipjs@latest build && cd dist && npm publish",
+    "build": "npx --yes ipjs@latest build --tests",
+    "publish": "npx --yes ipjs@latest publish",
     "lint": "standard",
     "test:cjs": "npm run build && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
     "test:cjs:browser": "polendina --cleanup dist/cjs/browser-test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:cjs",
+    "test:node-v12": "mocha test/test-*.js && npm run test:cjs",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npx st -d coverage -p 8080"
   },
   "keywords": [],
