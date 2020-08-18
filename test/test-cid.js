@@ -444,4 +444,9 @@ describe('CID', () => {
     const encoded = varint.encode(2)
     await testThrow(() => CID.from(encoded), 'Invalid CID version 2')
   })
+  test('buffer', async () => {
+    const hash = await multihash.hash(Buffer.from('abc'), 'sha2-256')
+    const cid = CID.create(1, 112, hash)
+    await testThrow(() => cid.buffer, 'Deprecated .buffer property, use .bytes to get Uint8Array instead')
+  })
 })
