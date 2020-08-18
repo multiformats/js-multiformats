@@ -1,6 +1,6 @@
 import varints from 'varint'
-import createCID from 'multiformats/cid.js'
-import * as bytes from 'multiformats/bytes.js'
+import createCID from './cid.js'
+import * as bytes from './bytes.js'
 
 const cache = new Map()
 

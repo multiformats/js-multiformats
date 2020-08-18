@@ -1,4 +1,4 @@
-import { fromHex, toHex } from 'multiformats/bytes.js'
+import { fromHex, toHex } from '../bytes.js'
 
 const create = function base16 (alphabet) {
   return {

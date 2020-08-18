@@ -1,5 +1,5 @@
 import CID from 'cids'
-import * as bytes from 'multiformats/bytes.js'
+import * as bytes from './bytes.js'
 import { Buffer } from 'buffer'
 
 const legacy = (multiformats, name) => {

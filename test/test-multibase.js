@@ -1,12 +1,12 @@
 /* globals describe, it */
-import * as bytes from 'multiformats/bytes.js'
+import * as bytes from '../src/bytes.js'
 import assert from 'assert'
-import { create as multiformat } from 'multiformats/index.js'
-import base16 from 'multiformats/bases/base16.js'
-import base32 from 'multiformats/bases/base32.js'
-import base58 from 'multiformats/bases/base58.js'
-import base64 from 'multiformats/bases/base64.js'
-import basics from 'multiformats/basics.js'
+import { create as multiformat } from 'multiformats'
+import base16 from 'multiformats/bases/base16'
+import base32 from 'multiformats/bases/base32'
+import base58 from 'multiformats/bases/base58'
+import base64 from 'multiformats/bases/base64'
+import basics from 'multiformats/basics'
 const basicsMultibase = basics.multibase
 const same = assert.deepStrictEqual
 const test = it

@@ -1,5 +1,5 @@
 /* globals describe, it */
-import * as bytes from 'multiformats/bytes.js'
+import * as bytes from '../src/bytes.js'
 import { deepStrictEqual } from 'assert'
 const test = it
 const same = deepStrictEqual

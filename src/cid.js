@@ -1,4 +1,4 @@
-import * as Bytes from 'multiformats/bytes.js'
+import * as Bytes from './bytes.js'
 
 const property = (value, { writable = false, enumerable = true, configurable = false } = {}) => ({
   value,
