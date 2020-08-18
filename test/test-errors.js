@@ -1,6 +1,6 @@
 /* globals describe, it */
 import assert from 'assert'
-import { create } from 'multiformats/index.js'
+import { create } from 'multiformats'
 const multiformat = create()
 const test = it
 

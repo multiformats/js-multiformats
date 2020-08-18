@@ -1,5 +1,5 @@
 import baseX from 'base-x'
-import { coerce } from 'multiformats/bytes.js'
+import { coerce } from '../bytes.js'
 import { Buffer } from 'buffer'
 
 const wrap = obj => ({
