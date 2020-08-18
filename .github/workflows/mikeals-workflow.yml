@@ -23,7 +23,7 @@ jobs:
       if: steps.cache-modules.outputs.cache-hit != 'true'
       run: npm install
     - name: Test
-      run: npm test
+      run: npx --yes best-test@latest
   publish:
     name: Publish
     needs: test
