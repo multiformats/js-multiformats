@@ -111,6 +111,22 @@ Can optionally pass in a table of multiformat entries.
 
 ## multibase.add
 
+## multiformats/bases
+
+```js
+import { create } from 'multiformats'
+import base16 from 'multiformats/bases/base16'
+import base32 from 'multiformats/bases/base32'
+import base58 from 'multiformats/bases/base58'
+import base64 from 'multiformats/bases/base64'
+const multiformats = create()
+multiformats.add([base16, base32, base58, base64])
+```
+
+## multiformats/hashes
+
+## multiformats/codecs
+
 # CID
 
 Changes from `cids`:
