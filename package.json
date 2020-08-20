@@ -1,7 +1,7 @@
 {
   "name": "multiformats",
   "version": "0.0.0-dev",
-  "description": "Interface for multihash, multicodec, multibase and CID.",
+  "description": "Interface for multihash, multicodec, multibase and CID",
   "main": "index.js",
   "type": "module",
   "scripts": {
