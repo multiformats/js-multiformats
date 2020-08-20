@@ -13,17 +13,20 @@ This allows you to pass around an interface containing only the code you need
 which can greatly reduce dependencies and bundle size.
 
 ```js
-import { create } from 'multiformats'
-import sha2 from 'multiformats/hashes/sha2'
+import * as CID from 'multiformats/cid'
+import { sha256 } from 'multiformats/hashes/sha2'
 import dagcbor from '@ipld/dag-cbor'
-const { multihash, multicodec, CID } = create()
-multihash.add(sha2)
-multicodec.add(dagcbor)
+import { base32 } from 'multiformats/bases/base32'
+import { base58btc } from 'multiformats/bases/base58'
 
-const buffer = multicodec.encode({ hello, 'world' }, 'dag-cbor')
-const hash = await multihash.hash(buffer, 'sha2-256')
+const bytes = dagcbor.encode({ hello: 'world' })
+
+const hash = await sha256.digest(bytes)
 // raw codec is the only codec that is there by default
-const cid = new CID(1, 'raw', hash)
+const cid = CID.create(1, dagcbor.code, hash, {
+  base: base32,
+  base58btc
+})
 ```
 
 However, if you're doing this much you should probably use multiformats
@@ -31,13 +34,12 @@ with the `Block` API.
 
 ```js
 // Import basics package with dep-free codecs, hashes, and base encodings
-import multiformats from 'multiformats/basics'
+import { block } from 'multiformats/basics'
 import dagcbor from '@ipld/dag-cbor'
-import { create } from '@ipld/block' // Yet to be released Block interface
-multiformats.multicodec.add(dagcbor)
-const Block = create(multiformats)
-const block = Block.encoder({ hello: world }, 'dag-cbor')
-const cid = await block.cid()
+
+const encoder = block.encoder(dagcbor)
+const hello = encoder.encode({ hello: 'world' })
+const cid = await hello.cid()
 ```
 
 # Plugins
@@ -83,35 +85,17 @@ Returns a new multiformats interface.
 
 Can optionally pass in a table of multiformat entries.
 
-# multihash
+## multiformats.configure
 
-## multihash.encode
+## multiformats.varint
 
-## multihash.decode
+## multiformats.bytes
 
-## multihash.validate
+## multiformats.digest
 
-## multihash.add
+## multiformats.hasher
 
-## multihash.hash
-
-# multicodec
-
-## multicodec.encode
-
-## multicodec.decode
-
-## multicodec.add
-
-# multibase
-
-## multibase.encode
-
-## multibase.decode
-
-## multibase.add
-
-# CID
+# multiformats.CID
 
 Changes from `cids`:
 

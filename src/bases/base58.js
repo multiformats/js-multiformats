@@ -1,16 +1,25 @@
+// @ts-check
+
 import baseX from 'base-x'
 import { coerce } from '../bytes.js'
-import { Buffer } from 'buffer'
+import { from } from './base.js'
 
-const wrap = obj => ({
-  encode: b => obj.encode(Buffer.from(b)),
-  decode: s => coerce(obj.decode(s))
+const implement = (alphabet) => {
+  const { encode, decode } = baseX(alphabet)
+  return {
+    encode,
+    decode: text => coerce(decode(text))
+  }
+}
+
+export const base58btc = from({
+  name: 'base58btc',
+  prefix: 'z',
+  ...implement('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
 })
 
-const btc = '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
-const flickr = '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
-
-export default [
-  { name: 'base58btc', prefix: 'z', ...wrap(baseX(btc)) },
-  { name: 'base58flickr', prefix: 'Z', ...wrap(baseX(flickr)) }
-]
+export const base58flickr = from({
+  name: 'base58flickr',
+  prefix: 'Z',
+  ...implement('123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ')
+})

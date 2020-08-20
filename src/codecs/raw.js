@@ -1,10 +1,17 @@
+// @ts-check
+
 import { coerce } from '../bytes.js'
+import { codec } from './codec.js'
 
-const raw = buff => coerce(buff)
+/**
+ * @param {Uint8Array} bytes
+ * @returns {Uint8Array}
+ */
+const raw = (bytes) => coerce(bytes)
 
-export default {
-  encode: raw,
-  decode: raw,
+export default codec({
   name: 'raw',
-  code: 85
-}
+  code: 85,
+  decode: raw,
+  encode: raw
+})
