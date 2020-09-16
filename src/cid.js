@@ -292,7 +292,7 @@ export const createV1 = (code, digest, config) => create(1, code, digest, config
 export const parse = (source, config) => {
   const { base, base58btc } = config
   const [name, bytes] = source[0] === 'Q'
-    ? [BASE_58_BTC, base58btc.decoder.decode(`${BASE_58_BTC_PREFIX}{source}`)]
+    ? [BASE_58_BTC, base58btc.decoder.decode(`${BASE_58_BTC_PREFIX}${source}`)]
     : [base.encoder.name, base.decoder.decode(source)]
 
   const cid = decode(bytes, config)
