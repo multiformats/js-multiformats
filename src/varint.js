@@ -1,4 +1,4 @@
-import varint from 'varint'
+import varint from '../vendor/varint.js'
 
 /**
  * @param {Uint8Array} data
