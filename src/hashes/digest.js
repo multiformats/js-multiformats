@@ -41,18 +41,6 @@ export const decode = (multihash) => {
 }
 
 /**
- * Turns bytes representation of multihash digest into an instance.
- * @param {Uint8Array} hash
- */
-export const decodeImplicitSha256 = (hash) => {
-  if (hash.byteLength !== SHA256_SIZE) {
-    throw new Error('Given hash has incorrect length')
-  }
-
-  return new ImplicitSha256Digest(hash)
-}
-
-/**
  * @param {MultihashDigest} a
  * @param {MultihashDigest} b
  * @returns {boolean}
@@ -64,9 +52,6 @@ export const equals = (a, b) => {
     return a.code === b.code && a.size === b.size && equalBytes(a.bytes, b.bytes)
   }
 }
-
-const SHA256_SIZE = 32
-const SHA256_CODE = 0x12
 
 /**
  * @typedef {import('./interface').MultihashDigest} MultihashDigest
@@ -93,19 +78,5 @@ export class Digest {
     this.size = size
     this.digest = digest
     this.bytes = bytes
-  }
-}
-
-/**
- * @class
- * @implements {MultihashDigest}
- * @extends {Digest<0x12, 32>}
- */
-class ImplicitSha256Digest extends Digest {
-  /**
-   * @param {Uint8Array} digest
-   */
-  constructor (digest) {
-    super(SHA256_CODE, SHA256_SIZE, digest, digest)
   }
 }

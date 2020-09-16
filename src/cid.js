@@ -87,7 +87,7 @@ export class CID {
           throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
         }
 
-        return createV0(Digest.decodeImplicitSha256(digest), this)
+        return createV0(Digest.decode(digest), this)
       }
     }
   }
@@ -317,7 +317,7 @@ export const decode = (cid, config) => {
   switch (version) {
     // CIDv0
     case 18: {
-      const multihash = Digest.decodeImplicitSha256(cid)
+      const multihash = Digest.decode(cid)
       return createV0(multihash, config)
     }
     // CIDv1
@@ -362,9 +362,7 @@ export const asCID = (value, config) => {
     // symbol we still rebase it to the this `CID` implementation by
     // delegating that to a constructor.
     const { version, multihash, code } = value
-    const digest = version === 0
-      ? Digest.decodeImplicitSha256(multihash)
-      : Digest.decode(multihash)
+    const digest = Digest.decode(multihash)
     return create(version, code, digest, config)
   } else {
     // Otherwise value is not a CID (or an incompatible version of it) in
