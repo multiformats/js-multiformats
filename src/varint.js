@@ -32,7 +32,7 @@ export const encodeTo = (int, target, offset = 0) => {
   if (cached) {
     target.set(target, offset)
   } else {
-    varint.encode(int, target, 0)
+    varint.encode(int, target, offset)
   }
 }
 
