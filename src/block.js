@@ -1,6 +1,6 @@
 // @ts-check
 
-import { createV1 } from './cid.js'
+import { createV1, asCID } from './cid.js'
 
 /**
  * @class
@@ -92,6 +92,102 @@ export class Block {
       return cid
     }
   }
+
+  links () {
+    return links(this.data, [], this)
+  }
+
+  tree () {
+    return tree(this.data, [], this)
+  }
+
+  /**
+   * @param {string} path
+   */
+  get (path) {
+    return get(this.data, path.split('/').filter(Boolean), this)
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {Array<string|number>} base
+ * @param {BlockConfig} config
+ * @returns {Iterable<[string, CID]>}
+ */
+const links = function * (source, base, config) {
+  for (const [key, value] of Object.entries(source)) {
+    const path = [...base, key]
+    if (value != null && typeof value === 'object') {
+      if (Array.isArray(value)) {
+        for (const [index, element] of value.entries()) {
+          const elementPath = [...path, index]
+          const cid = asCID(element, config)
+          if (cid) {
+            yield [elementPath.join('/'), cid]
+          } else if (typeof element === 'object') {
+            yield * links(element, elementPath, config)
+          }
+        }
+      } else {
+        const cid = asCID(value, config)
+        if (cid) {
+          yield [path.join('/'), cid]
+        } else {
+          yield * links(value, path, config)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {Array<string|number>} base
+ * @param {BlockConfig} config
+ * @returns {Iterable<string>}
+ */
+const tree = function * (source, base, config) {
+  for (const [key, value] of Object.entries(source)) {
+    const path = [...base, key]
+    yield path.join('/')
+    if (value != null && typeof value === 'object' && !asCID(value, config)) {
+      if (Array.isArray(value)) {
+        for (const [index, element] of value.entries()) {
+          const elementPath = [...path, index]
+          yield elementPath.join('/')
+          if (typeof element === 'object' && !asCID(elementPath, config)) {
+            yield * tree(element, elementPath, config)
+          }
+        }
+      } else {
+        yield * tree(value, path, config)
+      }
+    }
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {string[]} path
+ * @param {BlockConfig} config
+ */
+const get = (source, path, config) => {
+  let node = source
+  for (const [index, key] of path.entries()) {
+    node = node[key]
+    if (node == null) {
+      throw new Error(`Object has no property at ${path.slice(0, index - 1).map(part => `[${JSON.stringify(part)}]`).join('')}`)
+    }
+    const cid = asCID(node, config)
+    if (cid) {
+      return { value: cid, remaining: path.slice(index).join('/') }
+    }
+  }
+  return { value: node }
 }
 
 /**
