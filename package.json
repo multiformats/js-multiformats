@@ -48,9 +48,18 @@
       "import": "./src/bases/base64-import.js",
       "browser": "./src/bases/base64-browser.js"
     },
+    "./hashes/hasher": {
+      "import": "./src/hashes/hasher.js"
+    },
+    "./hashes/digest": {
+      "import": "./src/hashes/digest.js"
+    },
     "./hashes/sha2": {
       "browser": "./src/hashes/sha2-browser.js",
       "import": "./src/hashes/sha2.js"
+    },
+    "./codecs/codec": {
+      "import": "./src/codecs/codec.js"
     },
     "./codecs/json": {
       "import": "./src/codecs/json.js"

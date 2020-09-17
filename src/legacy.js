@@ -3,31 +3,27 @@
 import OldCID from 'cids'
 import * as bytes from './bytes.js'
 import { Buffer } from 'buffer'
-import * as LibCID from './cid.js'
+import CID from './cid.js'
 
 /**
  * @template T
- * @param {Object} multiformats
- * @param {Object<string, MultihashHasher>} multiformats.hashes
- * @param {Object<number, BlockCodec<T>>} multiformats.codecs
- * @param {MultibaseCodec<any>} multiformats.base
- * @param {MultibaseCodec<'z'>} multiformats.base58btc
  * @param {BlockCodec<T>} codec
+ * @param {Object} options
+ * @param {Object<string, MultihashHasher>} options.hashes
  */
 
-const legacy = (multiformats, codec) => {
+const legacy = (codec, { hashes }) => {
   const toLegacy = obj => {
     if (OldCID.isCID(obj)) {
       return obj
     }
 
-    const newCID = LibCID.asCID(obj, multiformats)
+    const newCID = CID.asCID(obj)
     if (newCID) {
-      const { version, multihash: { bytes } } = newCID
+      const { version, code, multihash: { bytes } } = newCID
       const { buffer, byteOffset, byteLength } = bytes
-      const { name } = multiformats.codecs[newCID.code]
       const multihash = Buffer.from(buffer, byteOffset, byteLength)
-      return new OldCID(version, name, multihash)
+      return new OldCID(version, code, multihash)
     }
 
     if (bytes.isBinary(obj)) {
@@ -44,7 +40,7 @@ const legacy = (multiformats, codec) => {
   }
 
   const fromLegacy = obj => {
-    const cid = LibCID.asCID(obj, multiformats)
+    const cid = CID.asCID(obj)
     if (cid) return cid
     if (bytes.isBinary(obj)) return bytes.coerce(obj)
     if (obj && typeof obj === 'object') {
@@ -78,7 +74,7 @@ const legacy = (multiformats, codec) => {
     /** @type {{cidVersion:1, hashAlg: string}} */
     const defaults = { cidVersion: 1, hashAlg: 'sha2-256' }
     const { cidVersion, hashAlg } = { ...defaults, ...opts }
-    const hasher = multiformats.hashes[hashAlg]
+    const hasher = hashes[hashAlg]
     if (hasher == null) {
       throw new Error(`Hasher for ${hashAlg} was not provided in the configuration`)
     }
@@ -96,7 +92,7 @@ const legacy = (multiformats, codec) => {
   const resolve = (buff, path) => {
     let value = codec.decode(buff)
     const entries = path.split('/').filter(x => x)
-    while (path.length) {
+    while (entries.length) {
       value = value[entries.shift()]
       if (typeof value === 'undefined') throw new Error('Not found')
       if (OldCID.isCID(value)) {

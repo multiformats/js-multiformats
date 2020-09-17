@@ -34,7 +34,7 @@ export const decode = (multihash) => {
   const digest = bytes.subarray(sizeOffset + digestOffset)
 
   if (digest.byteLength !== size) {
-    throw new Error('Given multihash has incorrect length')
+    throw new Error('Incorrect length')
   }
 
   return new Digest(code, size, digest, bytes)

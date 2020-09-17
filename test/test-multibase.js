@@ -1,13 +1,13 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
 import assert from 'assert'
-import { create as multiformat } from 'multiformats'
-import base16 from 'multiformats/bases/base16'
-import base32 from 'multiformats/bases/base32'
-import base58 from 'multiformats/bases/base58'
-import base64 from 'multiformats/bases/base64'
-import basics from 'multiformats/basics'
-const basicsMultibase = basics.multibase
+import * as b16 from 'multiformats/bases/base16'
+import * as b32 from 'multiformats/bases/base32'
+import * as b58 from 'multiformats/bases/base58'
+import * as b64 from 'multiformats/bases/base64'
+
+const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
+
 const same = assert.deepStrictEqual
 const test = it
 
@@ -22,84 +22,70 @@ const testThrow = (fn, message) => {
 }
 
 describe('multibase', () => {
-  const { multibase } = multiformat()
-  multibase.add(base16)
-  multibase.add(base32)
-  multibase.add(base58)
-  multibase.add(base64)
   test('browser', () => {
-    same(!!base64.b64.__browser, !!process.browser)
+    same(!!b64.__browser, !!process.browser)
   })
 
-  for (const base of ['base16', 'base32', 'base58btc', 'base64']) {
-    describe(`basics ${base}`, () => {
+  for (const base of [base16, base32, base58btc, base64]) {
+    describe(`basics ${base.name}`, () => {
       test('encode/decode', () => {
-        const string = multibase.encode(bytes.fromString('test'), base)
-        same(string[0], multibase.get(base).prefix)
-        const buffer = multibase.decode(string)
+        const string = base.encode(bytes.fromString('test'))
+        same(string[0], base.prefix)
+        const buffer = base.decode(string)
         same(buffer, bytes.fromString('test'))
       })
       test('pristine backing buffer', () => {
         // some deepEqual() libraries go as deep as the backing buffer, make sure it's pristine
-        const string = multibase.encode(bytes.fromString('test'), base)
-        const buffer = multibase.decode(string)
+        const string = base.encode(bytes.fromString('test'))
+        const buffer = base.decode(string)
         const expected = bytes.fromString('test')
-        same(new Uint8Array(buffer.buffer).join(','), new Uint8Array(expected.buffer).join(','))
+        same(new Uint8Array(buffer).join(','), new Uint8Array(expected.buffer).join(','))
       })
       test('empty', () => {
-        const str = multibase.encode(bytes.fromString(''), base)
-        same(str, multibase.get(base).prefix)
-        same(multibase.decode(str), bytes.fromString(''))
+        const str = base.encode(bytes.fromString(''))
+        same(str, base.prefix)
+        same(base.decode(str), bytes.fromString(''))
       })
       test('bad chars', () => {
-        const str = multibase.get(base).prefix + '#$%^&*&^%$#'
-        const msg = base === 'base58btc' ? 'Non-base58 character' : `invalid ${base} character`
-        testThrow(() => multibase.decode(str), msg)
+        const str = base.prefix + '#$%^&*&^%$#'
+        const msg = base === base58btc ? 'Non-base58 character' : `invalid ${base.name} character`
+        testThrow(() => base.decode(str), msg)
       })
     })
   }
 
-  test('get fails', () => {
-    let msg = 'Missing multibase implementation for "x"'
-    testThrow(() => multibase.get('x'), msg)
-    msg = 'Missing multibase implementation for "notfound"'
-    testThrow(() => multibase.get('notfound'), msg)
-  })
   test('encode string failure', () => {
     const msg = 'Unknown type, must be binary type'
-    testThrow(() => multibase.encode('asdf'), msg)
+    testThrow(() => base32.encode('asdf'), msg)
   })
+
   test('decode int failure', () => {
     const msg = 'Can only multibase decode strings'
-    testThrow(() => multibase.decode(1), msg)
+    testThrow(() => base32.decode(1), msg)
   })
+
   const buff = bytes.fromString('test')
-  const baseTest = obj => {
-    if (Array.isArray(obj)) return obj.forEach(o => baseTest(o))
-    const { multibase } = multiformat()
-    multibase.add(obj)
-    test(`encode/decode ${obj.name}`, () => {
-      const encoded = multibase.encode(buff, obj.name)
-      const decoded = multibase.decode(encoded)
-      same(decoded, buff)
-    })
+  const baseTest = bases => {
+    for (const base of Object.values(bases)) {
+      if (base) {
+        test(`encode/decode ${base.name}`, () => {
+          const encoded = base.encode(buff)
+          const decoded = base.decode(encoded)
+          same(decoded, buff)
+        })
+      }
+    }
   }
   describe('base16', () => {
-    baseTest(base16)
+    baseTest(b16)
   })
   describe('base32', () => {
-    baseTest(base32)
+    baseTest(b32)
   })
   describe('base58', () => {
-    baseTest(base58)
+    baseTest(b58)
   })
   describe('base64', () => {
-    baseTest(base64)
-  })
-  test('has', () => {
-    same(basicsMultibase.has('E'), false)
-    same(basicsMultibase.has('baseNope'), false)
-    same(basicsMultibase.has('base32'), true)
-    same(basicsMultibase.has('c'), true)
+    baseTest(b64)
   })
 })

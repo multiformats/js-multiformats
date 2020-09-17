@@ -7,11 +7,11 @@
  */
 
 /**
- * @template T
+ * @template {string} T
  * @typedef {import('./interface').Multibase<T>} Multibase
  */
 /**
- * @template T
+ * @template {string} T
  * @typedef {import('./interface').MultibaseEncoder<T>} MultibaseEncoder
  */
 
@@ -42,14 +42,22 @@ class Encoder {
    * @returns {Multibase<Prefix>}
    */
   encode (bytes) {
-    // @ts-ignore
-    return `${this.prefix}${this.baseEncode(bytes)}`
+    if (bytes instanceof Uint8Array) {
+      return `${this.prefix}${this.baseEncode(bytes)}`
+    } else {
+      throw Error('Unknown type, must be binary type')
+    }
   }
 }
 
 /**
- * @template T
+ * @template {string} T
  * @typedef {import('./interface').MultibaseDecoder<T>} MultibaseDecoder
+ */
+
+/**
+ * @template {string} T
+ * @typedef {import('./interface').UnibaseDecoder<T>} UnibaseDecoder
  */
 
 /**
@@ -60,6 +68,7 @@ class Encoder {
  * @template {string} Base
  * @template {string} Prefix
  * @implements {MultibaseDecoder<Prefix>}
+ * @implements {UnibaseDecoder<Prefix>}
  * @implements {BaseDecoder}
  */
 class Decoder {
@@ -78,13 +87,83 @@ class Decoder {
    * @param {string} text
    */
   decode (text) {
-    switch (text[0]) {
-      case this.prefix: {
-        return this.baseDecode(text.slice(1))
+    if (typeof text === 'string') {
+      switch (text[0]) {
+        case this.prefix: {
+          return this.baseDecode(text.slice(1))
+        }
+        default: {
+          throw Error(`${this.name} expects input starting with ${this.prefix} and can not decode "${text}"`)
+        }
       }
-      default: {
-        throw Error(`${this.name} expects input starting with ${this.prefix} and can not decode "${text}"`)
-      }
+    } else {
+      throw Error('Can only multibase decode strings')
+    }
+  }
+
+  /**
+   * @template {string} OtherPrefix
+   * @param {UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
+   * @returns {ComposedDecoder<Prefix|OtherPrefix>}
+   */
+  or (decoder) {
+    if (decoder instanceof ComposedDecoder) {
+      return new ComposedDecoder({ [this.prefix]: this, ...decoder.decoders })
+    } else {
+      return new ComposedDecoder({ [this.prefix]: this, [decoder.prefix]: decoder })
+    }
+  }
+}
+
+/**
+ * @template {string} Prefix
+ * @implements {MultibaseDecoder<Prefix>}
+ */
+class ComposedDecoder {
+  /**
+   * @template {string} T
+   * @param {UnibaseDecoder<T>} decoder
+   * @returns {ComposedDecoder<T>}
+   */
+  static from (decoder) {
+    return new ComposedDecoder({ [decoder.prefix]: decoder })
+  }
+
+  /**
+   * @param {Object<Prefix, UnibaseDecoder<Prefix>>} decoders
+   */
+  constructor (decoders) {
+    /** @type {Object<string, UnibaseDecoder<Prefix>>} */
+    this.decoders = decoders
+    // so that we can distinguish between unibase and multibase
+    /** @type {void} */
+    this.prefix = null
+  }
+
+  /**
+   * @template {string} OtherPrefix
+   * @param {UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
+   * @returns {ComposedDecoder<Prefix|OtherPrefix>}
+   */
+  or (decoder) {
+    if (decoder instanceof ComposedDecoder) {
+      return new ComposedDecoder({ ...this.decoders, ...decoder.decoders })
+    } else {
+      return new ComposedDecoder({ ...this.decoders, [decoder.prefix]: decoder })
+    }
+  }
+
+  /**
+   * @param {string} input
+   * @returns {Uint8Array}
+   */
+  decode (input) {
+    const prefix = input[0]
+    const decoder = this.decoders[prefix]
+    if (decoder) {
+      return decoder.decode(input)
+    } else {
+      throw RangeError(`Unable to decode multibase string ${input}, only inputs prefixed with ${Object.keys(this.decoders)} are supported`)
     }
   }
 }
@@ -191,15 +270,3 @@ export const withSettings = ({ name, prefix, settings, encode, decode }) =>
  */
 export const from = ({ name, prefix, encode, decode }) =>
   new Codec(name, prefix, encode, decode)
-
-export const notImplemented = ({ name, prefix }) =>
-  from({
-    name,
-    prefix,
-    encode: _ => {
-      throw Error(`No ${name} encoder implementation was provided`)
-    },
-    decode: _ => {
-      throw Error(`No ${name} decoder implemnetation was provided`)
-    }
-  })

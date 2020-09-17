@@ -23,10 +23,7 @@ const bytes = dagcbor.encode({ hello: 'world' })
 
 const hash = await sha256.digest(bytes)
 // raw codec is the only codec that is there by default
-const cid = CID.create(1, dagcbor.code, hash, {
-  base: base32,
-  base58btc
-})
+const cid = CID.create(1, dagcbor.code, hash)
 ```
 
 However, if you're doing this much you should probably use multiformats
@@ -35,9 +32,10 @@ with the `Block` API.
 ```js
 // Import basics package with dep-free codecs, hashes, and base encodings
 import { block } from 'multiformats/basics'
+import { sha256 } from 'multiformats/hashes/sha2'
 import dagcbor from '@ipld/dag-cbor'
 
-const encoder = block.encoder(dagcbor)
+const encoder = block.encoder(dagcbor, { hasher: sha256 })
 const hello = encoder.encode({ hello: 'world' })
 const cid = await hello.cid()
 ```

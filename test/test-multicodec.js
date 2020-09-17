@@ -32,7 +32,7 @@ describe('multicodec', () => {
   })
 
   test('raw cannot encode string', async () => {
-    await testThrow(() => raw.encode('asdf', 'raw'), 'Unknown type, must be binary type')
+    await testThrow(() => raw.encode('asdf'), 'Unknown type, must be binary type')
   })
 
   test('add with function', () => {

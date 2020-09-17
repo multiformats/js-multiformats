@@ -1,6 +1,216 @@
 // @ts-check
 
-import { createV1, asCID } from './cid.js'
+import CID from './cid.js'
+
+/**
+ * @template T
+ * @class
+ */
+export default class Block {
+  /**
+   * @param {CID|null} cid
+   * @param {number} code
+   * @param {T} data
+   * @param {Uint8Array} bytes
+   * @param {BlockConfig} config
+   */
+  constructor (cid, code, data, bytes, { hasher }) {
+    /** @type {CID|Promise<CID>|null} */
+    this._cid = cid
+    this.code = code
+    this.data = data
+    this.bytes = bytes
+    this.hasher = hasher
+  }
+
+  async cid () {
+    const { _cid: cid } = this
+    if (cid != null) {
+      return await cid
+    } else {
+      const { bytes, code, hasher } = this
+      // First we store promise to avoid a race condition if cid is called
+      // whlie promise is pending.
+      const promise = createCID(hasher, bytes, code)
+      this._cid = promise
+      const cid = await promise
+      // Once promise resolves we store an actual CID.
+      this._cid = cid
+      return cid
+    }
+  }
+
+  links () {
+    return links(this.data, [])
+  }
+
+  tree () {
+    return tree(this.data, [])
+  }
+
+  /**
+   * @param {string} path
+   */
+  get (path) {
+    return get(this.data, path.split('/').filter(Boolean))
+  }
+
+  /**
+   * @template T
+   * @param {Encoder<T>} codec
+   * @param {BlockConfig} options
+   */
+  static encoder (codec, options) {
+    return new BlockEncoder(codec, options)
+  }
+
+  /**
+   * @template T
+   * @param {Decoder<T>} codec
+   * @param {BlockConfig} options
+   */
+  static decoder (codec, options) {
+    return new BlockDecoder(codec, options)
+  }
+
+  /**
+   * @template T
+   * @param {Object} codec
+   * @param {Encoder<T>} codec.encoder
+   * @param {Decoder<T>} codec.decoder
+   * @param {Object} [options]
+   * @returns {BlockCodec<T>}
+   */
+
+  static codec ({ encoder, decoder }, options) {
+    return new BlockCodec(encoder, decoder, options)
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {Array<string|number>} base
+ * @returns {Iterable<[string, CID]>}
+ */
+const links = function * (source, base) {
+  for (const [key, value] of Object.entries(source)) {
+    const path = [...base, key]
+    if (value != null && typeof value === 'object') {
+      if (Array.isArray(value)) {
+        for (const [index, element] of value.entries()) {
+          const elementPath = [...path, index]
+          const cid = CID.asCID(element)
+          if (cid) {
+            yield [elementPath.join('/'), cid]
+          } else if (typeof element === 'object') {
+            yield * links(element, elementPath)
+          }
+        }
+      } else {
+        const cid = CID.asCID(value)
+        if (cid) {
+          yield [path.join('/'), cid]
+        } else {
+          yield * links(value, path)
+        }
+      }
+    }
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {Array<string|number>} base
+ * @returns {Iterable<string>}
+ */
+const tree = function * (source, base) {
+  for (const [key, value] of Object.entries(source)) {
+    const path = [...base, key]
+    yield path.join('/')
+    if (value != null && typeof value === 'object' && !CID.asCID(value)) {
+      if (Array.isArray(value)) {
+        for (const [index, element] of value.entries()) {
+          const elementPath = [...path, index]
+          yield elementPath.join('/')
+          if (typeof element === 'object' && !CID.asCID(element)) {
+            yield * tree(element, elementPath)
+          }
+        }
+      } else {
+        yield * tree(value, path)
+      }
+    }
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {string[]} path
+ */
+const get = (source, path) => {
+  let node = source
+  for (const [index, key] of path.entries()) {
+    node = node[key]
+    if (node == null) {
+      throw new Error(`Object has no property at ${path.slice(0, index - 1).map(part => `[${JSON.stringify(part)}]`).join('')}`)
+    }
+    const cid = CID.asCID(node)
+    if (cid) {
+      return { value: cid, remaining: path.slice(index).join('/') }
+    }
+  }
+  return { value: node }
+}
+
+/**
+ *
+ * @param {Hasher} hasher
+ * @param {Uint8Array} bytes
+ * @param {number} code
+ */
+
+const createCID = async (hasher, bytes, code) => {
+  const multihash = await hasher.digest(bytes)
+  return CID.createV1(code, multihash)
+}
+
+/**
+ * @template T
+ */
+class BlockCodec {
+  /**
+   * @param {Encoder<T>} encoder
+   * @param {Decoder<T>} decoder
+   * @param {BlockConfig} config
+   */
+
+  constructor (encoder, decoder, config) {
+    this.encoder = new BlockEncoder(encoder, config)
+    this.decoder = new BlockDecoder(decoder, config)
+    this.config = config
+  }
+
+  /**
+   * @param {Uint8Array} bytes
+   * @param {BlockConfig} [options]
+   * @returns {Block<T>}
+   */
+  decode (bytes, options) {
+    return this.decoder.decode(bytes, { ...this.config, ...options })
+  }
+
+  /**
+   * @param {T} data
+   * @param {BlockConfig} [options]
+   * @returns {Block<T>}
+   */
+  encode (data, options) {
+    return this.encoder.encode(data, { ...this.config, ...options })
+  }
+}
 
 /**
  * @class
@@ -44,7 +254,7 @@ class BlockDecoder {
 
   /**
    * @param {Uint8Array} bytes
-   * @param {BlockConfig} [options]
+   * @param {Partial<BlockConfig>} [options]
    * @returns {Block}
    */
   decode (bytes, options) {
@@ -52,248 +262,7 @@ class BlockDecoder {
     return new Block(null, this.codec.code, data, bytes, { ...this.config, ...options })
   }
 }
-
 /**
- * @template T
- * @class
- */
-export class Block {
-  /**
-   * @param {CID|null} cid
-   * @param {number} code
-   * @param {T} data
-   * @param {Uint8Array} bytes
-   * @param {BlockConfig} config
-   */
-  constructor (cid, code, data, bytes, { hasher, base, base58btc }) {
-    /** @type {CID|Promise<CID>|null} */
-    this._cid = cid
-    this.code = code
-    this.data = data
-    this.bytes = bytes
-    this.hasher = hasher
-    this.base = base
-    this.base58btc = base58btc
-  }
-
-  async cid () {
-    const { _cid: cid } = this
-    if (cid != null) {
-      return await cid
-    } else {
-      const { bytes, code, hasher } = this
-      // First we store promise to avoid a race condition if cid is called
-      // whlie promise is pending.
-      const promise = createCID(hasher, bytes, code, this)
-      this._cid = promise
-      const cid = await promise
-      // Once promise resolves we store an actual CID.
-      this._cid = cid
-      return cid
-    }
-  }
-
-  links () {
-    return links(this.data, [], this)
-  }
-
-  tree () {
-    return tree(this.data, [], this)
-  }
-
-  /**
-   * @param {string} path
-   */
-  get (path) {
-    return get(this.data, path.split('/').filter(Boolean), this)
-  }
-}
-
-/**
- * @template T
- * @param {T} source
- * @param {Array<string|number>} base
- * @param {BlockConfig} config
- * @returns {Iterable<[string, CID]>}
- */
-const links = function * (source, base, config) {
-  for (const [key, value] of Object.entries(source)) {
-    const path = [...base, key]
-    if (value != null && typeof value === 'object') {
-      if (Array.isArray(value)) {
-        for (const [index, element] of value.entries()) {
-          const elementPath = [...path, index]
-          const cid = asCID(element, config)
-          if (cid) {
-            yield [elementPath.join('/'), cid]
-          } else if (typeof element === 'object') {
-            yield * links(element, elementPath, config)
-          }
-        }
-      } else {
-        const cid = asCID(value, config)
-        if (cid) {
-          yield [path.join('/'), cid]
-        } else {
-          yield * links(value, path, config)
-        }
-      }
-    }
-  }
-}
-
-/**
- * @template T
- * @param {T} source
- * @param {Array<string|number>} base
- * @param {BlockConfig} config
- * @returns {Iterable<string>}
- */
-const tree = function * (source, base, config) {
-  for (const [key, value] of Object.entries(source)) {
-    const path = [...base, key]
-    yield path.join('/')
-    if (value != null && typeof value === 'object' && !asCID(value, config)) {
-      if (Array.isArray(value)) {
-        for (const [index, element] of value.entries()) {
-          const elementPath = [...path, index]
-          yield elementPath.join('/')
-          if (typeof element === 'object' && !asCID(elementPath, config)) {
-            yield * tree(element, elementPath, config)
-          }
-        }
-      } else {
-        yield * tree(value, path, config)
-      }
-    }
-  }
-}
-
-/**
- * @template T
- * @param {T} source
- * @param {string[]} path
- * @param {BlockConfig} config
- */
-const get = (source, path, config) => {
-  let node = source
-  for (const [index, key] of path.entries()) {
-    node = node[key]
-    if (node == null) {
-      throw new Error(`Object has no property at ${path.slice(0, index - 1).map(part => `[${JSON.stringify(part)}]`).join('')}`)
-    }
-    const cid = asCID(node, config)
-    if (cid) {
-      return { value: cid, remaining: path.slice(index).join('/') }
-    }
-  }
-  return { value: node }
-}
-
-/**
- *
- * @param {Hasher} hasher
- * @param {Uint8Array} bytes
- * @param {number} code
- * @param {BlockConfig} context
- */
-
-const createCID = async (hasher, bytes, code, context) => {
-  const multihash = await hasher.digest(bytes)
-  return createV1(code, multihash, context)
-}
-
-/**
- * @template T
- */
-class BlockCodec {
-  /**
-   * @param {Encoder<T>} encoder
-   * @param {Decoder<T>} decoder
-   * @param {BlockConfig} config
-   */
-
-  constructor (encoder, decoder, config) {
-    this.encoder = new BlockEncoder(encoder, config)
-    this.decoder = new BlockDecoder(decoder, config)
-    this.config = config
-  }
-
-  /**
-   * @param {Uint8Array} bytes
-   * @param {BlockConfig} [options]
-   * @returns {Block<T>}
-   */
-  decode (bytes, options) {
-    return this.decoder.decode(bytes, { ...this.config, ...options })
-  }
-
-  /**
-   * @param {T} data
-   * @param {BlockConfig} [options]
-   * @returns {Block<T>}
-   */
-  encode (data, options) {
-    return this.encoder.encode(data, { ...this.config, ...options })
-  }
-}
-
-/**
- * @typedef {Object} Config
- * @property {MultibaseCodec<any>} base
- * @property {MultibaseCodec<'z'>} base58btc
- */
-
-class BlockAPI {
-  /**
-   * @param {BlockConfig} config
-   */
-  constructor (config) {
-    this.config = config
-    this.Block = Block
-  }
-
-  /**
-   * @template T
-   * @param {Encoder<T>} options
-   * @param {Partial<BlockConfig>} [options]
-   */
-  encoder (codec, options) {
-    return new BlockEncoder(codec, { ...this.config, ...options })
-  }
-
-  /**
-   * @template T
-   * @param {Decoder<T>} options
-   * @param {Partial<BlockConfig>} [options]
-   */
-  decoder (codec, options) {
-    return new BlockDecoder(codec, { ...this.config, ...options })
-  }
-
-  /**
-   * @template T
-   * @param {Object} codec
-   * @param {Encoder<T>} codec.encoder
-   * @param {Decoder<T>} codec.decoder
-   * @param {Partial<BlockConfig>} [options]
-   * @returns {BlockCodec<T>}
-   */
-
-  codec ({ encoder, decoder }, options) {
-    return new BlockCodec(encoder, decoder, { ...this.config, ...options })
-  }
-}
-
-/**
- * @param {BlockConfig} config
- */
-export const configure = (config) => new BlockAPI(config)
-
-export default configure
-
-/**
- * @typedef {import('./cid').CID} CID
  * @typedef {import('./block/interface').Config} BlockConfig
  * @typedef {import('./hashes/interface').MultihashHasher} Hasher
  **/

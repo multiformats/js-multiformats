@@ -83,3 +83,8 @@ export interface MultibaseCodec<Prefix extends string> {
   encoder: MultibaseEncoder<Prefix>
   decoder: MultibaseDecoder<Prefix>
 }
+
+
+export interface UnibaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
+  prefix: Prefix
+}

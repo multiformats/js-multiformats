@@ -39,8 +39,12 @@ export class Hasher {
    * @returns {Promise<Digest.Digest>}
    */
   async digest (input) {
-    const digest = await this.encode(input)
-    return Digest.create(this.code, digest)
+    if (input instanceof Uint8Array) {
+      const digest = await this.encode(input)
+      return Digest.create(this.code, digest)
+    } else {
+      throw Error('Unknown type, must be binary type')
+    }
   }
 }
 
