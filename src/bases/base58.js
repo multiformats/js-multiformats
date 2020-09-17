@@ -1,6 +1,6 @@
 // @ts-check
 
-import baseX from 'base-x'
+import baseX from '../../vendor/base-x.js'
 import { coerce } from '../bytes.js'
 import { from } from './base.js'
 

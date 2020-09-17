@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "build": "npm_config_yes=true npx ipjs@latest build --tests",
-    "build:vendor": "npx brrp -x varint > vendor/varint.js",
+    "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
+    "build:vendor:varint": "npx brrp -x varint > vendor/varint.js",
+    "build:vendor:base-x": "npx brrp -x @multiformats/base-x > vendor/base-x.js",
     "publish": "npm_config_yes=true npx ipjs@latest publish",
     "lint": "standard",
     "test:cjs": "npm run build && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
@@ -70,7 +72,6 @@
     ]
   },
   "dependencies": {
-    "base-x": "^3.0.8",
     "buffer": "^5.6.0",
     "cids": "^1.0.0"
   },
