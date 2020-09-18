@@ -15,8 +15,9 @@ export const codec = ({ name, code, decode, encode }) =>
   new Codec(name, code, encode, decode)
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./interface').BlockEncoder<T>} BlockEncoder
+ * @typedef {import('./interface').BlockEncoder<Code, T>} BlockEncoder
  */
 
 /**
@@ -24,7 +25,7 @@ export const codec = ({ name, code, decode, encode }) =>
  * @template T
  * @template {string} Name
  * @template {number} Code
- * @implements {BlockEncoder<T>}
+ * @implements {BlockEncoder<Code, T>}
  */
 export class Encoder {
   /**
@@ -40,28 +41,34 @@ export class Encoder {
 }
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./interface').BlockDecoder<T>} BlockDecoder
+ * @typedef {import('./interface').BlockDecoder<Code, T>} BlockDecoder
  */
 
 /**
  * @class
+ * @template {number} Code
  * @template T
- * @implements {BlockDecoder<T>}
+ * @implements {BlockDecoder<Code, T>}
  */
 export class Decoder {
   /**
+   * @param {string} name
+   * @param {Code} code
    * @param {(bytes:Uint8Array) => T} decode
    */
-  constructor (code, decode) {
+  constructor (name, code, decode) {
+    this.name = name
     this.code = code
     this.decode = decode
   }
 }
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./interface').BlockCodec<T>} BlockCodec
+ * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
  */
 
 /**
@@ -69,7 +76,7 @@ export class Decoder {
  * @template {string} Name
  * @template {number} Code
  * @template T
- * @implements {BlockCodec<T>}
+ * @implements {BlockCodec<Code, T>}
  */
 export class Codec {
   /**
@@ -86,8 +93,8 @@ export class Codec {
   }
 
   get decoder () {
-    const { name, decode } = this
-    const decoder = new Decoder(name, decode)
+    const { name, code, decode } = this
+    const decoder = new Decoder(name, code, decode)
     Object.defineProperty(this, 'decoder', { value: decoder })
     return decoder
   }

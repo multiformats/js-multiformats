@@ -136,7 +136,7 @@ class ComposedDecoder {
     /** @type {Object<string, UnibaseDecoder<Prefix>>} */
     this.decoders = decoders
     // so that we can distinguish between unibase and multibase
-    /** @type {void} */
+    /** @type {null} */
     this.prefix = null
   }
 

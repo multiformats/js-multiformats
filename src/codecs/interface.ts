@@ -1,18 +1,18 @@
 /**
  * IPLD encoder part of the codec.
  */
-export interface BlockEncoder<T> {
+export interface BlockEncoder<Code extends number, T> {
   name: string
-  code: number
-  encode(data: T): Uint8Array
+  code: Code
+  encode(data: T): ByteView<T>
 }
 
 /**
  * IPLD decoder part of the codec.
  */
-export interface BlockDecoder<T> {
-  code: number
-  decode(bytes: Uint8Array): T
+export interface BlockDecoder<Code extends number, T> {
+  code: Code
+  decode(bytes: ByteView<T>): T
 }
 
 /**
@@ -20,5 +20,12 @@ export interface BlockDecoder<T> {
  * separate those capabilties as sender requires encoder and receiver
  * requires decoder.
  */
-export interface BlockCodec<T> extends BlockEncoder<T>, BlockDecoder<T> { }
+export interface BlockCodec<Code extends number, T> extends BlockEncoder<Code, T>, BlockDecoder<Code, T> { }
 
+
+// This just a hack to retain type information abouth the data that
+// is incoded `T`  Because it's a union `data` field is never going
+// to be usable anyway.
+type ByteView<T> =
+  | Uint8Array
+  | Uint8Array & { data: T }

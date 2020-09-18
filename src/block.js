@@ -3,13 +3,14 @@
 import CID from './cid.js'
 
 /**
+ * @template {number} Code
  * @template T
  * @class
  */
 export default class Block {
   /**
    * @param {CID|null} cid
-   * @param {number} code
+   * @param {Code} code
    * @param {T} data
    * @param {Uint8Array} bytes
    * @param {BlockConfig} config
@@ -56,8 +57,9 @@ export default class Block {
   }
 
   /**
+   * @template {number} Code
    * @template T
-   * @param {Encoder<T>} codec
+   * @param {Encoder<Code, T>} codec
    * @param {BlockConfig} options
    */
   static encoder (codec, options) {
@@ -65,8 +67,9 @@ export default class Block {
   }
 
   /**
+   * @template {number} Code
    * @template T
-   * @param {Decoder<T>} codec
+   * @param {Decoder<Code, T>} codec
    * @param {BlockConfig} options
    */
   static decoder (codec, options) {
@@ -74,12 +77,13 @@ export default class Block {
   }
 
   /**
+   * @template {number} Code
    * @template T
    * @param {Object} codec
-   * @param {Encoder<T>} codec.encoder
-   * @param {Decoder<T>} codec.decoder
-   * @param {Object} [options]
-   * @returns {BlockCodec<T>}
+   * @param {Encoder<Code, T>} codec.encoder
+   * @param {Decoder<Code, T>} codec.decoder
+   * @param {BlockConfig} options
+   * @returns {BlockCodec<Code, T>}
    */
 
   static codec ({ encoder, decoder }, options) {
@@ -178,12 +182,13 @@ const createCID = async (hasher, bytes, code) => {
 }
 
 /**
+ * @template {number} Code
  * @template T
  */
 class BlockCodec {
   /**
-   * @param {Encoder<T>} encoder
-   * @param {Decoder<T>} decoder
+   * @param {Encoder<Code, T>} encoder
+   * @param {Decoder<Code, T>} decoder
    * @param {BlockConfig} config
    */
 
@@ -195,8 +200,8 @@ class BlockCodec {
 
   /**
    * @param {Uint8Array} bytes
-   * @param {BlockConfig} [options]
-   * @returns {Block<T>}
+   * @param {Partial<BlockConfig>} [options]
+   * @returns {Block<Code, T>}
    */
   decode (bytes, options) {
     return this.decoder.decode(bytes, { ...this.config, ...options })
@@ -204,8 +209,8 @@ class BlockCodec {
 
   /**
    * @param {T} data
-   * @param {BlockConfig} [options]
-   * @returns {Block<T>}
+   * @param {Partial<BlockConfig>} [options]
+   * @returns {Block<Code, T>}
    */
   encode (data, options) {
     return this.encoder.encode(data, { ...this.config, ...options })
@@ -214,11 +219,12 @@ class BlockCodec {
 
 /**
  * @class
+ * @template {number} Code
  * @template T
  */
 class BlockEncoder {
   /**
-   * @param {Encoder<T>} codec
+   * @param {Encoder<Code, T>} codec
    * @param {BlockConfig} config
    */
   constructor (codec, config) {
@@ -228,8 +234,8 @@ class BlockEncoder {
 
   /**
    * @param {T} data
-   * @param {BlockConfig} [options]
-   * @returns {Block}
+   * @param {Partial<BlockConfig>} [options]
+   * @returns {Block<Code, T>}
    */
   encode (data, options) {
     const { codec } = this
@@ -240,11 +246,12 @@ class BlockEncoder {
 
 /**
  * @class
+ * @template {number} Code
  * @template T
  */
 class BlockDecoder {
   /**
-   * @param {Decoder<T>} codec
+   * @param {Decoder<Code, T>} codec
    * @param {BlockConfig} config
    */
   constructor (codec, config) {
@@ -255,7 +262,7 @@ class BlockDecoder {
   /**
    * @param {Uint8Array} bytes
    * @param {Partial<BlockConfig>} [options]
-   * @returns {Block}
+   * @returns {Block<Code, T>}
    */
   decode (bytes, options) {
     const data = this.codec.decode(bytes)
@@ -283,16 +290,19 @@ class BlockDecoder {
  */
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockEncoder<T>} Encoder
+ * @typedef {import('./codecs/interface').BlockEncoder<Code, T>} Encoder
  */
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockDecoder} Decoder
+ * @typedef {import('./codecs/interface').BlockDecoder<Code, T>} Decoder
  */
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockCodec} Codec
+ * @typedef {import('./codecs/interface').BlockCodec<Code, T>} Codec
  */

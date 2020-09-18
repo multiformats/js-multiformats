@@ -27,6 +27,7 @@ const legacy = (codec, { hashes }) => {
     }
 
     if (bytes.isBinary(obj)) {
+      // @ts-ignore
       return Buffer.from(obj)
     }
 
@@ -93,7 +94,7 @@ const legacy = (codec, { hashes }) => {
     let value = codec.decode(buff)
     const entries = path.split('/').filter(x => x)
     while (entries.length) {
-      value = value[entries.shift()]
+      value = value[/** @type {string} */(entries.shift())]
       if (typeof value === 'undefined') throw new Error('Not found')
       if (OldCID.isCID(value)) {
         return { value, remainderPath: entries.join('/') }
