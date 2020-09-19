@@ -44,15 +44,11 @@ export class Encoder {
 
   /**
    * @template {number} OtherCode
-   * @template T
    * @param {BlockEncoder<OtherCode, T>|MultiblockEncoder<OtherCode, T>} other
    * @returns {Encoder<Code|OtherCode, T>}
    */
   or (other) {
-    return new Encoder({
-      ...this.codecs,
-      ...other.codecs || { [other.code]: other }
-    })
+    return Encoder.or(this, other)
   }
 }
 
@@ -100,15 +96,10 @@ export class Decoder {
 
   /**
    * @template {number} OtherCode
-   * @template T
    * @param {BlockDecoder<OtherCode, T>|MultiblockDecoder<OtherCode, T>} other
-   * @returns {Decoder<Code|OtherCode, T>}
    */
   or (other) {
-    return new Decoder({
-      ...this.codecs,
-      ...other.codecs || { [other.code]: other }
-    })
+    return Decoder.or(this, other)
   }
 }
 
@@ -170,15 +161,11 @@ export class Codec {
 
   /**
    * @template {number} OtherCode
-   * @template T
-   * @param {BlockEncoder<OtherCode, T>|MultiblockEncoder<OtherCode, T>} other
-   * @returns {Encoder<Code|OtherCode, T>}
+   * @param {BlockCodec<OtherCode, T>|MultiblockCodec<OtherCode, T>} other
+   * @returns {Codec<Code|OtherCode, T>}
    */
   or (other) {
-    return new Encoder({
-      ...this.codecs,
-      ...other.codecs || { [other.code]: other }
-    })
+    return Codec.or(this, other)
   }
 
   /**
