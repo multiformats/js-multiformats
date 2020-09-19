@@ -5,7 +5,22 @@
  * @template T
  * @implements {MultiblockEncoder<Code, T>}
  */
-class Encoder {
+export class Encoder {
+  /**
+   * @template {number} LeftCode
+   * @template {number} RightCode
+   * @template T
+   * @param {BlockEncoder<LeftCode, T>|MultiblockEncoder<LeftCode, T>} left
+   * @param {BlockEncoder<RightCode, T>|MultiblockEncoder<RightCode, T>} right
+   * @returns {Encoder<LeftCode|RightCode, T>}
+   */
+  static or (left, right) {
+    return new Encoder({
+      ...left.codecs || { [left.code]: left },
+      ...right.codecs || { [right.code]: right }
+    })
+  }
+
   /**
    * @param {Record<Code, BlockEncoder<Code, T>>} codecs
    */
@@ -46,7 +61,22 @@ class Encoder {
  * @template T
  * @implements {MultiblockDecoder<Code, T>}
  */
-class Decoder {
+export class Decoder {
+  /**
+   * @template {number} LeftCode
+   * @template {number} RightCode
+   * @template T
+   * @param {BlockDecoder<LeftCode, T>|MultiblockDecoder<LeftCode, T>} left
+   * @param {BlockDecoder<RightCode, T>|MultiblockDecoder<RightCode, T>} right
+   * @returns {Decoder<LeftCode|RightCode, T>}
+   */
+  static or (left, right) {
+    return new Decoder({
+      ...left.codecs || { [left.code]: left },
+      ...right.codecs || { [right.code]: right }
+    })
+  }
+
   /**
    * @param {Record<Code, BlockDecoder<Code, T>>} codecs
    */
@@ -71,11 +101,11 @@ class Decoder {
   /**
    * @template {number} OtherCode
    * @template T
-   * @param {BlockEncoder<OtherCode, T>|MultiblockEncoder<OtherCode, T>} other
-   * @returns {Encoder<Code|OtherCode, T>}
+   * @param {BlockDecoder<OtherCode, T>|MultiblockDecoder<OtherCode, T>} other
+   * @returns {Decoder<Code|OtherCode, T>}
    */
   or (other) {
-    return new Encoder({
+    return new Decoder({
       ...this.codecs,
       ...other.codecs || { [other.code]: other }
     })
@@ -87,37 +117,7 @@ class Decoder {
  * @template T
  * @implements {MultiblockCodec<Code, T>}
  */
-export default class Codec {
-  /**
-   * @template {number} Code
-   * @template T
-   * @param {BlockCodec<Code, T>|MultiblockCodec<Code, T>} codec
-   * @returns {Codec<Code, T>}
-   */
-  static codec (codec) {
-    return new Codec(codec.codecs || { [codec.code]: codec })
-  }
-
-  /**
-   * @template {number} Code
-   * @template T
-   * @param {BlockDecoder<Code, T>|MultiblockDecoder<Code, T>} codec
-   * @returns {Decoder<Code, T>}
-   */
-  static decoder (codec) {
-    return new Decoder(codec.codecs || { [codec.code]: codec })
-  }
-
-  /**
-   * @template {number} Code
-   * @template T
-   * @param {BlockEncoder<Code, T>|MultiblockEncoder<Code, T>} codec
-   * @returns {Encoder<Code, T>}
-   */
-  static encoder (codec) {
-    return new Encoder(codec.codecs || { [codec.code]: codec })
-  }
-
+export class Codec {
   /**
    * @template {number} LeftCode
    * @template {number} RightCode
@@ -202,53 +202,53 @@ export default class Codec {
 
 /**
  * @template T
- * @typedef {import('./codecs/interface').ByteView<T>}
+ * @typedef {import('./interface').ByteView<T>}
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockEncoder<Code, T>} BlockEncoder
+ * @typedef {import('./interface').BlockEncoder<Code, T>} BlockEncoder
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockDecoder<Code, T>} BlockDecoder
+ * @typedef {import('./interface').BlockDecoder<Code, T>} BlockDecoder
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockCodec<Code, T>} BlockCodec
+ * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').MultiblockEncoder<Code, T>} MultiblockEncoder
+ * @typedef {import('./interface').MultiblockEncoder<Code, T>} MultiblockEncoder
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').MultiblockDecoder<Code, T>} MultiblockDecoder
+ * @typedef {import('./interface').MultiblockDecoder<Code, T>} MultiblockDecoder
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').MultiblockCodec<Code, T>} MultiblockCodec
+ * @typedef {import('./interface').MultiblockCodec<Code, T>} MultiblockCodec
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').Multiblock<Code, T>} Multiblock
+ * @typedef {import('./interface').Multiblock<Code, T>} Multiblock
  */
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').MultiblockView<Code, T>} MultiblockView
+ * @typedef {import('./interface').MultiblockView<Code, T>} MultiblockView
  */

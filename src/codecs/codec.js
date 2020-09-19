@@ -1,5 +1,7 @@
 // @ts-check
 
+import { Encoder as MEncoder, Decoder as MDecoder, Codec as MCodec } from './multicodec.js'
+
 /**
  * @template {string} Name
  * @template {number} Code
@@ -21,6 +23,12 @@ export const codec = ({ name, code, decode, encode }) =>
  */
 
 /**
+ * @template {number} Code
+ * @template T
+ * @typedef {import('./interface').MultiblockEncoder<Code, T>} MultiblockEncoder
+ */
+
+/**
  * @class
  * @template T
  * @template {string} Name
@@ -38,12 +46,27 @@ export class Encoder {
     this.code = code
     this.encode = encode
   }
+
+  /**
+   * @template {number} OtherCode
+   * @param {BlockEncoder<OtherCode, T>|MultiblockEncoder<OtherCode, T>} codec
+   * @returns {MEncoder<Code|OtherCode, T>}
+   */
+  or (codec) {
+    return MEncoder.or(this, codec)
+  }
 }
 
 /**
  * @template {number} Code
  * @template T
  * @typedef {import('./interface').BlockDecoder<Code, T>} BlockDecoder
+ */
+
+/**
+ * @template {number} Code
+ * @template T
+ * @typedef {import('./interface').MultiblockDecoder<Code, T>} MultiblockDecoder
  */
 
 /**
@@ -63,12 +86,26 @@ export class Decoder {
     this.code = code
     this.decode = decode
   }
+
+  /**
+   * @template {number} OtherCode
+   * @param {BlockDecoder<OtherCode, T>|MultiblockDecoder<OtherCode, T>} codec
+   * @returns {MDecoder<Code|OtherCode, T>}
+   */
+  or (codec) {
+    return MDecoder.or(this, codec)
+  }
 }
 
 /**
  * @template {number} Code
  * @template T
  * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
+ */
+/**
+ * @template {number} Code
+ * @template T
+ * @typedef {import('./interface').MultiblockCodec<Code, T>} MultiblockCodec
  */
 
 /**
@@ -90,6 +127,15 @@ export class Codec {
     this.code = code
     this.encode = encode
     this.decode = decode
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @param {BlockCodec<OtherCode, T>|MultiblockCodec<OtherCode, T>} other
+   * @returns {MCodec<Code|OtherCode, T>}
+   */
+  or (other) {
+    return MCodec.or(this, other)
   }
 
   get decoder () {
