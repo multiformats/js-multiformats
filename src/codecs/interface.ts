@@ -26,6 +26,6 @@ export interface BlockCodec<Code extends number, T> extends BlockEncoder<Code, T
 // This just a hack to retain type information abouth the data that
 // is incoded `T`  Because it's a union `data` field is never going
 // to be usable anyway.
-type ByteView<T> =
+export type ByteView<T> =
   | Uint8Array
   | Uint8Array & { data: T }
