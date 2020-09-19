@@ -37,7 +37,9 @@ export interface BaseCodec {
  * Multibase represets base encoded strings with a prefix first character
  * describing it's encoding.
  */
-export type Multibase<Prefix extends string> = string
+export type Multibase<Prefix extends string> =
+  | string
+  | string & { [0]: Prefix }
 
 /**
  * Multibase encoder for the specific base encoding encodes bytes into
@@ -86,5 +88,12 @@ export interface MultibaseCodec<Prefix extends string> {
 
 
 export interface UnibaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
-  prefix: Prefix
+  // Reserve this property so it can be used to derive type.
+  readonly decoders?: null
+
+  readonly prefix: Prefix
+}
+
+export interface CombobaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
+  readonly decoders: Record<Prefix, UnibaseDecoder<Prefix>>
 }

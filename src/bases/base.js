@@ -51,15 +51,18 @@ class Encoder {
 }
 
 /**
- * @template {string} T
- * @typedef {import('./interface').MultibaseDecoder<T>} MultibaseDecoder
+ * @template {string} Prefix
+ * @typedef {import('./interface').MultibaseDecoder<Prefix>} MultibaseDecoder
  */
 
 /**
- * @template {string} T
- * @typedef {import('./interface').UnibaseDecoder<T>} UnibaseDecoder
+ * @template {string} Prefix
+ * @typedef {import('./interface').UnibaseDecoder<Prefix>} UnibaseDecoder
  */
 
+/**
+ * @template {string} Prefix
+ */
 /**
  * Class represents both BaseDecoder and MultibaseDecoder so it could be used
  * to decode multibases (with matching prefix) or just base decode strings
@@ -107,37 +110,48 @@ class Decoder {
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
-    if (decoder instanceof ComposedDecoder) {
-      return new ComposedDecoder({ [this.prefix]: this, ...decoder.decoders })
-    } else {
-      return new ComposedDecoder({ [this.prefix]: this, [decoder.prefix]: decoder })
-    }
+    /** @type {Decoders<Prefix|OtherPrefix>} */
+    const decoders = ({
+      [this.prefix]: this,
+      ...decoder.decoders || ({ [decoder.prefix]: decoder })
+    })
+
+    return new ComposedDecoder(decoders)
   }
 }
 
 /**
  * @template {string} Prefix
+ * @typedef {import('./interface').CombobaseDecoder<Prefix>} CombobaseDecoder
+ */
+
+/**
+ * @template {string} Prefix
+ * @typedef {Record<Prefix, UnibaseDecoder<Prefix>>} Decoders
+ */
+
+/**
+ * @template {string} Prefix
  * @implements {MultibaseDecoder<Prefix>}
+ * @implements {CombobaseDecoder<Prefix>}
  */
 class ComposedDecoder {
   /**
-   * @template {string} T
-   * @param {UnibaseDecoder<T>} decoder
-   * @returns {ComposedDecoder<T>}
+   * @template {string} Prefix
+   * @param {UnibaseDecoder<Prefix>} decoder
+   * @returns {ComposedDecoder<Prefix>}
    */
   static from (decoder) {
-    return new ComposedDecoder({ [decoder.prefix]: decoder })
+    return new ComposedDecoder(/** @type {Decoders<Prefix>} */ ({
+      [decoder.prefix]: decoder
+    }))
   }
 
   /**
-   * @param {Object<Prefix, UnibaseDecoder<Prefix>>} decoders
+   * @param {Record<Prefix, UnibaseDecoder<Prefix>>} decoders
    */
   constructor (decoders) {
-    /** @type {Object<string, UnibaseDecoder<Prefix>>} */
     this.decoders = decoders
-    // so that we can distinguish between unibase and multibase
-    /** @type {null} */
-    this.prefix = null
   }
 
   /**
@@ -146,11 +160,12 @@ class ComposedDecoder {
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
-    if (decoder instanceof ComposedDecoder) {
-      return new ComposedDecoder({ ...this.decoders, ...decoder.decoders })
-    } else {
-      return new ComposedDecoder({ ...this.decoders, [decoder.prefix]: decoder })
-    }
+    /** @type {Decoders<OtherPrefix>} */
+    const other = (decoder.decoders || { [decoder.prefix]: decoder })
+    return new ComposedDecoder({
+      ...this.decoders,
+      ...other
+    })
   }
 
   /**
