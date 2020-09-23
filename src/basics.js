@@ -7,10 +7,10 @@ import * as sha2 from './hashes/sha2.js'
 import raw from './codecs/raw.js'
 import json from './codecs/json.js'
 
-import { CID, hasher, digest, varint, bytes } from './index.js'
+import { CID, Block, hasher, digest, varint, bytes } from './index.js'
 
 const bases = { ...base32, ...base58 }
 const hashes = { ...sha2 }
 const codecs = { raw, json }
 
-export { CID, hasher, digest, varint, bytes, hashes, bases, codecs }
+export { CID, Block, hasher, digest, varint, bytes, hashes, bases, codecs }
