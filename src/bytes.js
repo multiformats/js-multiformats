@@ -12,7 +12,7 @@ const toHex = d => d.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '
  */
 const fromHex = hex => {
   if (!hex.length) return empty
-  return new Uint8Array(hex.match(/../g).map(b => parseInt(b, 16)))
+  return new Uint8Array(/** @type {string[]} */(hex.match(/../g)).map(b => parseInt(b, 16)))
 }
 
 /**

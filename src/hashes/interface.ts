@@ -9,38 +9,52 @@
 // a bunch of places that parse it to extract (code, digest, size). By creating
 // this first class representation we avoid reparsing and things generally fit
 // really nicely.
-export interface MultihashDigest {
+export interface MultihashDigest<Code extends number> {
   /**
    * Code of the multihash
    */
-  code: number
+  readonly code: Code
 
   /**
    * Raw digest (without a hashing algorithm info)
    */
-  digest: Uint8Array
+  readonly digest: Uint8Array
 
   /**
    * byte length of the `this.digest`
    */
-  size: number
+  readonly size: number
 
   /**
    * Binary representation of the this multihash digest.
    */
-  bytes: Uint8Array
+  readonly bytes: Uint8Array
 }
-
 
 /**
  * Hasher represents a hashing algorithm implementation that produces as
  * `MultihashDigest`.
  */
-export interface MultihashHasher {
-  /**
-   * Takes binary `input` and returns it (multi) hash digest.
-   * @param {Uint8Array} input
-   */
-  digest(input: Uint8Array): Promise<MultihashDigest>
+export interface Hasher<Code extends number> {
+  readonly code: Code
+
+
+  digestBytes(bytes: Uint8Array): Promise<MultihashDigest<Code>>
 }
 
+export interface MultihashHasher<Code extends number> extends Hasher<Code> {
+  readonly hashers: Record<Code, Hasher<Code>>
+
+  digest(input: HashInput<Code>): Promise<MultihashDigest<Code>>
+
+  or<OtherCode extends number>(other: MultihashHasher<OtherCode>): MultihashHasher<Code | OtherCode>
+}
+
+export interface HashInput<Code extends number> {
+  readonly code: Code
+  readonly bytes: Uint8Array
+}
+
+export type Await<T> =
+  | Promise<T>
+  | T

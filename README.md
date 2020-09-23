@@ -27,17 +27,25 @@ const cid = CID.create(1, dagcbor.code, hash)
 ```
 
 However, if you're doing this much you should probably use multiformats
-with the `Block` API.
+with the `dag` API.
 
 ```js
 // Import basics package with dep-free codecs, hashes, and base encodings
-import { block } from 'multiformats/basics'
+import { dag } from 'multiformats/basics'
 import { sha256 } from 'multiformats/hashes/sha2'
-import dagcbor from '@ipld/dag-cbor'
+import cbor from '@ipld/dag-cbor'
+import json from '@ipld/dag-json'
 
-const encoder = block.encoder(dagcbor, { hasher: sha256 })
-const hello = encoder.encode({ hello: 'world' })
+const encoder = dag.encoder({ multicodec: dag.or(json), hasher: sha256 })
+
+const hello = encoder.encodeBlock({ hello: 'world' })
 const cid = await hello.cid()
+
+const greeting = encoder.encode({ code: json.code, value: { greeting: hello } })
+await greeting.cid()
+
+const decoder = dag.decoder({ multicodec: dag.or(json), hasher: sha256 })
+decoder.decode({ code: json.code, bytes: greeting.bytes })
 ```
 
 # Plugins

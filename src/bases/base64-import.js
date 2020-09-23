@@ -1,6 +1,7 @@
 
 // @ts-check
 
+import { Buffer } from 'buffer'
 import { coerce } from '../bytes.js'
 import b64 from './base64.js'
 
