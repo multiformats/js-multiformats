@@ -99,6 +99,7 @@ export default class CID {
       case 1: {
         return this
       }
+      /* c8 ignore next 3 */
       default: {
         throw Error(`Can not convert CID version ${this.version} to version 0. This is a bug please report`)
       }

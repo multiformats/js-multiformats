@@ -304,6 +304,19 @@ describe('CID', () => {
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.toV0(), 'Cannot convert non sha2-256 multihash CID to CIDv0')
     })
+
+    test('should return same instance when converting v1 to v1', async () => {
+      const hash = await sha512.digest(Buffer.from(`TEST${Date.now()}`))
+      const cid = CID.create(1, 112, hash)
+
+      same(cid.toV1() === cid, true)
+    })
+
+    test('should return same instance when converting v0 to v0', async () => {
+      const hash = await sha256.digest(Buffer.from(`TEST${Date.now()}`))
+      const cid = CID.create(0, 112, hash)
+      same(cid.toV0() === cid, true)
+    })
   })
 
   describe('caching', () => {
@@ -400,6 +413,48 @@ describe('CID', () => {
     assert.strictEqual(cid5.version, 1)
     assert.ok(equals(cid5.multihash, hash))
     assert.strictEqual(cid5.code, 85)
+  })
+
+  describe('CID.parse', async () => {
+    test('parse 32 encoded CIDv1', async () => {
+      const hash = await sha256.digest(Buffer.from('abc'))
+      const cid = CID.create(1, 112, hash)
+
+      const parsed = CID.parse(cid.toString())
+      same(cid, parsed)
+    })
+
+    test('parse base58btc encoded CIDv1', async () => {
+      const hash = await sha256.digest(Buffer.from('abc'))
+      const cid = CID.create(1, 112, hash)
+
+      const parsed = CID.parse(cid.toString(base58btc))
+      same(cid, parsed)
+    })
+
+    test('parse base58btc encoded CIDv0', async () => {
+      const hash = await sha256.digest(Buffer.from('abc'))
+      const cid = CID.create(0, 112, hash)
+
+      const parsed = CID.parse(cid.toString())
+      same(cid, parsed)
+    })
+
+    test('fails to parse base64 encoded CIDv1', async () => {
+      const hash = await sha256.digest(Buffer.from('abc'))
+      const cid = CID.create(1, 112, hash)
+      const msg = 'To parse non base32 or base56btc encoded CID multibase decoder must be provided'
+
+      await testThrow(() => CID.parse(cid.toString(base64)), msg)
+    })
+
+    test('parses base64 encoded CIDv1 if base64 is provided', async () => {
+      const hash = await sha256.digest(Buffer.from('abc'))
+      const cid = CID.create(1, 112, hash)
+
+      const parsed = CID.parse(cid.toString(base64), base64)
+      same(cid, parsed)
+    })
   })
 
   test('new CID from old CID', async () => {
