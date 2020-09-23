@@ -67,7 +67,7 @@ describe('multibase', () => {
   const buff = bytes.fromString('test')
   const baseTest = bases => {
     for (const base of Object.values(bases)) {
-      if (base) {
+      if (base && base.name) {
         test(`encode/decode ${base.name}`, () => {
           const encoded = base.encode(buff)
           const decoded = base.decode(encoded)

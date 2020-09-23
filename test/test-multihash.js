@@ -6,9 +6,15 @@ import invalid from './fixtures/invalid-multihash.js'
 import crypto from 'crypto'
 import { sha256, sha512, __browser } from 'multiformats/hashes/sha2'
 import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
-const same = assert.deepStrictEqual
 const test = it
 const encode = name => data => coerce(crypto.createHash(name).update(data).digest())
+
+const same = (x, y) => {
+  if (x instanceof Uint8Array && y instanceof Uint8Array) {
+    if (Buffer.compare(Buffer.from(x), Buffer.from(y)) === 0) return
+  }
+  return assert.deepStrictEqual(x, y)
+}
 
 const sample = (code, size, hex) => {
   const toHex = (i) => {

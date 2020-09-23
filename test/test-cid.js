@@ -11,7 +11,13 @@ import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import util from 'util'
 import { Buffer } from 'buffer'
 const test = it
-const same = assert.deepStrictEqual
+
+const same = (x, y) => {
+  if (x instanceof Uint8Array && y instanceof Uint8Array) {
+    if (Buffer.compare(Buffer.from(x), Buffer.from(y)) === 0) return
+  }
+  return assert.deepStrictEqual(x, y)
+}
 
 // eslint-disable-next-line no-unused-vars
 
@@ -63,7 +69,8 @@ describe('CID', () => {
 
       same(cid.code, 112)
       same(cid.version, 0)
-      same(cid.multihash, hash)
+      same(cid.multihash.digest, hash.digest)
+      same({ ...cid.multihash, digest: null }, { ...hash, digest: null })
       cid.toString()
       same(cid.toString(), base58btc.baseEncode(hash.bytes))
     })
@@ -146,7 +153,10 @@ describe('CID', () => {
 
       same(cid1.code, cid2.code)
       same(cid1.version, cid2.version)
-      same(cid1.multihash, cid2.multihash)
+      same(cid1.multihash.digest, cid2.multihash.digest)
+      same(cid1.multihash.bytes, cid2.multihash.bytes)
+      const clear = { digest: null, bytes: null }
+      same({ ...cid1.multihash, ...clear }, { ...cid2.multihash, ...clear })
     })
 
     /* TODO: after i have a keccak hash for the new interface
