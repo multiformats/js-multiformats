@@ -67,7 +67,7 @@ export class Hasher {
   /**
    * @template {number} OtherCode
    * @param {MultihashHasher<OtherCode>} other
-   * @returns {ComposedHasher<Code|OtherCode>}
+   * @returns {MultihashHasher<Code|OtherCode>}
    */
   or (other) {
     /** @type {UnihashHasher<Code|OtherCode>} */
@@ -75,7 +75,8 @@ export class Hasher {
     /** @type {MultihashHasher<Code|OtherCode>} */
     const extension = (other)
     return new ComposedHasher(base, {
-      ...extension.hashers
+      ...extension.hashers,
+      [base.code]: base
     })
   }
 }
@@ -126,7 +127,7 @@ class ComposedHasher {
   /**
    * @template {number} OtherCode
    * @param {MultihashHasher<OtherCode>} other
-   * @returns {ComposedHasher<Code|OtherCode>}
+   * @returns {MultihashHasher<Code|OtherCode>}
    */
   or (other) {
     /** @type {MultihashHasher<Code|OtherCode>} */

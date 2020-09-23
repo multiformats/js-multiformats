@@ -66,6 +66,8 @@ export interface DagEncoder<Codec extends number, Algorithm extends number, T> {
   hasher: MultihashHasher<Algorithm>
 
   encode(block: BlockDraft<Codec, Algorithm, T>): Block<T>
+
+  or<C extends number, A extends number>(other: DagEncoder<Codec | C, Algorithm | A, T>): DagEncoder<Codec | C, Algorithm | A, T>
 }
 
 
@@ -74,6 +76,8 @@ export interface DagDecoder<Codec extends number, Algorithm extends number, T> {
   hasher: MultihashHasher<Algorithm>
 
   decode(block: BlockView<Codec, Algorithm, T>): Block<T>
+
+  or<C extends number, A extends number>(other: DagDecoder<Codec | C, Algorithm | A, T>): DagDecoder<Codec | C, Algorithm | A, T>
 }
 
 export interface DagCodec<Code extends number, Algorithm extends number, T> extends DagEncoder<Code, Algorithm, T>, DagDecoder<Code, Algorithm, T> {
@@ -82,6 +86,7 @@ export interface DagCodec<Code extends number, Algorithm extends number, T> exte
   decoder: DagDecoder<Code, Algorithm, T>
   encoder: DagEncoder<Code, Algorithm, T>
 
+  or<C extends number, A extends number>(other: DagCodec<Code | C, Algorithm | A, T>): DagCodec<Code | C, Algorithm | A, T>
 }
 
 export { ByteView }

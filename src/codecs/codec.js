@@ -404,6 +404,21 @@ class ComposedCodec {
   decode (input) {
     return this.decoder.decode(input)
   }
+
+  /**
+   * @template {number} OtherCode
+   * @param {MulticodecCodec<OtherCode, T>} other
+   * @returns {MulticodecCodec<Code|OtherCode, T>}
+   */
+  or (other) {
+    /** @type {BlockCodec<Code|OtherCode, T>} */
+    const defaultCodec = this.defaultCodec
+
+    return new ComposedCodec(defaultCodec, {
+      ...this.codecs,
+      ...other.codecs
+    })
+  }
 }
 
 /**

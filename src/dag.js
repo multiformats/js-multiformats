@@ -7,7 +7,7 @@ import Block from './dag/block.js'
  * @template {number} HashAlgorithm
  * @template T
  * @param {Object} options
- * @param {MulticodecCodec<Code, T> & BlockCodec<Code, T>} options.multicodec
+ * @param {MulticodecCodec<Code, T>} options.multicodec
  * @param {MultihashHasher<HashAlgorithm>} options.hasher
  * @returns {Codec<Code, HashAlgorithm, T>}
  */
@@ -19,7 +19,7 @@ export const codec = ({ multicodec, hasher }) =>
  * @template {number} HashAlgorithm
  * @template T
  * @param {Object} options
- * @param {MulticodecEncoder<Code, T> & BlockEncoder<Code, T>} options.multicodec
+ * @param {MulticodecEncoder<Code, T>} options.multicodec
  * @param {MultihashHasher<HashAlgorithm>} options.hasher
  * @returns {Encoder<Code, HashAlgorithm, T>}
  */
@@ -31,7 +31,7 @@ export const encoder = ({ multicodec, hasher }) =>
  * @template {number} HashAlgorithm
  * @template T
  * @param {Object} options
- * @param {MulticodecDecoder<Code, T> & BlockDecoder<Code, T>} options.multicodec
+ * @param {MulticodecDecoder<Code, T>} options.multicodec
  * @param {MultihashHasher<HashAlgorithm>} options.hasher
  * @returns {Decoder<Code, HashAlgorithm, T>}
  */
@@ -47,7 +47,7 @@ export const decoder = ({ multicodec, hasher }) =>
  */
 class Encoder {
   /**
-   * @param {MulticodecEncoder<Code, T> & BlockEncoder<Code, T>} encoder
+   * @param {MulticodecEncoder<Code, T>} encoder
    * @param {MultihashHasher<Algorithm>} hasher
    */
   constructor (encoder, hasher) {
@@ -71,6 +71,16 @@ class Encoder {
   encode (input) {
     const { bytes, code } = this.codec.encode(input)
     return Block.createWithHasher(input.value, bytes, code, this.hasher)
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @template {number} OtherAlgorithm
+   * @param {DagEncoder<OtherCode, OtherAlgorithm, T>} other
+   * @returns {DagEncoder<Code|OtherCode, Algorithm|OtherAlgorithm, T>}
+   */
+  or (other) {
+    return new Encoder(this.codec.or(other.codec), this.hasher.or(other.hasher))
   }
 }
 
@@ -117,6 +127,16 @@ class Decoder {
       return Block.createWithHasher(value, input.bytes, code, this.hasher)
     }
   }
+
+  /**
+   * @template {number} OtherCode
+   * @template {number} OtherAlgorithm
+   * @param {DagDecoder<OtherCode, OtherAlgorithm, T>} other
+   * @returns {DagDecoder<Code|OtherCode, Algorithm|OtherAlgorithm, T>}
+   */
+  or (other) {
+    return new Decoder(this.codec.or(other.codec), this.hasher.or(other.hasher))
+  }
 }
 
 /**
@@ -153,6 +173,16 @@ class Codec {
 
   decodeBlock (bytes) {
     return this.decoder.decodecBlock(bytes)
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @template {number} OtherAlgorithm
+   * @param {DagCodec<OtherCode, OtherAlgorithm, T>} other
+   * @returns {DagCodec<Code|OtherCode, Algorithm|OtherAlgorithm, T>}
+   */
+  or (other) {
+    return new Codec(this.codec.or(other.codec), this.hasher.or(other.hasher))
   }
 }
 

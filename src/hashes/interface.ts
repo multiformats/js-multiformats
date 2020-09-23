@@ -46,6 +46,8 @@ export interface MultihashHasher<Code extends number> extends Hasher<Code> {
   readonly hashers: Record<Code, Hasher<Code>>
 
   digest(input: HashInput<Code>): Promise<MultihashDigest<Code>>
+
+  or<OtherCode extends number>(other: MultihashHasher<OtherCode>): MultihashHasher<Code | OtherCode>
 }
 
 export interface HashInput<Code extends number> {

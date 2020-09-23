@@ -35,7 +35,7 @@ export default class Block {
   /**
      * @param {string} path
      */
-  get (path) {
+  get (path = '/') {
     return Block.get(this.value, path.split('/').filter(Boolean))
   }
 
@@ -130,11 +130,11 @@ export default class Block {
     for (const [index, key] of path.entries()) {
       node = node[key]
       if (node == null) {
-        throw new Error(`Object has no property at ${path.slice(0, index - 1).map(part => `[${JSON.stringify(part)}]`).join('')}`)
+        throw new Error(`Object has no property at ${path.slice(0, index + 1).map(part => `[${JSON.stringify(part)}]`).join('')}`)
       }
       const cid = CID.asCID(node)
       if (cid) {
-        return { value: cid, remaining: path.slice(index).join('/') }
+        return { value: cid, remaining: path.slice(index + 1).join('/') }
       }
     }
     return { value: node }

@@ -61,7 +61,7 @@ export interface BlockCodec<Code extends number, T> extends BlockEncoder<Code, T
  * Composition of one or more `BlockEncoder`s so it can be used to encode JS
  * values into multiple formats by disptaching to a corresponding `BlockEncoder`.
  */
-export interface Encoder<Code extends number, T> {
+export interface Encoder<Code extends number, T> extends BlockEncoder<Code, T> {
   /**
    * Table of block encoders keyed by code.
    */
@@ -72,13 +72,15 @@ export interface Encoder<Code extends number, T> {
    * supported throws an exception.
    */
   encode(input: BlockSource<Code, T>): BlockView<Code, T>
+
+  or<Other extends number>(other: Encoder<Other, T>): Encoder<Code | Other, T>
 }
 
 /**
  * Composition of one or more `BlockDecoder`s so it can be used to decode JS
  * values from multiple formats by disptaching to a corresponding `BlockDecoder`.
  */
-export interface Decoder<Code extends number, T> {
+export interface Decoder<Code extends number, T> extends BlockDecoder<Code, T> {
   readonly codecs: Record<Code, BlockDecoder<Code, T>>
 
   /**
@@ -86,9 +88,11 @@ export interface Decoder<Code extends number, T> {
    * supported throws an exception.
    */
   decode(view: BlockView<Code, T>): BlockSource<Code, T>
+
+  or<Other extends number>(other: Decoder<Other, T>): Decoder<Code | Other, T>
 }
 
-export interface Codec<Code extends number, T> extends Encoder<Code, T>, Decoder<Code, T> {
+export interface Codec<Code extends number, T> extends Encoder<Code, T>, Decoder<Code, T>, BlockCodec<Code, T> {
   readonly codecs: Record<Code, BlockCodec<Code, T>>
 
   /**
@@ -99,6 +103,8 @@ export interface Codec<Code extends number, T> extends Encoder<Code, T>, Decoder
    * Decoder part of the codec.
    */
   readonly decoder: Decoder<Code, T>
+
+  or<Other extends number>(other: Codec<Other, T>): Codec<Code | Other, T>
 }
 
 
