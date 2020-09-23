@@ -28,6 +28,7 @@ const testThrow = async (fn, message) => {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 const testThrowAny = async fn => {
@@ -36,6 +37,7 @@ const testThrowAny = async fn => {
   } catch (e) {
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 
@@ -197,15 +199,20 @@ describe('CID', () => {
   describe('utilities', () => {
     const h1 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
     const h2 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1o'
+    const h3 = 'zdj7Wd8AMwqnhJGQCbFxBVodGSBG84TM7Hs1rcJuQMwTyfEDS'
 
     test('.equals v0 to v0', () => {
-      same(CID.parse(h1).equals(CID.parse(h1)), true)
-      same(CID.parse(h1).equals(CID.parse(h2)), false)
+      const cid1 = CID.parse(h1)
+      same(cid1.equals(CID.parse(h1)), true)
+      same(cid1.equals(CID.create(cid1.version, cid1.code, cid1.multihash)), true)
+
+      const cid2 = CID.parse(h2)
+      same(cid1.equals(CID.parse(h2)), false)
+      same(cid1.equals(CID.create(cid2.version, cid2.code, cid2.multihash)), false)
     })
 
     test('.equals v0 to v1 and vice versa', () => {
-      const cidV1Str = 'zdj7Wd8AMwqnhJGQCbFxBVodGSBG84TM7Hs1rcJuQMwTyfEDS'
-      const cidV1 = CID.parse(cidV1Str)
+      const cidV1 = CID.parse(h3)
 
       const cidV0 = cidV1.toV0()
 
@@ -213,6 +220,13 @@ describe('CID', () => {
       same(cidV1.equals(cidV0), false)
 
       same(cidV1.multihash, cidV0.multihash)
+    })
+
+    test('.equals v1 to v1', () => {
+      const cid1 = CID.parse(h3)
+
+      same(cid1.equals(CID.parse(h3)), true)
+      same(cid1.equals(CID.create(cid1.version, cid1.code, cid1.multihash)), true)
     })
 
     test('.isCid', () => {

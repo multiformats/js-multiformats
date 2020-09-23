@@ -13,6 +13,7 @@ const testThrow = async (fn, message) => {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 
@@ -29,6 +30,22 @@ describe('multicodec', () => {
     const buff = json.encode({ hello: 'world' })
     same(buff, bytes.fromString(JSON.stringify({ hello: 'world' })))
     same(json.decode(buff), { hello: 'world' })
+  })
+
+  test('json.encoder', () => {
+    const { encoder } = json
+    same(encoder === json.encoder, true, 'getter cached decoder')
+
+    const buff = encoder.encode({ hello: 'world' })
+    same(buff, bytes.fromString(JSON.stringify({ hello: 'world' })))
+  })
+
+  test('json.decoder', () => {
+    const { decoder } = json
+    same(decoder === json.decoder, true, 'getter cached encoder')
+
+    const buff = json.encode({ hello: 'world' })
+    same(decoder.decode(buff), { hello: 'world' })
   })
 
   test('raw cannot encode string', async () => {

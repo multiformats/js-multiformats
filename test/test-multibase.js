@@ -18,6 +18,7 @@ const testThrow = (fn, message) => {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 
@@ -57,11 +58,13 @@ describe('multibase', () => {
   test('encode string failure', () => {
     const msg = 'Unknown type, must be binary type'
     testThrow(() => base32.encode('asdf'), msg)
+    testThrow(() => base32.encoder.encode('asdf'), msg)
   })
 
   test('decode int failure', () => {
     const msg = 'Can only multibase decode strings'
     testThrow(() => base32.decode(1), msg)
+    testThrow(() => base32.decoder.decode(1), msg)
   })
 
   const buff = bytes.fromString('test')
@@ -72,6 +75,8 @@ describe('multibase', () => {
           const encoded = base.encode(buff)
           const decoded = base.decode(encoded)
           same(decoded, buff)
+          same(encoded, base.encoder.encode(buff))
+          same(buff, base.decoder.decode(encoded))
         })
       }
     }
@@ -87,5 +92,31 @@ describe('multibase', () => {
   })
   describe('base64', () => {
     baseTest(b64)
+  })
+
+  describe('multibase mismatch', () => {
+    const b64 = base64.encode(bytes.fromString('test'))
+    const msg = `Unable to decode multibase string "${b64}", base32 decoder only supports inputs prefixed with ${base32.prefix}`
+    testThrow(() => base32.decode(b64), msg)
+  })
+
+  describe('decoder composition', () => {
+    const base = base32.decoder.or(base58btc.decoder)
+
+    const b32 = base32.encode(bytes.fromString('test'))
+    same(base.decode(b32), bytes.fromString('test'))
+
+    const b58 = base58btc.encode(bytes.fromString('test'))
+    same(base.decode(b58), bytes.fromString('test'))
+
+    const b64 = base64.encode(bytes.fromString('test'))
+    const msg = `Unable to decode multibase string "${b64}", only inputs prefixed with ${base32.prefix},${base58btc.prefix} are supported`
+    testThrow(() => base.decode(b64), msg)
+
+    const baseExt = base.or(base64)
+    same(baseExt.decode(b64), bytes.fromString('test'))
+
+    // original composition stayes intact
+    testThrow(() => base.decode(b64), msg)
   })
 })

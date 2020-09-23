@@ -96,7 +96,7 @@ class Decoder {
           return this.baseDecode(text.slice(1))
         }
         default: {
-          throw Error(`${this.name} expects input starting with ${this.prefix} and can not decode "${text}"`)
+          throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`)
         }
       }
     } else {
@@ -137,17 +137,6 @@ class Decoder {
  */
 class ComposedDecoder {
   /**
-   * @template {string} Prefix
-   * @param {UnibaseDecoder<Prefix>} decoder
-   * @returns {ComposedDecoder<Prefix>}
-   */
-  static from (decoder) {
-    return new ComposedDecoder(/** @type {Decoders<Prefix>} */ ({
-      [decoder.prefix]: decoder
-    }))
-  }
-
-  /**
    * @param {Record<Prefix, UnibaseDecoder<Prefix>>} decoders
    */
   constructor (decoders) {
@@ -178,7 +167,7 @@ class ComposedDecoder {
     if (decoder) {
       return decoder.decode(input)
     } else {
-      throw RangeError(`Unable to decode multibase string ${input}, only inputs prefixed with ${Object.keys(this.decoders)} are supported`)
+      throw RangeError(`Unable to decode multibase string ${JSON.stringify(input)}, only inputs prefixed with ${Object.keys(this.decoders)} are supported`)
     }
   }
 }

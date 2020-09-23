@@ -32,6 +32,7 @@ const testThrowAsync = async (fn, message) => {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 

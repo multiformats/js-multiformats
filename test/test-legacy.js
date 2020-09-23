@@ -11,13 +11,14 @@ import CID from 'multiformats/cid'
 const same = assert.deepStrictEqual
 const test = it
 
-const testThrow = (fn, message) => {
+const testThrow = async (fn, message) => {
   try {
-    fn()
+    await fn()
   } catch (e) {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 
@@ -69,8 +70,11 @@ describe('multicodec', () => {
     same(cid.codec, 'raw')
     const { bytes } = await sha256.digest(Buffer.from('test'))
     same(cid.multihash, Buffer.from(bytes))
+
+    const msg = 'Hasher for md5 was not provided in the configuration'
+    testThrow(async () => await raw.util.cid(Buffer.from('test'), { hashAlg: 'md5' }), msg)
   })
-  test('resolve', () => {
+  test('resolve', async () => {
     const fixture = custom.util.serialize({
       one: {
         two: {
@@ -85,7 +89,7 @@ describe('multicodec', () => {
     same(custom.resolver.resolve(fixture, 'o/one/two/hello'), { value })
     value = link
     same(custom.resolver.resolve(fixture, 'l/outside'), { value, remainderPath: 'outside' })
-    testThrow(() => custom.resolver.resolve(fixture, 'o/two'), 'Not found')
+    await testThrow(() => custom.resolver.resolve(fixture, 'o/two'), 'Not found')
   })
   test('tree', () => {
     const fixture = custom.util.serialize({

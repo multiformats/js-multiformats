@@ -6,6 +6,7 @@ import varint from '../vendor/varint.js'
  */
 export const decode = (data) => {
   const code = varint.decode(data)
+  // @ts-ignore
   return [code, varint.decode.bytes]
 }
 
@@ -28,12 +29,7 @@ export const encode = (int) => {
  * @param {number} [offset=0]
  */
 export const encodeTo = (int, target, offset = 0) => {
-  const cached = cache.get(int)
-  if (cached) {
-    target.set(target, offset)
-  } else {
-    varint.encode(int, target, offset)
-  }
+  varint.encode(int, target, offset)
 }
 
 /**
