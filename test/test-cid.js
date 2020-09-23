@@ -429,13 +429,24 @@ describe('CID', () => {
     assert.strictEqual(cid5.code, 85)
   })
 
+  const digestsame = (x, y) => {
+    same(x.digest, y.digest)
+    same(x.hash, y.hash)
+    same(x.bytes, y.bytes)
+    if (x.multihash) {
+      digestsame(x.multihash, y.multihash)
+    }
+    const empty = { hash: null, bytes: null, digest: null, multihash: null }
+    same({ ...x, ...empty }, { ...y, ...empty })
+  }
+
   describe('CID.parse', async () => {
     test('parse 32 encoded CIDv1', async () => {
       const hash = await sha256.digest(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
 
       const parsed = CID.parse(cid.toString())
-      same(cid, parsed)
+      digestsame(cid, parsed)
     })
 
     test('parse base58btc encoded CIDv1', async () => {
@@ -443,7 +454,7 @@ describe('CID', () => {
       const cid = CID.create(1, 112, hash)
 
       const parsed = CID.parse(cid.toString(base58btc))
-      same(cid, parsed)
+      digestsame(cid, parsed)
     })
 
     test('parse base58btc encoded CIDv0', async () => {
@@ -451,7 +462,7 @@ describe('CID', () => {
       const cid = CID.create(0, 112, hash)
 
       const parsed = CID.parse(cid.toString())
-      same(cid, parsed)
+      digestsame(cid, parsed)
     })
 
     test('fails to parse base64 encoded CIDv1', async () => {
@@ -467,7 +478,7 @@ describe('CID', () => {
       const cid = CID.create(1, 112, hash)
 
       const parsed = CID.parse(cid.toString(base64), base64)
-      same(cid, parsed)
+      digestsame(cid, parsed)
     })
   })
 
