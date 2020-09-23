@@ -44,6 +44,7 @@ export class Hasher {
       return Digest.create(this.code, digest)
     } else {
       throw Error('Unknown type, must be binary type')
+      /* c8 ignore next 1 */
     }
   }
 }
