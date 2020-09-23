@@ -20,19 +20,19 @@ describe('multicodec', () => {
   const { codecs: { raw, json } } = multiformats
 
   test('encode/decode raw', () => {
-    const buff = raw.encode(bytes.fromString('test'))
+    const buff = raw.encodeBlock(bytes.fromString('test'))
     same(buff, bytes.fromString('test'))
-    same(raw.decode(buff, 'raw'), bytes.fromString('test'))
+    same(raw.decodeBlock(buff, 'raw'), bytes.fromString('test'))
   })
 
   test('encode/decode json', () => {
-    const buff = json.encode({ hello: 'world' })
+    const buff = json.encodeBlock({ hello: 'world' })
     same(buff, bytes.fromString(JSON.stringify({ hello: 'world' })))
-    same(json.decode(buff), { hello: 'world' })
+    same(json.decodeBlock(buff), { hello: 'world' })
   })
 
   test('raw cannot encode string', async () => {
-    await testThrow(() => raw.encode('asdf'), 'Unknown type, must be binary type')
+    await testThrow(() => raw.encodeBlock('asdf'), 'Unknown type, must be binary type')
   })
 
   test('add with function', () => {
@@ -45,7 +45,7 @@ describe('multicodec', () => {
 
     const two = bytes.fromString('two')
     const three = bytes.fromString('three')
-    same(blip.encode(['one', two, three]), two)
-    same(blip.decode(three, 200), three)
+    same(blip.encodeBlock(['one', two, three]), two)
+    same(blip.decodeBlock(three, 200), three)
   })
 })

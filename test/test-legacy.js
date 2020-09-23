@@ -67,7 +67,7 @@ describe('multicodec', () => {
     const cid = await raw.util.cid(Buffer.from('test'))
     same(cid.version, 1)
     same(cid.codec, 'raw')
-    const { bytes } = await sha256.digest(Buffer.from('test'))
+    const { bytes } = await sha256.digestBytes(Buffer.from('test'))
     same(cid.multihash, Buffer.from(bytes))
   })
   test('resolve', () => {

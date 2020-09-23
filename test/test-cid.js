@@ -47,7 +47,7 @@ describe('CID', () => {
     })
 
     test('create by parts', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(0, 112, hash)
 
       same(cid.code, 112)
@@ -57,7 +57,7 @@ describe('CID', () => {
     })
 
     test('create from multihash', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
 
       const cid = CID.decode(hash.bytes)
 
@@ -74,7 +74,7 @@ describe('CID', () => {
     })
 
     test('throws on trying to create a CIDv0 with a codec other than dag-pb', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const msg = 'Version 0 CID must use dag-pb (code: 112) block encoding'
       await testThrow(() => CID.create(0, 113, hash), msg)
     })
@@ -95,7 +95,7 @@ describe('CID', () => {
     })
 
     test('.bytes', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const codec = 112
       const cid = CID.create(0, codec, hash)
       const bytes = cid.bytes
@@ -132,7 +132,7 @@ describe('CID', () => {
     })
 
     test('create by parts', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 0x71, hash)
       same(cid.code, 0x71)
       same(cid.version, 1)
@@ -140,7 +140,7 @@ describe('CID', () => {
     })
 
     test('can roundtrip through cid.toString()', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid1 = CID.create(1, 0x71, hash)
       const cid2 = CID.parse(cid1.toString())
 
@@ -167,7 +167,7 @@ describe('CID', () => {
     */
 
     test('.bytes', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const code = 0x71
       const cid = CID.create(1, code, hash)
       const bytes = cid.bytes
@@ -272,25 +272,25 @@ describe('CID', () => {
 
   describe('conversion v0 <-> v1', () => {
     test('should convert v0 to v1', async () => {
-      const hash = await sha256.digest(Buffer.from(`TEST${Date.now()}`))
+      const hash = await sha256.digestBytes(Buffer.from(`TEST${Date.now()}`))
       const cid = (CID.create(0, 112, hash)).toV1()
       same(cid.version, 1)
     })
 
     test('should convert v1 to v0', async () => {
-      const hash = await sha256.digest(Buffer.from(`TEST${Date.now()}`))
+      const hash = await sha256.digestBytes(Buffer.from(`TEST${Date.now()}`))
       const cid = (CID.create(1, 112, hash)).toV0()
       same(cid.version, 0)
     })
 
     test('should not convert v1 to v0 if not dag-pb codec', async () => {
-      const hash = await sha256.digest(Buffer.from(`TEST${Date.now()}`))
+      const hash = await sha256.digestBytes(Buffer.from(`TEST${Date.now()}`))
       const cid = CID.create(1, 0x71, hash)
       await testThrow(() => cid.toV0(), 'Cannot convert a non dag-pb CID to CIDv0')
     })
 
     test('should not convert v1 to v0 if not sha2-256 multihash', async () => {
-      const hash = await sha512.digest(Buffer.from(`TEST${Date.now()}`))
+      const hash = await sha512.digestBytes(Buffer.from(`TEST${Date.now()}`))
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.toV0(), 'Cannot convert non sha2-256 multihash CID to CIDv0')
     })
@@ -298,14 +298,14 @@ describe('CID', () => {
 
   describe('caching', () => {
     test('should cache CID as buffer', async () => {
-      const hash = await sha256.digest(Buffer.from(`TEST${Date.now()}`))
+      const hash = await sha256.digestBytes(Buffer.from(`TEST${Date.now()}`))
       const cid = CID.create(1, 112, hash)
       assert.ok(cid.bytes)
       same(cid.bytes, cid.bytes)
     })
 
     test('should cache string representation when it matches the multibaseName it was constructed with', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
       same(cid._baseCache.size, 0)
 
@@ -328,7 +328,7 @@ describe('CID', () => {
   })
 
   test('toJSON()', async () => {
-    const hash = await sha256.digest(Buffer.from('abc'))
+    const hash = await sha256.digestBytes(Buffer.from('abc'))
     const cid = CID.create(1, 112, hash)
     const json = cid.toJSON()
 
@@ -337,13 +337,13 @@ describe('CID', () => {
   })
 
   test('isCID', async () => {
-    const hash = await sha256.digest(Buffer.from('abc'))
+    const hash = await sha256.digestBytes(Buffer.from('abc'))
     const cid = CID.create(1, 112, hash)
     assert.strictEqual(OLDCID.isCID(cid), false)
   })
 
   test('asCID', async () => {
-    const hash = await sha256.digest(Buffer.from('abc'))
+    const hash = await sha256.digestBytes(Buffer.from('abc'))
     class IncompatibleCID {
       constructor (version, code, multihash) {
         this.version = version
@@ -393,7 +393,7 @@ describe('CID', () => {
   })
 
   test('new CID from old CID', async () => {
-    const hash = await sha256.digest(Buffer.from('abc'))
+    const hash = await sha256.digestBytes(Buffer.from('abc'))
     const cid = CID.asCID(new OLDCID(1, 'raw', Buffer.from(hash.bytes)))
     same(cid.version, 1)
 
@@ -403,7 +403,7 @@ describe('CID', () => {
 
   if (!process.browser) {
     test('util.inspect', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
       same(util.inspect(cid), 'CID(bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu)')
     })
@@ -411,23 +411,23 @@ describe('CID', () => {
 
   describe('deprecations', async () => {
     test('codec', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
       await testThrow(() => CID.create(1, 'dag-pb', hash), 'String codecs are no longer supported')
     })
     test('multibaseName', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.multibaseName, '"multibaseName" property is deprecated')
     })
     test('prefix', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.prefix, '"prefix" property is deprecated')
     })
     test('toBaseEncodedString()', async () => {
-      const hash = await sha256.digest(Buffer.from('abc'))
+      const hash = await sha256.digestBytes(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
     })
@@ -438,7 +438,7 @@ describe('CID', () => {
     await testThrow(() => CID.decode(encoded), 'Invalid CID version 2')
   })
   test('buffer', async () => {
-    const hash = await sha256.digest(Buffer.from('abc'))
+    const hash = await sha256.digestBytes(Buffer.from('abc'))
     const cid = CID.create(1, 112, hash)
     await testThrow(() => cid.buffer, 'Deprecated .buffer property, use .bytes to get Uint8Array instead')
   })

@@ -1,7 +1,5 @@
 // @ts-check
 
-import { Encoder as MEncoder, Decoder as MDecoder, Codec as MCodec } from './multicodec.js'
-
 /**
  * @template {string} Name
  * @template {number} Code
@@ -17,6 +15,410 @@ export const codec = ({ name, code, decode, encode }) =>
   new Codec(name, code, encode, decode)
 
 /**
+ * @class
+ * @template T
+ * @template {string} Name
+ * @template {number} Code
+ * @implements {BlockEncoder<Code, T>}
+ * @implements {MulticodecEncoder<Code, T>}
+ */
+class Encoder {
+  /**
+   * @param {Name} name
+   * @param {Code} code
+   * @param {(data:T) => Uint8Array} encodeBlock
+   */
+  constructor (name, code, encodeBlock) {
+    this.name = name
+    this.code = code
+    this.encodeBlock = encodeBlock
+  }
+
+  get codecs () {
+    return { [this.code]: this }
+  }
+
+  /**
+   * Encodes given input `{ code, data }` with this encoder, if `code` does not
+   * match the code here it will throw an exception.
+   * @param {Object} input
+   * @param {Code} input.code
+   * @param {T} input.value
+   * @returns {BlockView<Code, T>}
+   */
+  encode ({ code, value }) {
+    if (code === this.code) {
+      return { code, bytes: this.encodeBlock(value) }
+    } else {
+      throw Error(`Codec (code: ${code}) is not supported, only supports: ${this.code}`)
+    }
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @param {MulticodecEncoder<OtherCode, T>} other
+   * @returns {MulticodecEncoder<Code|OtherCode, T>}
+   */
+  or (other) {
+    // Note: Need type annotate so it isn't inferred as `BlockEncoder<Code>`.
+    /** @type {BlockEncoder<Code|OtherCode, T>} */
+    const defaultEncoder = this
+    return new ComposedEncoder(defaultEncoder, {
+      ...other.codecs,
+      [this.code]: this
+    })
+  }
+}
+
+/**
+ * @template {number} Code
+ * @template T
+ * @implements {BlockEncoder<Code, T>}
+ * @implements {MulticodecEncoder<Code, T>}
+ */
+class ComposedEncoder {
+  /**
+   * @param {BlockEncoder<Code, T>} defaultEncoder
+   * @param {Record<Code, BlockEncoder<Code, T>>} codecs
+   */
+  constructor (defaultEncoder, codecs) {
+    this.defaultEncoder = defaultEncoder
+    this.codecs = codecs
+  }
+
+  // BlockEncoder
+
+  // Implementing `BlockEncoder` interface seems awkward because this
+  // represents composition and therefor `.code` and `.encodeBlock` have little
+  // sense. On the other hand making composed codec e.g. `dagCBOR.or(dagPB)`
+  // be a drop-in replacment for `dagCBOR` is so convinient that we chose to
+  // go for it.
+  get code () {
+    return this.defaultEncoder.code
+  }
+
+  get name () {
+    return Object.values(this.codecs).map(codec => codec.name).join('|')
+  }
+
+  /**
+   * @param {T} value
+   * @returns {ByteView<T>}
+   */
+  encodeBlock (value) {
+    return this.defaultEncoder.encodeBlock(value)
+  }
+
+  /**
+   * @param {BlockSource<Code, T>} block
+   * @returns {BlockView<Code, T>}
+   */
+  encode ({ code, value }) {
+    const codec = this.codecs[code]
+    if (codec) {
+      const bytes = codec.encodeBlock(value)
+      return { code, bytes }
+    } else {
+      throw Error(`Codec (code: ${code}) is not supported, only supports: ${Object.keys(this.codecs)}`)
+    }
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @param {MulticodecEncoder<OtherCode, T>} other
+   * @returns {MulticodecEncoder<Code|OtherCode, T>}
+   */
+  or (other) {
+    // Note: Need type annotate so it isn't inferred as `BlockEncoder<Code>`.
+    /** @type {BlockEncoder<Code|OtherCode, T>} */
+    const encoder = this.defaultEncoder
+    return new ComposedEncoder(encoder, {
+      ...other.codecs,
+      ...this.codecs
+    })
+  }
+}
+
+/**
+ * @class
+ * @template {number} Code
+ * @template T
+ * @implements {BlockDecoder<Code, T>}
+ * @implements {MulticodecDecoder<Code, T>}
+ */
+class Decoder {
+  /**
+   * @param {string} name
+   * @param {Code} code
+   * @param {(bytes:Uint8Array) => T} decodeBlock
+   */
+  constructor (name, code, decodeBlock) {
+    this.name = name
+    this.code = code
+    this.decodeBlock = decodeBlock
+  }
+
+  get codecs () {
+    return { [this.code]: this }
+  }
+
+  /**
+   * @param {BlockView<Code, T>} input
+   * @returns {BlockSource<Code, T>}
+   */
+  decode ({ code, bytes }) {
+    if (this.code === code) {
+      return { code, value: this.decodeBlock(bytes) }
+    } else {
+      throw Error(`Codec (code: ${code}) is not supported, only supports: ${this.code}`)
+    }
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @param {MulticodecDecoder<OtherCode, T>} other
+   * @returns {MulticodecDecoder<Code|OtherCode, T>}
+   */
+  or (other) {
+    // Note: Need type annotate so it isn't inferred as `BlockEncoder<Code>`.
+    /** @type {BlockDecoder<Code|OtherCode, T>} */
+    const defaultDecoder = this
+    return new ComposedDecoder(defaultDecoder, {
+      ...other.codecs,
+      [this.code]: this
+    })
+  }
+}
+
+/**
+ * @template {number} Code
+ * @template T
+ * @implements {BlockDecoder<Code, T>}
+ * @implements {MulticodecDecoder<Code, T>}
+ */
+class ComposedDecoder {
+  /**
+   * @param {BlockDecoder<Code, T>} defaultDecoder
+   * @param {Record<Code, BlockDecoder<Code, T>>} codecs
+   */
+  constructor (defaultDecoder, codecs) {
+    this.defaultDecoder = defaultDecoder
+    this.codecs = codecs
+  }
+
+  // BlockDecoder
+
+  // Implementing `BlockDecoder` interface seems awkward because this
+  // represents composition and therefor `.code` and `.decodeBlock` have little
+  // sense. On the other hand making composed codec e.g. `dagCBOR.or(dagPB)`
+  // be a drop-in replacment for `dagCBOR` is so convinient that we chose to
+  // go for it.
+  get code () {
+    return this.defaultDecoder.code
+  }
+
+  /**
+   * Decodes given bytes with this decoder. If it was encoded with a different
+   * codec than the default it will throw an exception.
+   * @param {ByteView<T>} bytes
+   * @returns {T}
+   */
+  decodeBlock (bytes) {
+    return this.defaultDecoder.decodeBlock(bytes)
+  }
+
+  // MulticodecDecoder
+
+  /**
+   * @param {BlockView<Code, T>} block
+   * @returns {BlockSource<Code, T>}
+   */
+  decode ({ code, bytes }) {
+    const codec = this.codecs[code]
+    if (codec) {
+      const value = codec.decodeBlock(bytes)
+      return { code, value }
+    } else {
+      throw Error(`Codec (code: ${code}) is not supported, only supports: ${Object.keys(this.codecs)}`)
+    }
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @param {MulticodecDecoder<OtherCode, T>} other
+   * @returns {MulticodecDecoder<Code|OtherCode, T>}
+   */
+  or (other) {
+    /** @type {BlockDecoder<Code|OtherCode, T>} */
+    const defaultDecoder = this.defaultDecoder
+    return new ComposedDecoder(defaultDecoder, {
+      ...other.codecs,
+      ...this.codecs
+    })
+  }
+}
+
+/**
+ * @class
+ * @template {string} Name
+ * @template {number} Code
+ * @template T
+ * @implements {BlockCodec<Code, T>}
+ * @implements {MulticodecCodec<Code, T>}
+ */
+class Codec {
+  /**
+   * @param {Name} name
+   * @param {Code} code
+   * @param {(data:T) => Uint8Array} encodeBlock
+   * @param {(bytes:Uint8Array) => T} decodeBlock
+   */
+  constructor (name, code, encodeBlock, decodeBlock) {
+    this.name = name
+    this.code = code
+    this.encodeBlock = encodeBlock
+    this.decodeBlock = decodeBlock
+  }
+
+  get codecs () {
+    return { [this.code]: this }
+  }
+
+  /**
+   * Encodes given input `{ code, data }` with this encoder, if `code` does not
+   * match the code here it will throw an exception.
+   * @param {Object} input
+   * @param {Code} input.code
+   * @param {T} input.value
+   * @returns {BlockView<Code, T>}
+   */
+  encode ({ code, value }) {
+    if (code === this.code) {
+      return { code, bytes: this.encodeBlock(value) }
+    } else {
+      throw Error(`Codec (code: ${code}) is not supported, only supports: ${this.code}`)
+    }
+  }
+
+  /**
+   * @param {BlockView<Code, T>} input
+   * @returns {BlockSource<Code, T>}
+   */
+  decode ({ code, bytes }) {
+    if (this.code === code) {
+      return { code, value: this.decodeBlock(bytes) }
+    } else {
+      throw Error(`Codec (code: ${code}) is not supported, only supports: ${this.code}`)
+    }
+  }
+
+  /**
+   * @template {number} OtherCode
+   * @param {MulticodecCodec<OtherCode, T>} other
+   * @returns {MulticodecCodec<Code|OtherCode, T>}
+   */
+  or (other) {
+    /** @type {BlockCodec<Code|OtherCode, T>} */
+    const defaultCodec = this
+    return new ComposedCodec(defaultCodec, {
+      ...other.codecs,
+      [this.code]: this
+    })
+  }
+
+  get decoder () {
+    const { name, code, decodeBlock } = this
+    const decoder = new Decoder(name, code, decodeBlock)
+    Object.defineProperty(this, 'decoder', { value: decoder })
+    return decoder
+  }
+
+  get encoder () {
+    const { name, code, encodeBlock } = this
+    const encoder = new Encoder(name, code, encodeBlock)
+    Object.defineProperty(this, 'encoder', { value: encoder })
+    return encoder
+  }
+}
+
+/**
+ * @class
+ * @template {number} Code
+ * @template T
+ * @implements {BlockCodec<Code, T>}
+ * @implements {MulticodecCodec<Code, T>}
+ */
+class ComposedCodec {
+  /**
+   * @param {BlockCodec<Code, T>} defaultCodec
+   * @param {Record<Code, BlockCodec<Code, T>>} codecs
+   */
+  constructor (defaultCodec, codecs) {
+    this.defaultCodec = defaultCodec
+    this.codecs = codecs
+
+    this.encoder = new ComposedEncoder(defaultCodec, codecs)
+    this.decoder = new ComposedDecoder(defaultCodec, codecs)
+  }
+
+  // BlockCodec
+
+  get name () {
+    return Object.values(this.codecs).map(codec => codec.name).join('|')
+  }
+
+  get code () {
+    return this.defaultCodec.code
+  }
+
+  /**
+   * @param {T} value
+   */
+  encodeBlock (value) {
+    return this.encoder.encodeBlock(value)
+  }
+
+  /**
+   * @param {ByteView<T>} bytes
+   */
+  decodeBlock (bytes) {
+    return this.decoder.decodeBlock(bytes)
+  }
+
+  // MulticodecCodec
+
+  /**
+   * Encodes given input `{ code, data }` with this encoder, if `code` does not
+   * match the code here it will throw an exception.
+   * @param {BlockSource<Code, T>} input
+   * @returns {BlockView<Code, T>}
+   */
+  encode (input) {
+    return this.encoder.encode(input)
+  }
+
+  /**
+   * @param {BlockView<Code, T>} input
+   * @returns {BlockSource<Code, T>}
+   */
+  decode (input) {
+    return this.decoder.decode(input)
+  }
+}
+
+/**
+ * @template {number} Code
+ * @template T
+ * @typedef {import('./interface').Codec<Code, T>} MulticodecCodec
+ */
+
+/**
+ * @template {number} Code
+ * @template T
+ * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
+ */
+
+/**
  * @template {number} Code
  * @template T
  * @typedef {import('./interface').BlockEncoder<Code, T>} BlockEncoder
@@ -25,37 +427,8 @@ export const codec = ({ name, code, decode, encode }) =>
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./interface').MultiblockEncoder<Code, T>} MultiblockEncoder
+ * @typedef {import('./interface').Encoder<Code, T>} MulticodecEncoder
  */
-
-/**
- * @class
- * @template T
- * @template {string} Name
- * @template {number} Code
- * @implements {BlockEncoder<Code, T>}
- */
-export class Encoder {
-  /**
-   * @param {Name} name
-   * @param {Code} code
-   * @param {(data:T) => Uint8Array} encode
-   */
-  constructor (name, code, encode) {
-    this.name = name
-    this.code = code
-    this.encode = encode
-  }
-
-  /**
-   * @template {number} OtherCode
-   * @param {BlockEncoder<OtherCode, T>|MultiblockEncoder<OtherCode, T>} codec
-   * @returns {MEncoder<Code|OtherCode, T>}
-   */
-  or (codec) {
-    return MEncoder.or(this, codec)
-  }
-}
 
 /**
  * @template {number} Code
@@ -66,89 +439,22 @@ export class Encoder {
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./interface').MultiblockDecoder<Code, T>} MultiblockDecoder
+ * @typedef {import('./interface').Decoder<Code, T>} MulticodecDecoder
  */
-
-/**
- * @class
- * @template {number} Code
- * @template T
- * @implements {BlockDecoder<Code, T>}
- */
-export class Decoder {
-  /**
-   * @param {string} name
-   * @param {Code} code
-   * @param {(bytes:Uint8Array) => T} decode
-   */
-  constructor (name, code, decode) {
-    this.name = name
-    this.code = code
-    this.decode = decode
-  }
-
-  /**
-   * @template {number} OtherCode
-   * @param {BlockDecoder<OtherCode, T>|MultiblockDecoder<OtherCode, T>} codec
-   * @returns {MDecoder<Code|OtherCode, T>}
-   */
-  or (codec) {
-    return MDecoder.or(this, codec)
-  }
-}
 
 /**
  * @template {number} Code
  * @template T
- * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
- */
-/**
- * @template {number} Code
- * @template T
- * @typedef {import('./interface').MultiblockCodec<Code, T>} MultiblockCodec
+ * @typedef {import('./interface').BlockView<Code, T>} BlockView
  */
 
 /**
- * @class
- * @template {string} Name
  * @template {number} Code
  * @template T
- * @implements {BlockCodec<Code, T>}
+ * @typedef {import('./interface').BlockSource<Code, T>} BlockSource
  */
-export class Codec {
-  /**
-   * @param {Name} name
-   * @param {Code} code
-   * @param {(data:T) => Uint8Array} encode
-   * @param {(bytes:Uint8Array) => T} decode
-   */
-  constructor (name, code, encode, decode) {
-    this.name = name
-    this.code = code
-    this.encode = encode
-    this.decode = decode
-  }
 
-  /**
-   * @template {number} OtherCode
-   * @param {BlockCodec<OtherCode, T>|MultiblockCodec<OtherCode, T>} other
-   * @returns {MCodec<Code|OtherCode, T>}
-   */
-  or (other) {
-    return MCodec.or(this, other)
-  }
-
-  get decoder () {
-    const { name, code, decode } = this
-    const decoder = new Decoder(name, code, decode)
-    Object.defineProperty(this, 'decoder', { value: decoder })
-    return decoder
-  }
-
-  get encoder () {
-    const { name, code, encode } = this
-    const encoder = new Encoder(name, code, encode)
-    Object.defineProperty(this, 'encoder', { value: encoder })
-    return encoder
-  }
-}
+/**
+ * @template T
+ * @typedef {import('./interface').ByteView<T>} ByteView
+ */

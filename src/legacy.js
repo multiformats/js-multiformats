@@ -56,13 +56,13 @@ const legacy = (codec, { hashes }) => {
    * @param {T} o
    * @returns {Buffer}
    */
-  const serialize = o => Buffer.from(codec.encode(fromLegacy(o)))
+  const serialize = o => Buffer.from(codec.encodeBlock(fromLegacy(o)))
 
   /**
    * @param {Uint8Array} b
    * @returns {T}
    */
-  const deserialize = b => toLegacy(codec.decode(bytes.coerce(b)))
+  const deserialize = b => toLegacy(codec.decodeBlock(bytes.coerce(b)))
 
   /**
    *
@@ -80,7 +80,7 @@ const legacy = (codec, { hashes }) => {
       throw new Error(`Hasher for ${hashAlg} was not provided in the configuration`)
     }
 
-    const hash = await hasher.digest(buff)
+    const hash = await hasher.digestBytes(buff)
     // https://github.com/bcoe/c8/issues/135
     /* c8 ignore next */
     return new OldCID(cidVersion, codec.name, Buffer.from(hash.bytes))
@@ -91,7 +91,7 @@ const legacy = (codec, { hashes }) => {
    * @param {string} path
    */
   const resolve = (buff, path) => {
-    let value = codec.decode(buff)
+    let value = codec.decodeBlock(buff)
     const entries = path.split('/').filter(x => x)
     while (entries.length) {
       value = value[/** @type {string} */(entries.shift())]
@@ -124,7 +124,7 @@ const legacy = (codec, { hashes }) => {
    * @param {Uint8Array} buff
    */
   const tree = (buff) => {
-    return _tree(codec.decode(buff))
+    return _tree(codec.decodeBlock(buff))
   }
 
   const defaultHashAlg = 'sha2-256'

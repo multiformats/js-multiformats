@@ -42,7 +42,7 @@ describe('multihash', () => {
       }
     })
     test('hash sha2-256', async () => {
-      const hash = await sha256.digest(fromString('test'))
+      const hash = await sha256.digestBytes(fromString('test'))
       same(hash.code, sha256.code)
       same(hash.digest, encode('sha256')(fromString('test')))
 
@@ -51,7 +51,7 @@ describe('multihash', () => {
       same(hash2.bytes, hash.bytes)
     })
     test('hash sha2-512', async () => {
-      const hash = await sha512.digest(fromString('test'))
+      const hash = await sha512.digestBytes(fromString('test'))
       same(hash.code, sha512.code)
       same(hash.digest, encode('sha512')(fromString('test')))
 
@@ -76,7 +76,7 @@ describe('multihash', () => {
     }
 
     test('get from buffer', async () => {
-      const hash = await sha256.digest(fromString('test'))
+      const hash = await sha256.digestBytes(fromString('test'))
 
       same(hash.code, 18)
     })
@@ -90,7 +90,7 @@ describe('multihash', () => {
     })
   })
   test('throw on hashing non-buffer', async () => {
-    await testThrowAsync(() => sha256.digest('asdf'), 'Unknown type, must be binary type')
+    await testThrowAsync(() => sha256.digestBytes('asdf'), 'Unknown type, must be binary type')
   })
   test('browser', () => {
     same(__browser, !!process.browser)
