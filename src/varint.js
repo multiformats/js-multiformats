@@ -12,24 +12,12 @@ export const decode = (data) => {
 
 /**
  * @param {number} int
- * @returns {Uint8Array}
- */
-export const encode = (int) => {
-  if (cache.has(int)) return cache.get(int)
-  const bytes = new Uint8Array(varint.encodingLength(int))
-  varint.encode(int, bytes, 0)
-  cache.set(int, bytes)
-
-  return bytes
-}
-
-/**
- * @param {number} int
  * @param {Uint8Array} target
  * @param {number} [offset=0]
  */
 export const encodeTo = (int, target, offset = 0) => {
   varint.encode(int, target, offset)
+  return target
 }
 
 /**
@@ -39,5 +27,3 @@ export const encodeTo = (int, target, offset = 0) => {
 export const encodingLength = (int) => {
   return varint.encodingLength(int)
 }
-
-const cache = new Map()

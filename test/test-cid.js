@@ -513,7 +513,7 @@ describe('CID', () => {
   })
 
   test('invalid CID version', async () => {
-    const encoded = varint.encode(2)
+    const encoded = varint.encodeTo(2, new Uint8Array(32))
     await testThrow(() => CID.decode(encoded), 'Invalid CID version 2')
   })
   test('buffer', async () => {
