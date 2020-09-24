@@ -1,55 +1,132 @@
 # multiformats
 
-This library is for building an interface for working with various
-inter-related multiformat technologies (multicodec, multihash, multibase,
-and CID).
+This library defines common interfaces and low level building blocks for varios inter-related multiformat technologies (multicodec, multihash, multibase,
+and CID). They can be used to implement custom custom base
+encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
-The interface contains all you need for encoding and decoding the basic
-structures with no codec information, codec encoder/decoders, base encodings
-or hashing functions. You can then add codec info, codec encoders/decoders,
-base encodings, and hashing functions to the interface.
+Library provides implementations for most basics and many others can be found in linked repositories.
 
-This allows you to pass around an interface containing only the code you need
-which can greatly reduce dependencies and bundle size.
+## Intefaces
 
 ```js
-import * as CID from 'multiformats/cid'
+import CID from 'multiformats/cid'
+import json from 'multiformats/codecs/json'
 import { sha256 } from 'multiformats/hashes/sha2'
-import dagcbor from '@ipld/dag-cbor'
-import { base32 } from 'multiformats/bases/base32'
-import { base58btc } from 'multiformats/bases/base58'
 
-const bytes = dagcbor.encode({ hello: 'world' })
+const bytes = json.encode({ hello: 'world' })
 
 const hash = await sha256.digest(bytes)
-// raw codec is the only codec that is there by default
-const cid = CID.create(1, dagcbor.code, hash)
+const cid = CID.create(1, json.code, hash)
+//> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
 ```
 
-However, if you're doing this much you should probably use multiformats
-with the `Block` API.
+### Multibase Encoders / Decoders / Codecs
+
+CIDs can be serialized to string representation using multibase encoders that
+implement [`MultibaseEncoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. Library
+provides quite a few implementations that can be imported:
 
 ```js
-// Import basics package with dep-free codecs, hashes, and base encodings
-import { block } from 'multiformats/basics'
-import { sha256 } from 'multiformats/hashes/sha2'
-import dagcbor from '@ipld/dag-cbor'
-
-const encoder = block.encoder(dagcbor, { hasher: sha256 })
-const hello = encoder.encode({ hello: 'world' })
-const cid = await hello.cid()
+import { base64 } from "multiformats/bases/base64"
+cid.toString(base64.encoder)
+//> 'mAYAEEiCTojlxqRTl6svwqNJRVM2jCcPBxy+7mRTUfGDzy2gViA'
 ```
 
-# Plugins
+Parsing CID string serialized CIDs requires multibase decoder that implements
+[`MultibaseDecoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. Library provides a
+decoder for every encoder it provides:
 
-By default, no base encodings, hash functions, or codec implementations are included with `multiformats`.
-However, you can import the following bundles to get a `multiformats` interface with them already configured.
+```js
+CID.parse('mAYAEEiCTojlxqRTl6svwqNJRVM2jCcPBxy+7mRTUfGDzy2gViA', base64.decoder)
+//> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
+```
 
-| bundle | bases | hashes | codecs |
-|---|---|---|---|
-| `multiformats/basics` | `base32`, `base64` | `sha2-256`, `sha2-512` | `json`, `raw` |
+Dual of multibase encoder & decoder is defined as multibase codec and it exposes
+them as `encoder` and `decoder` properties. For added convenience codecs also
+implement `MultibaseEncoder` and `MultibaseDecoder` interfaces so they could be
+used as either or both:
 
-## Base Encodings (multibase)
+
+```js
+cid.toString(base64)
+CID.parse(cid.toString(base64), base64)
+```
+
+**Note:** CID implementation comes bundled with `base32` and `base58btc`
+multibase codecs so that CIDs can be base serialized to (version specific)
+default base encoding and parsed without having to supply base encoders/decoders:
+
+```js
+const v1 = CID.parse('bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea')
+v1.toString()
+//> 'bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea'
+
+const v0 = CID.parse('QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n')
+v0.toString()
+//> 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
+v0.toV1().toString()
+//> 'bafybeihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku'
+```
+
+### Multicodec Encoders / Decoders / Codecs
+
+Library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts)
+and utility function to take care of the boilerplate when implementing them:
+
+```js
+import { codec } from 'multiformats/codecs/codec'
+
+const json = codec({
+  name: 'json',
+  // As per multiformats table
+  // https://github.com/multiformats/multicodec/blob/master/table.csv#L113
+  code: 0x0200,
+  encode: json => new TextEncoder().encode(JSON.stringify(json)),
+  decode: bytes => JSON.parse(new TextDecoder().decode(bytes))
+})
+```
+
+Just like with multibase, here codecs are duals of `encoder` and `decoder` parts,
+but they also implement both interfaces for convenience:
+
+```js
+const hello = json.encoder.encode({ hello: 'world' })
+json.decode(b1)
+//> { hello: 'world' }
+```
+
+### Multihash Hashers
+
+This library defines [`MultihashHasher` and `MultihashDigest` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/hashes/interface.ts)
+and convinient function for implementing them:
+
+```js
+import * as hasher from 'multiformats/hashes/hasher')
+
+const sha256 = hasher.from({
+  // As per multiformats table
+  // https://github.com/multiformats/multicodec/blob/master/table.csv#L9
+  name: 'sha2-256',
+  code: 0x12,
+
+  encode: (input) => new Uint8Array(crypto.createHash('sha256').update(input).digest())
+})
+
+const hash = await sha256.digest(json.encode({ hello: 'world' }))
+CID.create(1, json.code, hash)
+
+//> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
+```
+
+
+
+# Implementations
+
+By default, no base encodings (other than base32 & base58btc), hash functions,
+or codec implementations are included exposed by `multiformats`, you need to
+import the ones you need yourself.
+
+## Multibase codecs
 
 | bases | import | repo |
  --- | --- | --- |
@@ -58,7 +135,7 @@ However, you can import the following bundles to get a `multiformats` interface 
 `base64`, `base64pad`, `base64url`, `base64urlpad` | `multiformats/bases/base64` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 `base58btc`, `base58flick4` | `multiformats/bases/base58` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 
-## Hash Functions (multihash)
+## Multihash hashers
 
 | hashes | import | repo |
 | --- | --- | --- |
@@ -74,6 +151,4 @@ However, you can import the following bundles to get a `multiformats` interface 
 | `json` | `multiformats/codecs/json` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
 | `dag-cbor` | `@ipld/dag-cbor` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
 | `dag-json` | `@ipld/dag-json` | [ipld/js-dag-json](https://github.com/ipld/js-dag-json) |
-
-# API
 
