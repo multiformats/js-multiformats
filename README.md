@@ -6,7 +6,7 @@ encoders / decoders / codecs, codec encoders /decoders and multihash hashers tha
 
 Library provides implementations for most basics and many others can be found in linked repositories.
 
-## Intefaces
+## Interfaces
 
 ```js
 import CID from 'multiformats/cid'
