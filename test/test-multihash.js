@@ -1,16 +1,20 @@
 /* globals describe, it */
-import * as bytes from '../src/bytes.js'
+import { coerce, fromHex, fromString } from '../src/bytes.js'
 import assert from 'assert'
-import { create as multiformat } from 'multiformats'
-import intTable from 'multicodec/src/int-table.js'
 import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
 import crypto from 'crypto'
-import sha2 from 'multiformats/hashes/sha2'
-const same = assert.deepStrictEqual
+import { sha256, sha512, __browser } from 'multiformats/hashes/sha2'
+import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
 const test = it
-const encode = name => data => bytes.coerce(crypto.createHash(name).update(data).digest())
-const table = Array.from(intTable.entries())
+const encode = name => data => coerce(crypto.createHash(name).update(data).digest())
+
+const same = (x, y) => {
+  if (x instanceof Uint8Array && y instanceof Uint8Array) {
+    if (Buffer.compare(Buffer.from(x), Buffer.from(y)) === 0) return
+  }
+  return assert.deepStrictEqual(x, y)
+}
 
 const sample = (code, size, hex) => {
   const toHex = (i) => {
@@ -18,7 +22,7 @@ const sample = (code, size, hex) => {
     const h = i.toString(16)
     return h.length % 2 === 1 ? `0${h}` : h
   }
-  return bytes.fromHex(`${toHex(code)}${toHex(size)}${hex}`)
+  return fromHex(`${toHex(code)}${toHex(size)}${hex}`)
 }
 
 const testThrowAsync = async (fn, message) => {
@@ -28,81 +32,74 @@ const testThrowAsync = async (fn, message) => {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
 
 describe('multihash', () => {
-  const { multihash } = multiformat(table)
-  multihash.add(sha2)
-  const { validate } = multihash
   const empty = new Uint8Array(0)
 
   describe('encode', () => {
     test('valid', () => {
       for (const test of valid) {
         const { encoding, hex, size } = test
-        const { code, name, varint } = encoding
+        const { code, varint } = encoding
         const buf = sample(varint || code, size, hex)
-        same(multihash.encode(hex ? bytes.fromHex(hex) : empty, code), buf)
-        same(multihash.encode(hex ? bytes.fromHex(hex) : empty, name), buf)
+        same(createDigest(code, hex ? fromHex(hex) : empty).bytes, buf)
       }
     })
     test('hash sha2-256', async () => {
-      const hash = await multihash.hash(bytes.fromString('test'), 'sha2-256')
-      const { digest, code } = multihash.decode(hash)
-      same(code, multihash.get('sha2-256').code)
-      same(digest, encode('sha256')(bytes.fromString('test')))
-      same(await validate(hash), true)
-      same(await validate(hash, bytes.fromString('test')), true)
+      const hash = await sha256.digest(fromString('test'))
+      same(hash.code, sha256.code)
+      same(hash.digest, encode('sha256')(fromString('test')))
+
+      const hash2 = decodeDigest(hash.bytes)
+      same(hash2.code, sha256.code)
+      same(hash2.bytes, hash.bytes)
     })
     test('hash sha2-512', async () => {
-      const hash = await multihash.hash(bytes.fromString('test'), 'sha2-512')
-      const { digest, code } = multihash.decode(hash)
-      same(code, multihash.get('sha2-512').code)
-      same(digest, encode('sha512')(bytes.fromString('test')))
-      same(await validate(hash), true)
-      same(await validate(hash, bytes.fromString('test')), true)
-    })
-    test('no such hash', async () => {
-      let msg = 'Do not have multiformat entry for "notfound"'
-      await testThrowAsync(() => multihash.hash(bytes.fromString('test'), 'notfound'), msg)
-      msg = 'Missing hash implementation for "json"'
-      await testThrowAsync(() => multihash.hash(bytes.fromString('test'), 'json'), msg)
+      const hash = await sha512.digest(fromString('test'))
+      same(hash.code, sha512.code)
+      same(hash.digest, encode('sha512')(fromString('test')))
+
+      const hash2 = decodeDigest(hash.bytes)
+      same(hash2.code, sha512.code)
+      same(hash2.bytes, hash.bytes)
     })
   })
   describe('decode', () => {
-    test('valid fixtures', () => {
-      for (const test of valid) {
-        const { encoding, hex, size } = test
-        const { code, name, varint } = encoding
-        const buf = sample(varint || code, size, hex)
-        const digest = hex ? bytes.fromHex(hex) : empty
-        same(multihash.decode(buf), { code, name, digest, length: size })
-      }
-    })
+    for (const { encoding, hex, size } of valid) {
+      test(`valid fixture ${hex}`, () => {
+        const { code, varint } = encoding
+        const bytes = sample(varint || code, size, hex)
+        const digest = hex ? fromHex(hex) : empty
+        const hash = decodeDigest(bytes)
+
+        same(hash.bytes, bytes)
+        same(hash.code, code)
+        same(hash.size, size)
+        same(hash.digest, digest)
+      })
+    }
+
     test('get from buffer', async () => {
-      const hash = await multihash.hash(bytes.fromString('test'), 'sha2-256')
-      const { code, name } = multihash.get(hash)
-      same({ code, name }, { code: 18, name: 'sha2-256' })
+      const hash = await sha256.digest(fromString('test'))
+
+      same(hash.code, 18)
     })
   })
   describe('validate', async () => {
-    test('invalid hash sha2-256', async () => {
-      const hash = await multihash.hash(bytes.fromString('test'), 'sha2-256')
-      const msg = 'Buffer does not match hash'
-      await testThrowAsync(() => validate(hash, bytes.fromString('tes2t')), msg)
-    })
     test('invalid fixtures', async () => {
       for (const test of invalid) {
-        const buff = bytes.fromHex(test.hex)
-        await testThrowAsync(() => validate(buff), test.message)
+        const buff = fromHex(test.hex)
+        await testThrowAsync(() => decodeDigest(buff), test.message)
       }
     })
   })
   test('throw on hashing non-buffer', async () => {
-    await testThrowAsync(() => multihash.hash('asdf'), 'Unknown type, must be binary type')
+    await testThrowAsync(() => sha256.digest('asdf'), 'Unknown type, must be binary type')
   })
   test('browser', () => {
-    same(sha2.__browser, !!process.browser)
+    same(__browser, !!process.browser)
   })
 })

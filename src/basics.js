@@ -1,13 +1,16 @@
-import { create } from './index.js'
+// @ts-check
+
+import * as base32 from './bases/base32.js'
+import * as base58 from './bases/base58.js'
+import * as sha2 from './hashes/sha2.js'
+
 import raw from './codecs/raw.js'
 import json from './codecs/json.js'
-import base32 from './bases/base32.js'
-import sha2 from './hashes/sha2.js'
 
-export default base64 => {
-  const multiformats = create()
-  multiformats.multihash.add(sha2)
-  multiformats.multicodec.add([raw, json])
-  multiformats.multibase.add([base32, base64])
-  return multiformats
-}
+import { CID, hasher, digest, varint, bytes } from './index.js'
+
+const bases = { ...base32, ...base58 }
+const hashes = { ...sha2 }
+const codecs = { raw, json }
+
+export { CID, hasher, digest, varint, bytes, hashes, bases, codecs }

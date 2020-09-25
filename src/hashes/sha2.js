@@ -1,23 +1,19 @@
+// @ts-check
+
 import crypto from 'crypto'
+import { from } from './hasher.js'
+import { coerce } from '../bytes.js'
 
-const bufferToUint8Array = (buffer) => {
-  return new Uint8Array(buffer.buffer, buffer.byteOffset, buffer.byteLength)
-}
+export const sha256 = from({
+  name: 'sha2-256',
+  code: 0x12,
+  encode: (input) => coerce(crypto.createHash('sha256').update(input).digest())
+})
 
-const sha256 = async data => bufferToUint8Array(crypto.createHash('sha256').update(data).digest())
-const sha512 = async data => bufferToUint8Array(crypto.createHash('sha512').update(data).digest())
+export const sha512 = from({
+  name: 'sha2-512',
+  code: 0x13,
+  encode: input => coerce(crypto.createHash('sha512').update(input).digest())
+})
 
-const hashes = [
-  {
-    name: 'sha2-256',
-    encode: sha256,
-    code: 0x12
-  },
-  {
-    name: 'sha2-512',
-    encode: sha512,
-    code: 0x13
-  }
-]
-hashes.__browser = false
-export default hashes
+export const __browser = false

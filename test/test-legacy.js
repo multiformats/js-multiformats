@@ -1,31 +1,42 @@
 /* globals before, describe, it */
 import { Buffer } from 'buffer'
 import assert from 'assert'
-import multiformats from 'multiformats/basics'
 import legacy from 'multiformats/legacy'
+import rawCodec from 'multiformats/codecs/raw'
+import jsonCodec from 'multiformats/codecs/json'
+import { sha256, sha512 } from 'multiformats/hashes/sha2'
+import { codec } from 'multiformats/codecs/codec'
+import CID from 'multiformats/cid'
+
 const same = assert.deepStrictEqual
 const test = it
 
-const testThrow = (fn, message) => {
+const testThrow = async (fn, message) => {
   try {
-    fn()
+    await fn()
   } catch (e) {
     if (e.message !== message) throw e
     return
   }
+  /* c8 ignore next */
   throw new Error('Test failed to throw')
 }
+
+const hashes = {
+  [sha256.name]: sha256,
+  [sha512.name]: sha512
+}
+
 describe('multicodec', () => {
   let raw
   let json
   let custom
   let link
   before(async () => {
-    raw = legacy(multiformats, 'raw')
-    json = legacy(multiformats, 'json')
+    raw = legacy(rawCodec, { hashes })
+    json = legacy(jsonCodec, { hashes })
     link = await raw.util.cid(Buffer.from('test'))
-
-    multiformats.multicodec.add({
+    custom = legacy(codec({
       name: 'custom',
       code: 6787678,
       encode: o => {
@@ -38,11 +49,10 @@ describe('multicodec', () => {
       decode: buff => {
         const obj = json.util.deserialize(buff)
         obj.l = link
-        if (obj.o.link) obj.link = multiformats.CID.from(link)
+        if (obj.o.link) obj.link = CID.asCID(link)
         return obj
       }
-    })
-    custom = legacy(multiformats, 'custom')
+    }), { hashes })
   })
   test('encode/decode raw', () => {
     const buff = raw.util.serialize(Buffer.from('test'))
@@ -58,9 +68,13 @@ describe('multicodec', () => {
     const cid = await raw.util.cid(Buffer.from('test'))
     same(cid.version, 1)
     same(cid.codec, 'raw')
-    same(cid.multihash, Buffer.from(await multiformats.multihash.hash(Buffer.from('test'), 'sha2-256')))
+    const { bytes } = await sha256.digest(Buffer.from('test'))
+    same(cid.multihash, Buffer.from(bytes))
+
+    const msg = 'Hasher for md5 was not provided in the configuration'
+    testThrow(async () => await raw.util.cid(Buffer.from('test'), { hashAlg: 'md5' }), msg)
   })
-  test('resolve', () => {
+  test('resolve', async () => {
     const fixture = custom.util.serialize({
       one: {
         two: {
@@ -75,7 +89,7 @@ describe('multicodec', () => {
     same(custom.resolver.resolve(fixture, 'o/one/two/hello'), { value })
     value = link
     same(custom.resolver.resolve(fixture, 'l/outside'), { value, remainderPath: 'outside' })
-    testThrow(() => custom.resolver.resolve(fixture, 'o/two'), 'Not found')
+    await testThrow(() => custom.resolver.resolve(fixture, 'o/two'), 'Not found')
   })
   test('tree', () => {
     const fixture = custom.util.serialize({

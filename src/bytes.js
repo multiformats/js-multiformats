@@ -1,9 +1,24 @@
+// @ts-check
+
+const empty = new Uint8Array(0)
+
+/**
+ * @param {Uint8Array} d
+ */
 const toHex = d => d.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '0'), '')
+
+/**
+ * @param {string} hex
+ */
 const fromHex = hex => {
-  if (!hex.length) return new Uint8Array(0)
+  if (!hex.length) return empty
   return new Uint8Array(hex.match(/../g).map(b => parseInt(b, 16)))
 }
 
+/**
+ * @param {Uint8Array} aa
+ * @param {Uint8Array} bb
+ */
 const equals = (aa, bb) => {
   if (aa === bb) return true
   if (aa.byteLength !== bb.byteLength) {
@@ -19,6 +34,9 @@ const equals = (aa, bb) => {
   return true
 }
 
+/**
+ * @param {ArrayBufferView|ArrayBuffer} o
+ */
 const coerce = o => {
   if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') return o
   if (o instanceof ArrayBuffer) return new Uint8Array(o)
@@ -28,10 +46,23 @@ const coerce = o => {
   throw new Error('Unknown type, must be binary type')
 }
 
+/**
+ * @param {any} o
+ * @returns {o is ArrayBuffer|ArrayBufferView}
+ */
 const isBinary = o =>
   o instanceof ArrayBuffer || ArrayBuffer.isView(o)
 
+/**
+ * @param {string} str
+ * @returns {Uint8Array}
+ */
 const fromString = str => (new TextEncoder()).encode(str)
+
+/**
+ * @param {Uint8Array} b
+ * @returns {string}
+ */
 const toString = b => (new TextDecoder()).decode(b)
 
-export { equals, coerce, isBinary, fromHex, toHex, fromString, toString }
+export { equals, coerce, isBinary, fromHex, toHex, fromString, toString, empty }
