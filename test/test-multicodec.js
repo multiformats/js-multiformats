@@ -1,7 +1,8 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
 import assert from 'assert'
-import * as multiformats from 'multiformats/basics'
+import raw from 'multiformats/codecs/raw'
+import json from 'multiformats/codecs/json'
 import { codec } from 'multiformats/codecs/codec'
 const same = assert.deepStrictEqual
 const test = it
@@ -18,8 +19,6 @@ const testThrow = async (fn, message) => {
 }
 
 describe('multicodec', () => {
-  const { codecs: { raw, json } } = multiformats
-
   test('encode/decode raw', () => {
     const buff = raw.encode(bytes.fromString('test'))
     same(buff, bytes.fromString('test'))
