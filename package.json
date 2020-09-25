@@ -28,10 +28,6 @@
     ".": {
       "import": "./src/index.js"
     },
-    "./basics": {
-      "import": "./src/basics-import.js",
-      "browser": "./src/basics-browser.js"
-    },
     "./cid": {
       "import": "./src/cid.js"
     },
