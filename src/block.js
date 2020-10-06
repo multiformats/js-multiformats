@@ -89,8 +89,8 @@ const tree = function * (decoded, path = []) {
 
 class Block {
   constructor ({ codec, hasher, source, cid, data }) {
-    setImmutable(this, '_codec', codec)
-    setImmutable(this, '_hasher', hasher)
+    if (codec) setImmutable(this, '_codec', codec)
+    if (hasher) setImmutable(this, '_hasher', hasher)
     if (source) setImmutable(this, '_source', source)
     if (cid) setImmutable(this, '_cid', cid)
     if (data) setImmutable(this, '_data', data)
