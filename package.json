@@ -37,6 +37,9 @@
     "./legacy": {
       "import": "./src/legacy.js"
     },
+    "./block": {
+      "import": "./src/block.js"
+    },
     "./bases/base16": {
       "import": "./src/bases/base16.js"
     },
@@ -84,7 +87,8 @@
   },
   "dependencies": {
     "buffer": "^5.6.0",
-    "cids": "^1.0.0"
+    "cids": "^1.0.0",
+    "lodash.transform": "^4.6.0"
   },
   "directories": {
     "test": "test"
