@@ -91,7 +91,7 @@ class Block {
   constructor ({ codec, hasher, source, cid, data }) {
     if (codec) setImmutable(this, '_codec', codec)
     if (hasher) setImmutable(this, '_hasher', hasher)
-    if (source) setImmutable(this, '_source', source)
+    if (typeof source !== 'undefined') setImmutable(this, '_source', source)
     if (cid) setImmutable(this, '_cid', cid)
     if (data) setImmutable(this, '_data', data)
     setImmutable(this, 'asBlock', this)
@@ -148,6 +148,19 @@ class Block {
 
   tree () {
     return tree(this.decodeUnsafe())
+  }
+
+  get (path) {
+    let node = this.decodeUnsafe()
+    path = path.split('/').filter(x => x)
+    while (path.length) {
+      const key = path.shift()
+      if (node[key] === undefined) { throw new Error(`Object has no property ${key}`) }
+      node = node[key]
+      const cid = CID.asCID(node)
+      if (cid) return { value: cid, remaining: path.join('/') }
+    }
+    return { value: node }
   }
 }
 
