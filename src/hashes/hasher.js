@@ -1,5 +1,3 @@
-// @ts-check
-
 import * as Digest from './digest.js'
 
 /**
@@ -36,7 +34,7 @@ export class Hasher {
 
   /**
    * @param {Uint8Array} input
-   * @returns {Promise<Digest.Digest>}
+   * @returns {Promise<Digest.Digest<Code, number>>}
    */
   async digest (input) {
     if (input instanceof Uint8Array) {

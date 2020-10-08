@@ -1,18 +1,20 @@
-// @ts-check
-
 import OldCID from 'cids'
 import * as bytes from './bytes.js'
 import { Buffer } from 'buffer'
 import CID from './cid.js'
 
 /**
+ * @template {number} Code
  * @template T
- * @param {BlockCodec<T>} codec
+ * @param {BlockCodec<Code, T>} codec
  * @param {Object} options
  * @param {Object<string, MultihashHasher>} options.hashes
  */
 
 const legacy = (codec, { hashes }) => {
+  /**
+   * @param {*} obj
+   */
   const toLegacy = obj => {
     if (OldCID.isCID(obj)) {
       return obj
@@ -40,6 +42,9 @@ const legacy = (codec, { hashes }) => {
     return obj
   }
 
+  /**
+   * @param {*} obj
+   */
   const fromLegacy = obj => {
     const cid = CID.asCID(obj)
     if (cid) return cid
@@ -94,6 +99,7 @@ const legacy = (codec, { hashes }) => {
     let value = codec.decode(buff)
     const entries = path.split('/').filter(x => x)
     while (entries.length) {
+      // @ts-ignore
       value = value[/** @type {string} */(entries.shift())]
       if (typeof value === 'undefined') throw new Error('Not found')
       if (OldCID.isCID(value)) {
@@ -139,8 +145,9 @@ export default legacy
  */
 
 /**
+ * @template {number} Code
  * @template T
- * @typedef {import('./codecs/interface').BlockCodec<T>} BlockCodec
+ * @typedef {import('./codecs/interface').BlockCodec<Code, T>} BlockCodec
  */
 
 /**

@@ -6,7 +6,6 @@ import varint from '../vendor/varint.js'
  */
 export const decode = (data) => {
   const code = varint.decode(data)
-  // @ts-ignore
   return [code, varint.decode.bytes]
 }
 

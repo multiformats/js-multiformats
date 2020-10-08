@@ -1,5 +1,3 @@
-// @ts-check
-
 /**
  * @typedef {import('./interface').BaseEncoder} BaseEncoder
  * @typedef {import('./interface').BaseDecoder} BaseDecoder
@@ -162,7 +160,7 @@ class ComposedDecoder {
    * @returns {Uint8Array}
    */
   decode (input) {
-    const prefix = input[0]
+    const prefix = /** @type {Prefix} */ (input[0])
     const decoder = this.decoders[prefix]
     if (decoder) {
       return decoder.decode(input)
@@ -211,6 +209,9 @@ export class Codec {
     return this.encoder.encode(input)
   }
 
+  /**
+   * @param {string} input
+   */
   decode (input) {
     return this.decoder.decode(input)
   }

@@ -1,5 +1,3 @@
-// @ts-check
-
 const empty = new Uint8Array(0)
 
 /**
@@ -11,8 +9,8 @@ const toHex = d => d.reduce((hex, byte) => hex + byte.toString(16).padStart(2, '
  * @param {string} hex
  */
 const fromHex = hex => {
-  if (!hex.length) return empty
-  return new Uint8Array(hex.match(/../g).map(b => parseInt(b, 16)))
+  const hexes = hex.match(/../g)
+  return hexes ? new Uint8Array(hexes.map(b => parseInt(b, 16))) : empty
 }
 
 /**
