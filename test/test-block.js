@@ -69,7 +69,7 @@ describe('block', () => {
     test('constructor missing args', () => {
       let threw = true
       try {
-        new main.Block({})
+        threw = new main.Block({})
         threw = false
       } catch (e) {
         if (e.message !== 'Missing required argument') throw e
@@ -88,7 +88,7 @@ describe('block', () => {
     }
     test('encode', async () => {
       await errTest(main.encode, {}, 'Missing required argument "value"')
-      await errTest(main.encode, {value: true}, 'Missing required argument: codec or hasher')
+      await errTest(main.encode, { value: true }, 'Missing required argument: codec or hasher')
     })
     test('decode', async () => {
       await errTest(main.decode, {}, 'Missing required argument "bytes"')
@@ -99,10 +99,10 @@ describe('block', () => {
     })
     test('create', async () => {
       await errTest(main.create, {}, 'Missing required argument "bytes"')
-      await errTest(main.create, {bytes: true}, 'Missing required argument "hasher"')
+      await errTest(main.create, { bytes: true }, 'Missing required argument "hasher"')
       const block = await main.encode({ value: fixture, codec, hasher })
-      const block2 = await main.encode({ value: { ...fixture, test: 'blah' }, codec, hasher})
-      await errTest(main.create, { bytes: block.bytes, cid: block2.cid, codec, hasher}, 'CID hash does not match bytes')
+      const block2 = await main.encode({ value: { ...fixture, test: 'blah' }, codec, hasher })
+      await errTest(main.create, { bytes: block.bytes, cid: block2.cid, codec, hasher }, 'CID hash does not match bytes')
     })
     test('get', async () => {
       const block = await main.encode({ value: fixture, codec, hasher })
