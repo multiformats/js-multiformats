@@ -16,7 +16,7 @@
     "test:cjs:browser": "polendina --cleanup dist/cjs/browser-test/test-*.js",
     "test": "npm run lint && npm run test:node && npm run test:cjs",
     "test:node-v12": "mocha test/test-*.js && npm run test:cjs",
-    "coverage": "c8 --exclude vendor --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080"
+    "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080"
   },
   "c8": {
     "exclude": [
@@ -36,6 +36,9 @@
     },
     "./legacy": {
       "import": "./src/legacy.js"
+    },
+    "./block": {
+      "import": "./src/block.js"
     },
     "./bases/base16": {
       "import": "./src/bases/base16.js"
@@ -84,7 +87,8 @@
   },
   "dependencies": {
     "buffer": "^5.6.0",
-    "cids": "^1.0.0"
+    "cids": "^1.0.0",
+    "lodash.transform": "^4.6.0"
   },
   "directories": {
     "test": "test"
