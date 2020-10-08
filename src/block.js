@@ -1,28 +1,6 @@
-import transform from 'lodash.transform'
-import { bytes, CID } from './index.js'
+import { bytes as binary, CID } from './index.js'
 
 const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
-
-const immutableTypes = new Set(['number', 'string', 'boolean'])
-
-const { coerce, isBinary } = bytes
-const copyBinary = value => {
-  const b = coerce(value)
-  return coerce(b.buffer.slice(b.byteOffset, b.byteOffset + b.byteLength))
-}
-
-const clone = obj => transform(obj, (result, value, key) => {
-  const cid = CID.asCID(value)
-  if (cid) {
-    result[key] = cid
-  } else if (isBinary(value)) {
-    result[key] = copyBinary(value)
-  } else if (typeof value === 'object' && value !== null) {
-    result[key] = clone(value)
-  } else {
-    result[key] = value
-  }
-})
 
 const setImmutable = (obj, key, value) => {
   if (typeof value === 'undefined') throw new Error(`${key} cannot be undefined`)
@@ -88,70 +66,24 @@ const tree = function * (decoded, path = []) {
 /* eslint-enable max-depth */
 
 class Block {
-  constructor ({ codec, hasher, source, cid, data }) {
-    if (codec) setImmutable(this, '_codec', codec)
-    if (hasher) setImmutable(this, '_hasher', hasher)
-    if (typeof source !== 'undefined') setImmutable(this, '_source', source)
-    if (cid) setImmutable(this, '_cid', cid)
-    if (data) setImmutable(this, '_data', data)
+  constructor ({ cid, bytes, value }) {
+    if (!cid || !bytes || typeof value === 'undefined') throw new Error('Missing required argument')
+    setImmutable(this, 'bytes', bytes)
+    setImmutable(this, 'value', value)
+    setImmutable(this, 'cid', cid)
     setImmutable(this, 'asBlock', this)
   }
 
-  decodeUnsafe () {
-    if (typeof this._source !== 'undefined') return this._source
-    throw new Error('Block created without a decoded state')
-  }
-
-  decode () {
-    const decoded = this.decodeUnsafe()
-    if (decoded === null) return null
-    if (isBinary(decoded)) return copyBinary(decoded)
-    if (immutableTypes.has(typeof decoded) || decoded === null) {
-      return decoded
-    }
-    return clone(decoded)
-  }
-
-  encodeUnsafe () {
-    if (this._data) return this._data
-    throw new Error('Block created without an encoded state')
-  }
-
-  encode () {
-    const data = this.encodeUnsafe()
-    return copyBinary(data)
-  }
-
-  async cid () {
-    if (this._cid) return this._cid
-    const hash = await this._hasher.digest(this.encodeUnsafe())
-    const cid = CID.create(1, this._codec.code, hash)
-    setImmutable(this, '_cid', cid)
-    return cid
-  }
-
-  get code () {
-    if (this._cid) return this._cid.code
-    return this._codec.code
-  }
-
-  async equals (block) {
-    if (block === this) return true
-    if (block.asBlock !== block) return false
-    const [a, b] = await Promise.all([this.cid(), block.cid()])
-    return a.equals(b)
-  }
-
   links () {
-    return links(this.decodeUnsafe())
+    return links(this.value)
   }
 
   tree () {
-    return tree(this.decodeUnsafe())
+    return tree(this.value)
   }
 
   get (path) {
-    let node = this.decodeUnsafe()
+    let node = this.value
     path = path.split('/').filter(x => x)
     while (path.length) {
       const key = path.shift()
@@ -164,51 +96,36 @@ class Block {
   }
 }
 
-class BlockDecoder extends Block {
-  decodeUnsafe () {
-    if (typeof this._source !== 'undefined') return this._source
-    if (!this._codec) {
-      throw new Error('Do not have codec implemention in this Block interface')
-    }
-    const source = this._codec.decode(this._data)
-    setImmutable(this, '_source', source)
-    return source
-  }
-}
-class BlockEncoder extends Block {
-  encodeUnsafe () {
-    if (this._data) return this._data
-    if (!this._codec) {
-      throw new Error('Do not have codec implemention in this Block interface')
-    }
-    const data = this._codec.encode(this._source)
-    setImmutable(this, '_data', data)
-    return data
-  }
-}
-
-const encoder = ({ source, codec, hasher }) => {
-  if (typeof source === undefined) throw new Error('Missing required argument "source"')
+const encode = async ({ value, codec, hasher }) => {
+  if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
-  return new BlockEncoder({ source, codec, hasher })
+  const bytes = codec.encode(value)
+  const hash = await hasher.digest(bytes)
+  const cid = CID.create(1, codec.code, hash)
+  return new Block({ value, bytes, cid })
 }
-const decoder = ({ data, codec, hasher }) => {
-  if (!data) throw new Error('Missing required argument "data"')
+const decode = async ({ bytes, codec, hasher }) => {
+  if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
-  return new BlockDecoder({ data, codec, hasher })
+  const value = codec.decode(bytes)
+  const hash = await hasher.digest(bytes)
+  const cid = CID.create(1, codec.code, hash)
+  return new Block({ value, bytes, cid })
 }
-const createUnsafe = ({ data, cid, codec, hasher }) => {
+const createUnsafe = ({ bytes, cid, value, codec }) => {
   if (!codec) throw new Error('Missing required argument "codec"')
-  return new BlockDecoder({ data, cid, codec, hasher })
+  if (typeof value === 'undefined') value = codec.decode(bytes)
+  return new Block({ bytes, cid, value })
 }
-const create = async ({ data, cid, hasher, codec }) => {
-  if (!data) throw new Error('Missing required argument "data"')
+const create = async ({ bytes, cid, hasher, codec }) => {
+  if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!hasher) throw new Error('Missing required argument "hasher"')
-  const hash = await hasher.digest(data)
-  if (!bytes.equals(cid.multihash.bytes, hash.bytes)) {
-    throw new Error('CID hash does not match data')
+  const value = codec.decode(bytes)
+  const hash = await hasher.digest(bytes)
+  if (!binary.equals(cid.multihash.bytes, hash.bytes)) {
+    throw new Error('CID hash does not match bytes')
   }
-  return createUnsafe({ data, cid, hasher, codec })
+  return createUnsafe({ bytes, cid, value, codec, hasher })
 }
 
-export { encoder, decoder, create, createUnsafe, Block }
+export { encode, decode, create, createUnsafe, Block }

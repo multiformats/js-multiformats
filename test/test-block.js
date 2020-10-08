@@ -12,30 +12,26 @@ const buff = bytes.fromString('sadf')
 
 describe('block', () => {
   test('basic encode/decode roundtrip', async () => {
-    const block = main.encoder({ source: fixture, codec, hasher })
-    same(block.code, codec.code)
-    const data = block.encode()
-    const block2 = main.decoder({ data, codec, hasher })
-    const [ cid1, cid2 ] = await Promise.all([ block.cid(), block2.cid() ])
-    same(await cid1.equals(cid2), true)
-    same(await block.equals(block2), true)
-    same(fixture, block2.decode())
-    const block3 = await main.create({ data, cid: cid1, codec, hasher })
-    same(block3.code, codec.code)
-    same(await block3.equals(block2), true)
+    const block = await main.encode({ value: fixture, codec, hasher })
+    const block2 = await main.decode({ bytes: block.bytes, codec, hasher })
+    same(await block.cid.equals(block2.cid), true)
+    same(await block.cid.equals(block2.cid), true)
+    same(fixture, block2.value)
+    const block3 = await main.create({ bytes: block.bytes, cid: block.cid, codec, hasher })
+    same(await block3.cid.equals(block2.cid), true)
   })
   describe('reader', () => {
-    const source = { link, nope: 'skip', arr: [link], obj: { arr: [{obj:{}}] } }
-    const block = main.encoder({ source, codec, hasher })
+    const value = { link, nope: 'skip', arr: [link], obj: { arr: [{ obj: {} }] } }
+    const block = main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
     test('links', () => {
-      const expected = [ 'link', 'arr/0' ]
-      for (const [ path, cid ] of block.links()) {
+      const expected = ['link', 'arr/0']
+      for (const [path, cid] of block.links()) {
         same(path, expected.shift())
         same(cid.toString(), link.toString())
       }
     })
     test('tree', () => {
-      const expected = [ 'link', 'nope', 'arr', 'arr/0', 'obj', 'obj/arr', 'obj/arr/0', 'obj/arr/0/obj' ]
+      const expected = ['link', 'nope', 'arr', 'arr/0', 'obj', 'obj/arr', 'obj/arr/0', 'obj/arr/0/obj']
       for (const path of block.tree()) {
         same(path, expected.shift())
       }
@@ -48,19 +44,19 @@ describe('block', () => {
       same(ret, { value: 'skip' })
     })
     test('null links/tree', () => {
-      const block = main.encoder({source: null, codec, hasher})
+      const block = main.createUnsafe({ value: null, codec, hasher, bytes: true, cid: true })
       for (const x of block.tree()) {
-        throw new Error('tree should have nothing')
+        throw new Error(`tree should have nothing, got "${x}"`)
       }
       for (const x of block.links()) {
-        throw new Error('links should have nothing')
+        throw new Error(`links should have nothing, got "${x}"`)
       }
     })
   })
 
   test('kitchen sink', () => {
-    const sink = { one: { two: { arr: [ true, false, null ], three: 3, buff, link } } }
-    const block = main.encoder({ source: sink, codec, hasher })
-    same(sink, block.decode())
+    const sink = { one: { two: { arr: [true, false, null], three: 3, buff, link } } }
+    const block = main.createUnsafe({ value: sink, codec, hasher, bytes: true, cid: true })
+    same(sink, block.value)
   })
 })
