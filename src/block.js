@@ -1,10 +1,16 @@
 import { bytes as binary, CID } from './index.js'
 
-const readonly = value => ({ get: () => value, set: () => { throw new Error('Cannot set read-only property') } })
+const readonly = (value, enumerable) => (
+  {
+    get: () => value,
+    set: () => { throw new Error('Cannot set read-only property') },
+    enumerable
+  }
+)
 
-const setImmutable = (obj, key, value) => {
+const setImmutable = (obj, key, value, enumerable = true) => {
   if (typeof value === 'undefined') throw new Error(`${key} cannot be undefined`)
-  Object.defineProperty(obj, key, readonly(value))
+  Object.defineProperty(obj, key, readonly(value, enumerable))
 }
 
 /* eslint-disable max-depth */
@@ -71,7 +77,7 @@ class Block {
     setImmutable(this, 'bytes', bytes)
     setImmutable(this, 'value', value)
     setImmutable(this, 'cid', cid)
-    setImmutable(this, 'asBlock', this)
+    setImmutable(this, 'asBlock', this, false)
   }
 
   links () {
