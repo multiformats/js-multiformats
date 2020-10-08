@@ -3,13 +3,13 @@ import { bytes as binary, CID } from './index.js'
 const readonly = (value, enumerable) => (
   {
     get: () => value,
-    set: () => { throw new Error('Cannot set read-only property') },
+    set: /* c8 ignore next */ () => { throw new Error('Cannot set read-only property') },
     enumerable
   }
 )
 
 const setImmutable = (obj, key, value, enumerable = true) => {
-  if (typeof value === 'undefined') throw new Error(`${key} cannot be undefined`)
+  if (typeof value === 'undefined') /* c8 ignore next */ throw new Error(`${key} cannot be undefined`)
   Object.defineProperty(obj, key, readonly(value, enumerable))
 }
 
@@ -93,7 +93,7 @@ class Block {
     path = path.split('/').filter(x => x)
     while (path.length) {
       const key = path.shift()
-      if (node[key] === undefined) { throw new Error(`Object has no property ${key}`) }
+      if (node[key] === undefined) { throw new Error(`Object has no property "${key}"`) }
       node = node[key]
       const cid = CID.asCID(node)
       if (cid) return { value: cid, remaining: path.join('/') }
