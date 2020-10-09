@@ -1,7 +1,16 @@
-on: [push, pull_request]
+on:
+  push:
+    branches:
+      - master
+      - main
+      - default
+  pull_request:
+    branches:
+      - '**'
+
 name: Typecheck
 jobs:
-  test:
+  check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
