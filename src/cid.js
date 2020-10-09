@@ -325,7 +325,7 @@ const parseCIDtoBytes = (source, base) => {
     // CIDv0 is parsed differently
     case 'Q': {
       const decoder = base || base58btc
-      return [base58btc.prefix, decoder.decode(`${base58btc.prefix}${source}`)]
+      return [base58btc.preflx, decoder.decode(`${base58btc.prefix}${source}`)]
     }
     case base58btc.prefix: {
       const decoder = base || base58btc
