@@ -13,7 +13,7 @@
     "build:vendor:base-x": "npx brrp -x @multiformats/base-x > vendor/base-x.js",
     "publish": "npm_config_yes=true npx ipjs@latest publish",
     "lint": "standard",
-    "check": "tsc --noEmit",
+    "check": "tsc --noEmit --noErrorTruncation",
     "test:cjs": "npm run build && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
     "test:cjs:browser": "polendina --cleanup dist/cjs/browser-test/test-*.js",
