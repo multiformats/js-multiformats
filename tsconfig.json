@@ -29,10 +29,10 @@
         "src"
       ]
     },
-    "baseUrl": ".",
+    "baseUrl": "."
   },
   "include": [
-    "src",
+    "src"
   ],
   "exclude": [
     "vendor",
