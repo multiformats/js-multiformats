@@ -1,5 +1,3 @@
-// @ts-check
-
 import * as varint from './varint.js'
 import * as Digest from './hashes/digest.js'
 import { base58btc } from './bases/base58.js'
@@ -150,6 +148,10 @@ export default class CID {
 
   // Deprecated
 
+  /**
+   * @param {any} value
+   * @returns {value is CID}
+   */
   static isCID (value) {
     deprecate(/^0\.0/, IS_CID_DEPRECATION)
     return !!(value && (value[cidSymbol] || value.asCID === value))
@@ -291,15 +293,15 @@ export default class CID {
   }
 
   /**
- * Takes cid in a string representation and creates an instance. If `base`
- * decoder is not provided will use a default from the configuration. It will
- * throw an error if encoding of the CID is not compatible with supplied (or
- * a default decoder).
- *
- * @template {string} Prefix
- * @param {string} source
- * @param {MultibaseDecoder<Prefix>} [base]
- */
+   * Takes cid in a string representation and creates an instance. If `base`
+   * decoder is not provided will use a default from the configuration. It will
+   * throw an error if encoding of the CID is not compatible with supplied (or
+   * a default decoder).
+   *
+   * @template {string} Prefix
+   * @param {string} source
+   * @param {MultibaseDecoder<Prefix>} [base]
+   */
   static parse (source, base) {
     const [prefix, bytes] = parseCIDtoBytes(source, base)
 
@@ -312,6 +314,12 @@ export default class CID {
   }
 }
 
+/**
+ * @template {string} Prefix
+ * @param {string} source
+ * @param {MultibaseDecoder<Prefix>} [base]
+ * @returns {[string, Uint8Array]}
+ */
 const parseCIDtoBytes = (source, base) => {
   switch (source[0]) {
     // CIDv0 is parsed differently
@@ -404,6 +412,11 @@ const hidden = { writable: false, enumerable: false, configurable: false }
 // should come from. To workaround it version is copied here.
 const version = '0.0.0-dev'
 // Start throwing exceptions on major version bump
+/**
+ *
+ * @param {RegExp} range
+ * @param {string} message
+ */
 const deprecate = (range, message) => {
   if (range.test(version)) {
     console.warn(message)

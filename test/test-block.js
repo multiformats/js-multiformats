@@ -61,7 +61,7 @@ describe('block', () => {
 
   test('kitchen sink', () => {
     const sink = { one: { two: { arr: [true, false, null], three: 3, buff, link } } }
-    const block = main.createUnsafe({ value: sink, codec, hasher, bytes: true, cid: true })
+    const block = main.createUnsafe({ value: sink, codec, bytes: true, cid: true })
     same(sink, block.value)
   })
 
@@ -95,7 +95,7 @@ describe('block', () => {
       await errTest(main.decode, { bytes: true }, 'Missing required argument: codec or hasher')
     })
     test('createUnsafe', async () => {
-      await errTest(main.createUnsafe, {}, 'Missing required argument "codec"')
+      await errTest(main.createUnsafe, {}, 'Missing required argument, must either provide "value" or "codec"')
     })
     test('create', async () => {
       await errTest(main.create, {}, 'Missing required argument "bytes"')
@@ -106,7 +106,7 @@ describe('block', () => {
     })
     test('get', async () => {
       const block = await main.encode({ value: fixture, codec, hasher })
-      await errTest(path => block.get(path), '/asd/fs/dfasd/f', 'Object has no property "asd"')
+      await errTest(path => block.get(path), '/asd/fs/dfasd/f', 'Object has no property at ["asd"]')
     })
   })
 })

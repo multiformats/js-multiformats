@@ -1,5 +1,3 @@
-// @ts-check
-
 import { coerce, equals as equalBytes } from '../bytes.js'
 import * as varint from '../varint.js'
 
@@ -25,7 +23,7 @@ export const create = (code, digest) => {
 /**
  * Turns bytes representation of multihash digest into an instance.
  * @param {Uint8Array} multihash
- * @returns {Digest}
+ * @returns {MultihashDigest}
  */
 export const decode = (multihash) => {
   const bytes = coerce(multihash)

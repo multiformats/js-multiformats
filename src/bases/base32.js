@@ -1,7 +1,9 @@
-// @ts-check
-
 import { withAlphabet } from './base.js'
 
+/**
+ * @param {string} input
+ * @param {input} alphabet
+ */
 function decode (input, alphabet) {
   input = input.replace(new RegExp('=', 'g'), '')
   const length = input.length
@@ -25,6 +27,10 @@ function decode (input, alphabet) {
   return output
 }
 
+/**
+ * @param {Uint8Array} buffer
+ * @param {string} alphabet
+ */
 function encode (buffer, alphabet) {
   const length = buffer.byteLength
   const view = new Uint8Array(buffer)
