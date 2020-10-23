@@ -27,7 +27,7 @@
       "vendor/**"
     ]
   },
-  "keywords": [],
+  "keywords": ["esm", "build"],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "exports": {
