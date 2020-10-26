@@ -27,7 +27,10 @@
       "vendor/**"
     ]
   },
-  "keywords": ["esm", "build"],
+  "keywords": [
+    "esm",
+    "build"
+  ],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "(Apache-2.0 AND MIT)",
   "exports": {
@@ -77,15 +80,15 @@
     }
   },
   "devDependencies": {
-    "c8": "^7.3.0",
-    "hundreds": "0.0.7",
-    "mocha": "^8.1.1",
-    "polendina": "^1.0.0",
-    "standard": "^14.3.4",
-    "typescript": "^4.0.3",
-    "@types/node": "14.11.7",
-    "@typescript-eslint/eslint-plugin": "^4.4.0",
-    "@typescript-eslint/parser": "^4.4.0"
+    "@types/node": "14.14.3",
+    "@typescript-eslint/eslint-plugin": "^4.6.0",
+    "@typescript-eslint/parser": "^4.6.0",
+    "c8": "^7.3.5",
+    "hundreds": "0.0.9",
+    "mocha": "^8.2.0",
+    "polendina": "^1.1.0",
+    "standard": "^15.0.0",
+    "typescript": "^4.0.3"
   },
   "standard": {
     "ignore": [
@@ -94,8 +97,8 @@
     ]
   },
   "dependencies": {
-    "buffer": "^5.6.0",
-    "cids": "^1.0.0",
+    "buffer": "^5.6.1",
+    "cids": "^1.0.2",
     "lodash.transform": "^4.6.0"
   },
   "directories": {

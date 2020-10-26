@@ -50,9 +50,11 @@ describe('block', () => {
     })
     test('null links/tree', () => {
       const block = main.createUnsafe({ value: null, codec, hasher, bytes: true, cid: true })
+      // eslint-disable-next-line
       for (const x of block.tree()) {
         throw new Error(`tree should have nothing, got "${x}"`)
       }
+      // eslint-disable-next-line
       for (const x of block.links()) {
         throw new Error(`links should have nothing, got "${x}"`)
       }
