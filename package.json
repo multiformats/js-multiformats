@@ -116,7 +116,7 @@
   "typesVersions": {
     "*": {
       "*": [
-        "dist/types/*"
+        "types/*"
       ]
     }
   }

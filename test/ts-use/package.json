@@ -2,9 +2,9 @@
   "name": "ts-use",
   "private": true,
   "dependencies": {
-    "multiformats": "file:../.."
+    "multiformats": "file:../../dist/"
   },
   "scripts": {
-    "test": "npm install && npx tsc --noEmit"
+    "test": "npm install && npx -p typescript tsc --noEmit"
   }
 }
