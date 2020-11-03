@@ -151,4 +151,5 @@ import the ones you need yourself.
 | `json` | `multiformats/codecs/json` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/codecs) |
 | `dag-cbor` | `@ipld/dag-cbor` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
 | `dag-json` | `@ipld/dag-json` | [ipld/js-dag-json](https://github.com/ipld/js-dag-json) |
+| `dag-jose` | `dag-jose`| [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose) |
 
