@@ -70,6 +70,9 @@
       "browser": "./src/hashes/sha2-browser.js",
       "import": "./src/hashes/sha2.js"
     },
+    "./hashes/identity": {
+      "import": "./src/hashes/identity.js"
+    },
     "./codecs/codec": {
       "import": "./src/codecs/codec.js"
     },
