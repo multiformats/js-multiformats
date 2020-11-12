@@ -5,6 +5,7 @@ import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
 import crypto from 'crypto'
 import { sha256, sha512, __browser } from 'multiformats/hashes/sha2'
+import identity from 'multiformats/hashes/identity'
 import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
 const test = it
 const encode = name => data => coerce(crypto.createHash(name).update(data).digest())
@@ -64,6 +65,16 @@ describe('multihash', () => {
 
       const hash2 = decodeDigest(hash.bytes)
       same(hash2.code, sha512.code)
+      same(hash2.bytes, hash.bytes)
+    })
+    test('hash identity', async () => {
+      const hash = await identity.digest(fromString('test'))
+      same(hash.code, identity.code)
+      same(identity.code, 0)
+      same(hash.digest, fromString('test'))
+
+      const hash2 = decodeDigest(hash.bytes)
+      same(hash2.code, identity.code)
       same(hash2.bytes, hash.bytes)
     })
   })
