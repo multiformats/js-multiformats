@@ -139,9 +139,10 @@ import the ones you need yourself.
 
 | hashes | import | repo |
 | --- | --- | --- |
-| `sha2-256`, `sha2-512` | `multiformats/hashes/sha2` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/hashes) |
+| `sha2-256`, `sha2-512` | `multiformats/hashes/sha2` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/hashes) |
 | `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `@multiformats/sha3` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
 | `murmur3-128`, `murmur3-32` | `@multiformats/murmur3` | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3) |
+| `blake2b-*`, `blake2s-*` | `@multiformats/blake2` | [multiformats/js-blake2](https://github.com/multiformats/js-blake2) |
 
 ## Codec Implementations (multicodec)
 
