@@ -156,3 +156,8 @@ import the ones you need yourself.
 | `dag-pb` | `@ipld/dag-pb` | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb) |
 | `dag-jose` | `dag-jose`| [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose) |
 
+
+# TypeScript support
+
+This project is distributed with type definitions for TypeScript. Unfortunately, due to [a bug in TypeScript](https://github.com/microsoft/TypeScript/issues/41258), you may notice some typechecking errors in these type definitions when compiling a project that uses them. As a workaround until the bug in TypeScript is fixed, you can set `skipLibCheck` to `true` in your `tsconfig.json` to suppress these errors. Please note that by enabling this option, the compiler will no longer check for errors in any of your dependencies' library type definitions.
+
