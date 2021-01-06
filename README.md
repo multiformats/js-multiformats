@@ -161,3 +161,13 @@ import the ones you need yourself.
 
 This project is distributed with type definitions for TypeScript. Unfortunately, due to [a bug in TypeScript](https://github.com/microsoft/TypeScript/issues/41258), you may notice some typechecking errors in these type definitions when compiling a project that uses them. As a workaround until the bug in TypeScript is fixed, you can set `skipLibCheck` to `true` in your `tsconfig.json` to suppress these errors. Please note that by enabling this option, the compiler will no longer check for errors in any of your dependencies' library type definitions.
 
+## License
+
+Licensed under either of
+
+ * Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / http://www.apache.org/licenses/LICENSE-2.0)
+ * MIT ([LICENSE-MIT](LICENSE-MIT) / http://opensource.org/licenses/MIT)
+
+### Contribution
+
+Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
