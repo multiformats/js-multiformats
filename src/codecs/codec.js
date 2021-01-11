@@ -11,8 +11,8 @@
  * @param {(data:T) => Uint8Array} options.encode
  * @param {(bytes:Uint8Array) => T} options.decode
  */
-export const codec = ({ name, code, decode, encode }) =>
-  new Codec(name, code, encode, decode)
+export const codec = ({ name, code, decode, encode, encrypt, decrypt }) =>
+  new Codec(name, code, encode, decode, encrypt, decrypt)
 
 /**
  * @template {number} Code
@@ -85,11 +85,13 @@ export class Codec {
    * @param {(data:T) => Uint8Array} encode
    * @param {(bytes:Uint8Array) => T} decode
    */
-  constructor (name, code, encode, decode) {
+  constructor (name, code, encode, decode, encrypt, decrypt) {
     this.name = name
     this.code = code
     this.encode = encode
     this.decode = decode
+    this.encrypt = encrypt
+    this.decrypt = decrypt
   }
 
   get decoder () {

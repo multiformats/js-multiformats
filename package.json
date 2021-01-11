@@ -81,6 +81,9 @@
     },
     "./codecs/raw": {
       "import": "./src/codecs/raw.js"
+    },
+    "./codecs/aes": {
+      "import": "./src/codecs/aes.js"
     }
   },
   "devDependencies": {
@@ -103,6 +106,8 @@
   "dependencies": {
     "buffer": "^5.6.1",
     "cids": "^1.0.2",
+    "js-crypto-aes": "^1.0.0",
+    "js-crypto-random": "^1.0.0",
     "lodash.transform": "^4.6.0"
   },
   "directories": {

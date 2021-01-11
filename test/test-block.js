@@ -1,5 +1,7 @@
 /* globals describe, it */
+import random from 'js-crypto-random'
 import codec from 'multiformats/codecs/json'
+import * as ciphers from 'multiformats/codecs/aes'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { CID, bytes } from 'multiformats'
@@ -59,6 +61,32 @@ describe('block', () => {
         throw new Error(`links should have nothing, got "${x}"`)
       }
     })
+  })
+
+  describe('ciphers', () => {
+    const createTest = name => {
+      const json = codec
+      test(`aes-${name}`, async () => {
+        const block = await main.encode({ value: fixture, codec: json, hasher })
+        const codec = ciphers[name]
+        const key = random.getRandomBytes(32)
+        const value = await codec.encrypt({ ...block, key })
+        const eblock = await main.encode({ codec, value, hasher })
+        const eeblock = await main.decode({ codec, bytes: eblock.bytes, hasher })
+        same(eblock.cid.toString(), eeblock.cid.toString())
+        same([...eblock.bytes], [...eeblock.bytes])
+        same([...eblock.value.bytes], [...eeblock.value.bytes])
+        same([...eblock.value.iv], [...eeblock.value.iv])
+        const { cid, bytes } = await eblock.decrypt(key)
+        same(block.cid.toString(), cid.toString())
+        same([...bytes], [...block.bytes])
+        const dblock = await main.create({ cid, bytes, codec: json, hasher })
+        same(block.value, dblock.value)
+      })
+    }
+    createTest('gcm')
+    createTest('cbc')
+    createTest('ctr')
   })
 
   test('kitchen sink', () => {
