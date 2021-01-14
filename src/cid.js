@@ -2,6 +2,7 @@ import * as varint from './varint.js'
 import * as Digest from './hashes/digest.js'
 import { base58btc } from './bases/base58.js'
 import { base32 } from './bases/base32.js'
+import { coerce } from './bytes.js'
 
 /**
  * @typedef {import('./hashes/interface').MultihashDigest} MultihashDigest
@@ -265,31 +266,86 @@ export default class CID {
   }
 
   /**
-   * Takes cid in a binary representation and a `base` encoder that will be used
-   * for default cid serialization.
+   * Decoded a CID from its binary representation. The byte array must contain
+   * only the CID with no additional bytes.
    *
-   * Throws if supplied base encoder is incompatible (CIDv0 is only compatible
-   * with `base58btc` encoder).
-   * @param {Uint8Array} cid
+   * An error will be thrown if the bytes provided do not contain a valid
+   * binary representation of a CID.
+   *
+   * @param {Uint8Array} bytes
+   * @returns {CID}
    */
-  static decode (cid) {
-    const [version, offset] = varint.decode(cid)
-    switch (version) {
-    // CIDv0
-      case 18: {
-        const multihash = Digest.decode(cid)
-        return CID.createV0(multihash)
-      }
-      // CIDv1
-      case 1: {
-        const [code, length] = varint.decode(cid.subarray(offset))
-        const digest = Digest.decode(cid.subarray(offset + length))
-        return CID.createV1(code, digest)
-      }
-      default: {
-        throw new RangeError(`Invalid CID version ${version}`)
-      }
+  static decode (bytes) {
+    const [cid, remainder] = CID.decodeFirst(bytes)
+    if (remainder.length) {
+      throw new Error('Incorrect length')
     }
+    return cid
+  }
+
+  /**
+   * Decoded a CID from its binary representation at the begining of a byte
+   * array.
+   *
+   * Returns an array with the first element containing the CID and the second
+   * element containing the remainder of the original byte array. The remainder
+   * will be a zero-length byte array if the provided bytes only contained a
+   * binary CID representation.
+   *
+   * @param {Uint8Array} bytes
+   * @returns {[CID, Uint8Array]}
+   */
+  static decodeFirst (bytes) {
+    const specs = CID.inspectBytes(bytes)
+    const prefixSize = specs.size - specs.multihashSize
+    const multihashBytes = coerce(bytes.subarray(prefixSize, prefixSize + specs.multihashSize))
+    if (multihashBytes.byteLength !== specs.multihashSize) {
+      throw new Error('Incorrect length')
+    }
+    const digestBytes = multihashBytes.subarray(specs.multihashSize - specs.digestSize)
+    const digest = new Digest.Digest(specs.multihashCode, specs.digestSize, digestBytes, multihashBytes)
+    const cid = specs.version === 0 ? CID.createV0(digest) : CID.createV1(specs.codec, digest)
+    return [cid, bytes.subarray(specs.size)]
+  }
+
+  /**
+   * Inspect the initial bytes of a CID to determine its properties.
+   *
+   * Involves decoding up to 4 varints. Typically this will require only 4 to 6
+   * bytes but for larger multicodec code values and larger multihash digest
+   * lengths these varints can be quite large. It is recommended that at least
+   * 10 bytes be made available in the `initialBytes` argument for a complete
+   * inspection.
+   *
+   * @param {Uint8Array} initialBytes
+   * @returns {{ version:number, codec:number, multihashCode:number, digestSize:number, multihashSize:number, size:number }}
+   */
+  static inspectBytes (initialBytes) {
+    let offset = 0
+    const next = () => {
+      const [i, length] = varint.decode(initialBytes.subarray(offset))
+      offset += length
+      return i
+    }
+
+    let version = next()
+    let codec = DAG_PB_CODE
+    if (version === 18) { // CIDv0
+      version = 0
+      offset = 0
+    } else if (version === 1) {
+      codec = next()
+    } else if (version !== 1) {
+      throw new RangeError(`Invalid CID version ${version}`)
+    }
+
+    const prefixSize = offset
+    const multihashCode = next() // multihash code
+    const digestSize = next() // multihash length
+    const size = offset + digestSize
+    const multihashSize = size - prefixSize
+
+    return { version, codec, multihashCode, digestSize, multihashSize, size }
   }
 
   /**
