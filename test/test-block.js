@@ -1,7 +1,8 @@
 /* globals describe, it */
 import random from 'js-crypto-random'
 import codec from 'multiformats/codecs/json'
-import * as ciphers from 'multiformats/codecs/aes'
+import * as ciphers from 'multiformats/crypto/aes'
+import encrypted from 'multiformats/codecs/encrypted'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { CID, bytes } from 'multiformats'
@@ -68,16 +69,16 @@ describe('block', () => {
       const json = codec
       test(`aes-${name}`, async () => {
         const block = await main.encode({ value: fixture, codec: json, hasher })
-        const codec = ciphers[name]
+        const crypto = ciphers[name]
         const key = random.getRandomBytes(32)
-        const value = await codec.encrypt({ ...block, key })
-        const eblock = await main.encode({ codec, value, hasher })
-        const eeblock = await main.decode({ codec, bytes: eblock.bytes, hasher })
+        const value = await crypto.encrypt({ ...block, key })
+        const eblock = await main.encode({ codec: encrypted, value, hasher })
+        const eeblock = await main.decode({ codec: encrypted, bytes: eblock.bytes, hasher })
         same(eblock.cid.toString(), eeblock.cid.toString())
         same([...eblock.bytes], [...eeblock.bytes])
         same([...eblock.value.bytes], [...eeblock.value.bytes])
         same([...eblock.value.iv], [...eeblock.value.iv])
-        const { cid, bytes } = await eblock.decrypt(key)
+        const { cid, bytes } = await crypto.decrypt({ ...eblock, key })
         same(block.cid.toString(), cid.toString())
         same([...bytes], [...block.bytes])
         const dblock = await main.create({ cid, bytes, codec: json, hasher })

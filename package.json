@@ -82,8 +82,11 @@
     "./codecs/raw": {
       "import": "./src/codecs/raw.js"
     },
-    "./codecs/aes": {
-      "import": "./src/codecs/aes.js"
+    "./codecs/encrypted": {
+      "import": "./src/codecs/encrypted.js"
+    },
+    "./crypto/aes": {
+      "import": "./src/crypto/aes.js"
     }
   },
   "devDependencies": {

@@ -97,7 +97,7 @@ class Block {
    * @param {ByteView<T>} options.bytes
    * @param {T} options.value
    */
-  constructor ({ cid, bytes, value, codec }) {
+  constructor ({ cid, bytes, value }) {
     if (!cid || !bytes || typeof value === 'undefined') throw new Error('Missing required argument')
 
     this.cid = cid
@@ -105,18 +105,12 @@ class Block {
     this.value = value
     this.asBlock = this
 
-    this.decrypt = null
-    if (codec.decrypt) {
-      this.decrypt = key => codec.decrypt({ value, key })
-    }
-
     // Mark all the properties immutable
     Object.defineProperties(this, {
       cid: readonly(),
       bytes: readonly(),
       value: readonly(),
-      asBlock: readonly(),
-      decrypt: readonly()
+      asBlock: readonly()
     })
   }
 
@@ -154,7 +148,7 @@ const encode = async ({ value, codec, hasher }) => {
   const hash = await hasher.digest(bytes)
   const cid = CID.create(1, codec.code, hash)
 
-  return new Block({ value, bytes, cid, codec })
+  return new Block({ value, bytes, cid })
 }
 
 /**
@@ -175,7 +169,7 @@ const decode = async ({ bytes, codec, hasher }) => {
   const hash = await hasher.digest(bytes)
   const cid = CID.create(1, codec.code, hash)
 
-  return new Block({ value, bytes, cid, codec })
+  return new Block({ value, bytes, cid })
 }
 
 /**
@@ -196,7 +190,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
 
   if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
 
-  return new Block({ cid, bytes, value, codec })
+  return new Block({ cid, bytes, value })
 }
 
 /**
