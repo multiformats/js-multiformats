@@ -2,7 +2,7 @@
 
 import OLDCID from 'cids'
 import assert from 'assert'
-import { toHex, equals } from '../src/bytes.js'
+import { fromHex, toHex, equals } from '../src/bytes.js'
 import { varint, CID } from 'multiformats'
 import { base58btc } from 'multiformats/bases/base58'
 import { base32 } from 'multiformats/bases/base32'
@@ -10,13 +10,15 @@ import { base64 } from 'multiformats/bases/base64'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import util from 'util'
 import { Buffer } from 'buffer'
+import invalidMultihash from './fixtures/invalid-multihash.js'
+
 const test = it
 
-const same = (x, y) => {
-  if (x instanceof Uint8Array && y instanceof Uint8Array) {
-    if (Buffer.compare(Buffer.from(x), Buffer.from(y)) === 0) return
+const same = (actual, expected) => {
+  if (actual instanceof Uint8Array && expected instanceof Uint8Array) {
+    if (Buffer.compare(Buffer.from(actual), Buffer.from(expected)) === 0) return
   }
-  return assert.deepStrictEqual(x, y)
+  return assert.deepStrictEqual(actual, expected)
 }
 
 // eslint-disable-next-line no-unused-vars
@@ -118,6 +120,35 @@ describe('CID', () => {
       const oldCid = CID.parse(cidStr)
       const newCid = CID.asCID(oldCid)
       same(newCid.toString(), cidStr)
+    })
+
+    test('inspect bytes', () => {
+      const byts = fromHex('1220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
+      const inspected = CID.inspectBytes(byts.subarray(0, 10)) // should only need the first few bytes
+      same({
+        version: 0,
+        codec: 0x70,
+        multihashCode: 0x12,
+        multihashSize: 34,
+        digestSize: 32,
+        size: 34
+      }, inspected)
+    })
+
+    describe('decodeFirst', () => {
+      test('no remainder', () => {
+        const byts = fromHex('1220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
+        const [cid, remainder] = CID.decodeFirst(byts)
+        same(cid.toString(), 'QmatYkNGZnELf8cAGdyJpUca2PyY4szai3RHyyWofNY1pY')
+        same(remainder.byteLength, 0)
+      })
+
+      test('remainder', () => {
+        const byts = fromHex('1220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad0102030405')
+        const [cid, remainder] = CID.decodeFirst(byts)
+        same(cid.toString(), 'QmatYkNGZnELf8cAGdyJpUca2PyY4szai3RHyyWofNY1pY')
+        same(toHex(remainder), '0102030405')
+      })
     })
   })
 
@@ -282,6 +313,13 @@ describe('CID', () => {
       const name = `CID.create(${version}, ${code}, ${mh})`
       test(name, async () => await testThrowAny(() => CID.create(version, code, hash)))
     }
+
+    test('invalid fixtures', async () => {
+      for (const test of invalidMultihash) {
+        const buff = fromHex(`0171${test.hex}`)
+        assert.throws(() => CID.decode(buff), new RegExp(test.message))
+      }
+    })
   })
 
   describe('idempotence', () => {
@@ -482,6 +520,35 @@ describe('CID', () => {
     })
   })
 
+  test('inspect bytes', () => {
+    const byts = fromHex('01711220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
+    const inspected = CID.inspectBytes(byts.subarray(0, 10)) // should only need the first few bytes
+    same({
+      version: 1,
+      codec: 0x71,
+      multihashCode: 0x12,
+      multihashSize: 34,
+      digestSize: 32,
+      size: 36
+    }, inspected)
+
+    describe('decodeFirst', () => {
+      test('no remainder', () => {
+        const byts = fromHex('01711220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad')
+        const [cid, remainder] = CID.decodeFirst(byts)
+        same(cid.toString(), 'bafyreif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu')
+        same(remainder.byteLength, 0)
+      })
+
+      test('remainder', () => {
+        const byts = fromHex('01711220ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad0102030405')
+        const [cid, remainder] = CID.decodeFirst(byts)
+        same(cid.toString(), 'bafyreif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu')
+        same(toHex(remainder), '0102030405')
+      })
+    })
+  })
+
   test('new CID from old CID', async () => {
     const hash = await sha256.digest(Buffer.from('abc'))
     const cid = CID.asCID(new OLDCID(1, 'raw', Buffer.from(hash.bytes)))
@@ -527,6 +594,7 @@ describe('CID', () => {
     const encoded = varint.encodeTo(2, new Uint8Array(32))
     await testThrow(() => CID.decode(encoded), 'Invalid CID version 2')
   })
+
   test('buffer', async () => {
     const hash = await sha256.digest(Buffer.from('abc'))
     const cid = CID.create(1, 112, hash)
