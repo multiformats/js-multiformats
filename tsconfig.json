@@ -16,7 +16,7 @@
     "strict": true,
     "alwaysStrict": true,
     "esModuleInterop": true,
-    "target": "ES2018",
+    "target": "ES2019",
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
