@@ -3,30 +3,6 @@ import random from 'js-crypto-random'
 import aes from 'js-crypto-aes'
 
 /**
- * @param {number} value
- */
-const enc32 = value => {
-  value = +value
-  const buff = new Uint8Array(4)
-  buff[3] = (value >>> 24)
-  buff[2] = (value >>> 16)
-  buff[1] = (value >>> 8)
-  buff[0] = (value & 0xff)
-  return buff
-}
-
-/**
- * @param {Uint8Array} buffer
- */
-const readUInt32LE = (buffer) => {
-  const offset = buffer.byteLength - 4
-  return ((buffer[offset]) |
-          (buffer[offset + 1] << 8) |
-          (buffer[offset + 2] << 16)) +
-          (buffer[offset + 3] * 0x1000000)
-}
-
-/**
  * @param {Uint8Array[]} buffers
  */
 const concat = buffers => Uint8Array.from(buffers.map(b => [...b]).flat())
@@ -52,10 +28,8 @@ const mkcrypto = ({ name, code, ivsize }) => {
    */
   const decrypt = async ({ key, value: { iv, bytes } }) => {
     bytes = await aes.decrypt(bytes, key, { name: cyperType, iv, tagLength: 16 })
-    const len = readUInt32LE(bytes.subarray(0, 4))
-    const cid = CID.decode(bytes.subarray(4, 4 + len))
-    bytes = bytes.subarray(4 + len)
-    return { cid, bytes }
+    const [cid, remainder] = CID.decodeFirst(bytes)
+    return { cid, bytes: remainder }
   }
   /**
    * @param {Object} options
@@ -64,9 +38,8 @@ const mkcrypto = ({ name, code, ivsize }) => {
    * @param {CID} options.cid
    */
   const encrypt = async ({ key, cid, bytes }) => {
-    const len = enc32(cid.bytes.byteLength)
     const iv = random.getRandomBytes(ivsize)
-    const msg = concat([len, cid.bytes, bytes])
+    const msg = concat([cid.bytes, bytes])
     bytes = await aes.encrypt(msg, key, { name: cyperType, iv, tagLength: 16 })
     return { bytes, iv, code }
   }
