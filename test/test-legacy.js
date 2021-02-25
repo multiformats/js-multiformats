@@ -84,9 +84,9 @@ describe('multicodec', () => {
       }
     })
     let value = { hello: 'world' }
-    same(custom.resolver.resolve(fixture, 'o/one/two'), { value })
+    same(custom.resolver.resolve(fixture, 'o/one/two'), { value, remainderPath: '' })
     value = 'world'
-    same(custom.resolver.resolve(fixture, 'o/one/two/hello'), { value })
+    same(custom.resolver.resolve(fixture, 'o/one/two/hello'), { value, remainderPath: '' })
     value = link
     same(custom.resolver.resolve(fixture, 'l/outside'), { value, remainderPath: 'outside' })
     await testThrow(() => custom.resolver.resolve(fixture, 'o/two'), 'Not found')
