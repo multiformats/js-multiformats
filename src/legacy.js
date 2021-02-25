@@ -106,7 +106,7 @@ const legacy = (codec, { hashes }) => {
         return { value, remainderPath: entries.join('/') }
       }
     }
-    return { value }
+    return { value, remainderPath: '' }
   }
 
   /**
