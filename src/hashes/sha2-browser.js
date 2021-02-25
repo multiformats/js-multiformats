@@ -1,3 +1,5 @@
+/* global crypto */
+
 import { from } from './hasher.js'
 
 /**
@@ -7,7 +9,7 @@ const sha = name =>
   /**
    * @param {Uint8Array} data
    */
-  async data => new Uint8Array(await window.crypto.subtle.digest(name, data))
+  async data => new Uint8Array(await crypto.subtle.digest(name, data))
 
 export const sha256 = from({
   name: 'sha2-256',
