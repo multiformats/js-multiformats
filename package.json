@@ -57,8 +57,8 @@
       "import": "./src/bases/base58.js"
     },
     "./bases/base64": {
-      "import": "./src/bases/base64-import.js",
-      "browser": "./src/bases/base64-browser.js"
+      "browser": "./src/bases/base64-browser.js",
+      "import": "./src/bases/base64-import.js"
     },
     "./hashes/hasher": {
       "import": "./src/hashes/hasher.js"
