@@ -182,7 +182,9 @@ import the ones you need yourself.
 
 ## TypeScript support
 
-This project is distributed with type definitions for TypeScript. Unfortunately, due to [a bug in TypeScript](https://github.com/microsoft/TypeScript/issues/41258), you may notice some typechecking errors in these type definitions when compiling a project that uses them. As a workaround until the bug in TypeScript is fixed, you can set `skipLibCheck` to `true` in your `tsconfig.json` to suppress these errors. Please note that by enabling this option, the compiler will no longer check for errors in any of your dependencies' library type definitions.
+This project is distributed with type definitions for TypeScript. 
+
+[A bug in TypeScript < 4.2](https://github.com/microsoft/TypeScript/issues/41258) causes typechecking errors in these type definitions when compiling a project that uses them. This is fixed in [TypeScript v4.2](https://github.com/microsoft/TypeScript/releases/tag/v4.2.2) so please upgrade if you hit that issue.
 
 ## License
 
