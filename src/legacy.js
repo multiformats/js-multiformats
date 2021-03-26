@@ -1,7 +1,7 @@
 import OldCID from 'cids'
 import * as bytes from './bytes.js'
 import { Buffer } from 'buffer'
-import CID from './cid.js'
+import { CID } from './cid.js'
 
 /**
  * @template {number} Code
@@ -11,7 +11,7 @@ import CID from './cid.js'
  * @param {Object<string, MultihashHasher>} options.hashes
  */
 
-const legacy = (codec, { hashes }) => {
+export const legacy = (codec, { hashes }) => {
   /**
    * @param {*} obj
    */
@@ -139,7 +139,6 @@ const legacy = (codec, { hashes }) => {
   return { defaultHashAlg, codec: codec.code, util, resolver }
 }
 
-export default legacy
 /**
  * @typedef {import('./hashes/interface').MultihashHasher} MultihashHasher
  */

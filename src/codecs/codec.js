@@ -10,9 +10,14 @@
  * @param {Code} options.code
  * @param {(data:T) => Uint8Array} options.encode
  * @param {(bytes:Uint8Array) => T} options.decode
+ * @returns {import('./interface').BlockCodec<Code, T>}
  */
-export const codec = ({ name, code, decode, encode }) =>
-  new Codec(name, code, encode, decode)
+export const codec = ({ name, code, decode, encode }) => {
+  const decoder = new Decoder(name, code, decode)
+  const encoder = new Encoder(name, code, encode)
+
+  return { name, code, decode, encode, decoder, encoder }
+}
 
 /**
  * @template {number} Code
@@ -62,47 +67,5 @@ export class Decoder {
     this.name = name
     this.code = code
     this.decode = decode
-  }
-}
-
-/**
- * @template {number} Code
- * @template T
- * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
- */
-
-/**
- * @class
- * @template {string} Name
- * @template {number} Code
- * @template T
- * @implements {BlockCodec<Code, T>}
- */
-export class Codec {
-  /**
-   * @param {Name} name
-   * @param {Code} code
-   * @param {(data:T) => Uint8Array} encode
-   * @param {(bytes:Uint8Array) => T} decode
-   */
-  constructor (name, code, encode, decode) {
-    this.name = name
-    this.code = code
-    this.encode = encode
-    this.decode = decode
-  }
-
-  get decoder () {
-    const { name, code, decode } = this
-    const decoder = new Decoder(name, code, decode)
-    Object.defineProperty(this, 'decoder', { value: decoder })
-    return decoder
-  }
-
-  get encoder () {
-    const { name, code, encode } = this
-    const encoder = new Encoder(name, code, encode)
-    Object.defineProperty(this, 'encoder', { value: encoder })
-    return encoder
   }
 }

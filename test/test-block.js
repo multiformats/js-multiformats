@@ -1,5 +1,5 @@
 /* globals describe, it */
-import codec from 'multiformats/codecs/json'
+import * as codec from 'multiformats/codecs/json'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { CID, bytes } from 'multiformats'
