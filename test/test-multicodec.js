@@ -1,8 +1,8 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
 import assert from 'assert'
-import raw from 'multiformats/codecs/raw'
-import json from 'multiformats/codecs/json'
+import * as raw from 'multiformats/codecs/raw'
+import * as json from 'multiformats/codecs/json'
 import { codec } from 'multiformats/codecs/codec'
 const same = assert.deepStrictEqual
 const test = it
