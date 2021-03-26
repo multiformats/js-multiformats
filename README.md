@@ -9,8 +9,8 @@ Library provides implementations for most basics and many others can be found in
 ## Interfaces
 
 ```js
-import CID from 'multiformats/cid'
-import json from 'multiformats/codecs/json'
+import { CID } from 'multiformats/cid'
+import * as json from 'multiformats/codecs/json'
 import { sha256 } from 'multiformats/hashes/sha2'
 
 const bytes = json.encode({ hello: 'world' })

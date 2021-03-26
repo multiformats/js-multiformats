@@ -18,7 +18,7 @@ import { coerce } from './bytes.js'
  * @typedef {import('./bases/interface').MultibaseDecoder<Prefix>} MultibaseDecoder
  */
 
-export default class CID {
+export class CID {
   /**
    * @param {0|1} version
    * @param {number} code
