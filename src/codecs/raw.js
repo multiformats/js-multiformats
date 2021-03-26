@@ -7,11 +7,11 @@ import { codec } from './codec.js'
  * @param {Uint8Array} bytes
  * @returns {Uint8Array}
  */
-const raw = (bytes) => coerce(bytes)
+const rawEncodeDecode = (bytes) => coerce(bytes)
 
-export default codec({
+export const { name, code, decode, encode, decoder, encoder } = codec({
   name: 'raw',
   code: 85,
-  decode: raw,
-  encode: raw
+  decode: rawEncodeDecode,
+  encode: rawEncodeDecode
 })
