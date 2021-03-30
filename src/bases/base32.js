@@ -5,7 +5,7 @@ import { withAlphabet } from './base.js'
  * @param {input} alphabet
  */
 function decode (input, alphabet) {
-  input = input.replace(new RegExp('=', 'g'), '')
+  input = input.replace(/=/g, '')
   const length = input.length
 
   let bits = 0
