@@ -10,6 +10,7 @@
  * @param {Code} options.code
  * @param {(data:T) => Uint8Array} options.encode
  * @param {(bytes:Uint8Array) => T} options.decode
+ * @returns {import('./interface'). BlockCodec<Code, T>}
  */
 export const codec = ({ name, code, decode, encode }) => {
   const decoder = new Decoder(name, code, decode)
