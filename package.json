@@ -8,20 +8,21 @@
   "scripts": {
     "build": "npm run build:js && npm run build:types",
     "build:js": "npm_config_yes=true ipjs build --tests --main",
-    "build:types": "cp tsconfig.json dist && cp -a src vendor dist/ && cd dist && tsc --emitDeclarationOnly --declarationDir types",
+    "build:types": "cp tsconfig.json dist && cp -a src vendor dist/ && cd dist && tsc --build",
     "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
     "build:vendor:varint": "npx brrp -x varint > vendor/varint.js",
     "build:vendor:base-x": "npx brrp -x @multiformats/base-x > vendor/base-x.js",
     "publish": "npm_config_yes=true ipjs publish",
     "lint": "standard",
-    "check": "tsc --noEmit --noErrorTruncation",
+    "check": "tsc --build --noErrorTruncation",
     "test:cjs": "npm run build:js && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
     "test:cjs:browser": "polendina --page --worker --serviceworker --cleanup dist/cjs/browser-test/test-*.js",
     "test:ts": "npm run build:types && npm run test --prefix test/ts-use",
     "test": "npm run lint && npm run test:node && npm run test:cjs && npm run test:ts",
     "test:node-v12": "mocha test/test-*.js && npm run test:cjs",
-    "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080"
+    "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080",
+    "prepare": "tsc --build"
   },
   "c8": {
     "exclude": [
@@ -119,7 +120,10 @@
   "homepage": "https://github.com/multiformats/js-multiformats#readme",
   "typesVersions": {
     "*": {
-      "multiformats/*": [
+      "*": [
+        "types/*"
+      ],
+      "types/*": [
         "types/*"
       ]
     }
