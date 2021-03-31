@@ -7,4 +7,3 @@ node_modules
 .DS_Store
 yarn.lock
 types
-test/ts-use/tsconfig.tsbuildinfo
