@@ -1,6 +1,6 @@
 import * as Block from 'multiformats/block'
 import { sha256 } from 'multiformats/hashes/sha2'
-import * as json from 'multiformats/codecs/json'
+import json from 'multiformats/codecs/json'
 
 const main = async () => {
   const block = await Block.encode({
