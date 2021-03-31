@@ -6,8 +6,8 @@
   "type": "module",
   "scripts": {
     "build": "npm run build:js && npm run build:types",
-    "build:js": "npm_config_yes=true ipjs build --tests --main",
-    "build:types": "cp tsconfig.json dist && cp -a src vendor dist/ && cd dist && tsc --emitDeclarationOnly --declarationDir types",
+    "build:js": "npm_config_yes=true ipjs build --tests",
+    "build:types": "tsc --emitDeclarationOnly --declarationDir dist/types",
     "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
     "build:vendor:varint": "npx brrp -x varint > vendor/varint.js",
     "build:vendor:base-x": "npx brrp -x @multiformats/base-x > vendor/base-x.js",
@@ -120,9 +120,6 @@
     "*": {
       "*": [
         "types/*"
-      ],
-      "cjs/src/index.js": [
-        "types/index.d.ts"
       ]
     }
   }
