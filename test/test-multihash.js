@@ -5,7 +5,7 @@ import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
 import crypto from 'crypto'
 import { sha256, sha512, __browser } from 'multiformats/hashes/sha2'
-import { identity } from 'multiformats/hashes/identity'
+import identity from 'multiformats/hashes/identity'
 import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
 const test = it
 const encode = name => data => coerce(crypto.createHash(name).update(data).digest())

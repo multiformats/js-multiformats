@@ -2,7 +2,7 @@
 
 import { codec } from './codec.js'
 
-export const { name, code, decode, encode, decoder, encoder } = codec({
+export default codec({
   name: 'json',
   code: 0x0200,
   encode: json => new TextEncoder().encode(JSON.stringify(json)),

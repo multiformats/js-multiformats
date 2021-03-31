@@ -1,12 +1,12 @@
 /* globals before, describe, it */
 import { Buffer } from 'buffer'
 import assert from 'assert'
-import { legacy } from 'multiformats/legacy'
-import * as rawCodec from 'multiformats/codecs/raw'
-import * as jsonCodec from 'multiformats/codecs/json'
+import legacy from 'multiformats/legacy'
+import rawCodec from 'multiformats/codecs/raw'
+import jsonCodec from 'multiformats/codecs/json'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import { codec } from 'multiformats/codecs/codec'
-import { CID } from 'multiformats/cid'
+import CID from 'multiformats/cid'
 
 const same = assert.deepStrictEqual
 const test = it

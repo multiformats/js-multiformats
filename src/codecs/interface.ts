@@ -20,10 +20,7 @@ export interface BlockDecoder<Code extends number, T> {
  * separate those capabilties as sender requires encoder and receiver
  * requires decoder.
  */
-export interface BlockCodec<Code extends number, T> extends BlockEncoder<Code, T>, BlockDecoder<Code, T> {
-  encoder: BlockEncoder<Code, T>,
-  decoder: BlockDecoder<Code, T>
-}
+export interface BlockCodec<Code extends number, T> extends BlockEncoder<Code, T>, BlockDecoder<Code, T> { }
 
 
 // This just a hack to retain type information abouth the data that
