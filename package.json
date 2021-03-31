@@ -22,8 +22,7 @@
     "test:ts": "npm run build:types && npm run test --prefix test/ts-use",
     "test": "npm run lint && npm run test:node && npm run test:cjs && npm run test:ts",
     "test:node-v12": "mocha test/test-*.js && npm run test:cjs",
-    "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080",
-    "prepare": "tsc --build"
+    "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080"
   },
   "c8": {
     "exclude": [
