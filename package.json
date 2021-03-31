@@ -8,7 +8,7 @@
   "scripts": {
     "build": "npm run build:js && npm run build:types",
     "build:js": "npm_config_yes=true ipjs build --tests --main && npm run build:copy",
-    "build:copy": "cp -a tsconfig.json src vendor test dist/",
+    "build:copy": "cp -a tsconfig.json src vendor test dist/ && rm -rf dist/test/ts-use",
     "build:types": "npm run build:copy && cd dist && tsc --build",
     "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
     "build:vendor:varint": "npx brrp -x varint > vendor/varint.js",
