@@ -1,9 +1,7 @@
 {
   "compilerOptions": {
     "strict": true,
-    "moduleResolution": "node",
     "noImplicitAny": true,
-    "skipLibCheck": true,
-    "incremental": true
+    "skipLibCheck": true
   }
 }
