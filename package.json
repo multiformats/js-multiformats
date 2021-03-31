@@ -3,7 +3,6 @@
   "version": "0.0.0-dev",
   "description": "Interface for multihash, multicodec, multibase and CID",
   "main": "./src/index.js",
-  "types": "./types/index.d.ts",
   "type": "module",
   "scripts": {
     "build": "npm run build:js && npm run build:types",
@@ -119,8 +118,11 @@
   "homepage": "https://github.com/multiformats/js-multiformats#readme",
   "typesVersions": {
     "*": {
-      "multiformats/*": [
+      "*": [
         "types/*"
+      ],
+      "cjs/src/index.js": [
+        "types/index.d.ts"
       ]
     }
   }
