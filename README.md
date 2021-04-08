@@ -1,10 +1,8 @@
 # multiformats
 
-This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase,
-and CID). They can be used to implement custom custom base
-encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
+This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase, and CID). They can be used to implement custom custom base encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
-Library provides implementations for most basics and many others can be found in linked repositories.
+This library provides implementations for most basics and many others can be found in linked repositories.
 
 ## Interfaces
 
@@ -45,9 +43,7 @@ block = await Block.create({ bytes: block.bytes, cid: block.cid, codec, hasher }
 
 ### Multibase Encoders / Decoders / Codecs
 
-CIDs can be serialized to string representation using multibase encoders that
-implement [`MultibaseEncoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. Library
-provides quite a few implementations that can be imported:
+CIDs can be serialized to string representation using multibase encoders that implement [`MultibaseEncoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. This library provides quite a few implementations that can be imported:
 
 ```js
 import { base64 } from "multiformats/bases/base64"
@@ -55,9 +51,7 @@ cid.toString(base64.encoder)
 //> 'mAYAEEiCTojlxqRTl6svwqNJRVM2jCcPBxy+7mRTUfGDzy2gViA'
 ```
 
-Parsing CID string serialized CIDs requires multibase decoder that implements
-[`MultibaseDecoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. Library provides a
-decoder for every encoder it provides:
+Parsing CID string serialized CIDs requires multibase decoder that implements [`MultibaseDecoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. This library provides a decoder for every encoder it provides:
 
 ```js
 CID.parse('mAYAEEiCTojlxqRTl6svwqNJRVM2jCcPBxy+7mRTUfGDzy2gViA', base64.decoder)
@@ -93,35 +87,24 @@ v0.toV1().toString()
 
 ### Multicodec Encoders / Decoders / Codecs
 
-Library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts)
-and utility function to take care of the boilerplate when implementing them:
+This library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts). Codec implementations should conform to the `BlockCodec` interface which implements both `BlockEncoder` and `BlockDecoder`.
 
 ```js
-import { codec } from 'multiformats/codecs/codec'
-
-const json = codec({
+/**
+ * @template T
+ * @type {BlockCodec<0x0200, T>}
+ */
+export const { name, code, encode, decode } = {
   name: 'json',
-  // As per multiformats table
-  // https://github.com/multiformats/multicodec/blob/master/table.csv#L113
   code: 0x0200,
   encode: json => new TextEncoder().encode(JSON.stringify(json)),
   decode: bytes => JSON.parse(new TextDecoder().decode(bytes))
-})
-```
-
-Just like with multibase, here codecs are duals of `encoder` and `decoder` parts,
-but they also implement both interfaces for convenience:
-
-```js
-const hello = json.encoder.encode({ hello: 'world' })
-json.decode(b1)
-//> { hello: 'world' }
+}
 ```
 
 ### Multihash Hashers
 
-This library defines [`MultihashHasher` and `MultihashDigest` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/hashes/interface.ts)
-and convinient function for implementing them:
+This library defines [`MultihashHasher` and `MultihashDigest` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/hashes/interface.ts) and convinient function for implementing them:
 
 ```js
 import * as hasher from 'multiformats/hashes/hasher')
@@ -140,8 +123,6 @@ CID.create(1, json.code, hash)
 
 //> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
 ```
-
-
 
 # Implementations
 
@@ -178,7 +159,6 @@ import the ones you need yourself.
 | `dag-json` | `@ipld/dag-json` | [ipld/js-dag-json](https://github.com/ipld/js-dag-json) |
 | `dag-pb` | `@ipld/dag-pb` | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb) |
 | `dag-jose` | `dag-jose`| [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose) |
-
 
 ## TypeScript support
 
