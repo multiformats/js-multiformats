@@ -1,11 +1,26 @@
 // @ts-check
 
 import { coerce } from '../bytes.js'
-import { codec } from './codec.js'
 
-export const { name, code, decode, encode, decoder, encoder } = codec({
+/**
+ * @template {number} Code
+ * @template T
+ * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
+ */
+
+/**
+ * @param {Uint8Array} bytes
+ * @returns {Uint8Array}
+ */
+const raw = (bytes) => coerce(bytes)
+
+/**
+ * @template T
+ * @type {BlockCodec<0x55, Uint8Array>}
+ */
+export const { name, code, encode, decode } = {
   name: 'raw',
-  code: 85,
-  decode: coerce,
-  encode: coerce
-})
+  code: 0x55,
+  decode: raw,
+  encode: raw
+}

@@ -7,15 +7,14 @@
   "type": "module",
   "scripts": {
     "build": "npm run build:js && npm run build:types",
-    "build:js": "npm_config_yes=true ipjs build --tests --main && npm run build:copy",
+    "build:js": "ipjs build --tests --main && npm run build:copy",
     "build:copy": "cp -a tsconfig.json src vendor test dist/ && rm -rf dist/test/ts-use",
     "build:types": "npm run build:copy && cd dist && tsc --build",
     "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
-    "build:vendor:varint": "npx brrp -x varint > vendor/varint.js",
-    "build:vendor:base-x": "npx brrp -x @multiformats/base-x > vendor/base-x.js",
-    "publish": "npm_config_yes=true ipjs publish",
+    "build:vendor:varint": "npm_config_yes=true npx brrp -x varint > vendor/varint.js",
+    "build:vendor:base-x": "npm_config_yes=true npx brrp -x @multiformats/base-x > vendor/base-x.js",
+    "publish": "ipjs publish",
     "lint": "standard",
-    "check": "tsc --build --noErrorTruncation",
     "test:cjs": "npm run build:js && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
     "test:node": "hundreds mocha test/test-*.js",
     "test:cjs:browser": "polendina --page --worker --serviceworker --cleanup dist/cjs/browser-test/test-*.js",
@@ -75,9 +74,6 @@
     "./hashes/identity": {
       "import": "./src/hashes/identity.js"
     },
-    "./codecs/codec": {
-      "import": "./src/codecs/codec.js"
-    },
     "./codecs/json": {
       "import": "./src/codecs/json.js"
     },
@@ -86,16 +82,16 @@
     }
   },
   "devDependencies": {
-    "@types/node": "^14.14.37",
-    "@typescript-eslint/eslint-plugin": "^4.20.0",
-    "@typescript-eslint/parser": "^4.20.0",
-    "c8": "^7.6.0",
+    "@types/node": "^14.14.41",
+    "@typescript-eslint/eslint-plugin": "^4.22.0",
+    "@typescript-eslint/parser": "^4.22.0",
+    "c8": "^7.7.1",
     "hundreds": "0.0.9",
     "ipjs": "^5.0.0",
     "mocha": "^8.3.2",
     "polendina": "^1.1.0",
     "standard": "^16.0.3",
-    "typescript": "^4.2.3"
+    "typescript": "^4.2.4"
   },
   "standard": {
     "ignore": [
@@ -120,6 +116,9 @@
   "homepage": "https://github.com/multiformats/js-multiformats#readme",
   "typesVersions": {
     "*": {
+      "bases/base64": [
+        "types/bases/base64-import.d.ts"
+      ],
       "*": [
         "types/*"
       ],

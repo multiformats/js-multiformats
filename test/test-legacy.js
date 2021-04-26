@@ -5,7 +5,6 @@ import { legacy } from 'multiformats/legacy'
 import * as rawCodec from 'multiformats/codecs/raw'
 import * as jsonCodec from 'multiformats/codecs/json'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
-import { codec } from 'multiformats/codecs/codec'
 import { CID } from 'multiformats/cid'
 
 const same = assert.deepStrictEqual
@@ -36,7 +35,7 @@ describe('multicodec', () => {
     raw = legacy(rawCodec, { hashes })
     json = legacy(jsonCodec, { hashes })
     link = await raw.util.cid(Buffer.from('test'))
-    custom = legacy(codec({
+    custom = legacy({
       name: 'custom',
       code: 6787678,
       encode: o => {
@@ -52,7 +51,7 @@ describe('multicodec', () => {
         if (obj.o.link) obj.link = CID.asCID(link)
         return obj
       }
-    }), { hashes })
+    }, { hashes })
   })
   test('encode/decode raw', () => {
     const buff = raw.util.serialize(Buffer.from('test'))

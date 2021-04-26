@@ -20,17 +20,17 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
-    "emitDeclarationOnly": true,
     "outDir": "types",
     "skipLibCheck": true,
     "stripInternal": true,
     "resolveJsonModule": true,
+    "emitDeclarationOnly": true,
+    "baseUrl": ".",
     "paths": {
       "multiformats": [
         "src"
       ]
-    },
-    "baseUrl": "."
+    }
   },
   "include": [
     "src"

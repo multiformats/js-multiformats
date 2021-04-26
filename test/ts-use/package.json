@@ -5,6 +5,6 @@
     "multiformats": "file:../../dist/"
   },
   "scripts": {
-    "test": "npm install && npx -p typescript tsc --noEmit"
+    "test": "npm install && npm_config_yes=true npx -p typescript tsc --noEmit"
   }
 }
