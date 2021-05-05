@@ -1,5 +1,19 @@
 # multiformats
 
+* [Interfaces](#interfaces)
+  * [Creating Blocks](#creating-blocks)
+  * [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
+  * [Multicodec Encoders / Decoders / Codecs](#multicodec-encoders--decoders--codecs)
+  * [Multihash Hashers](#multihash-hashers)
+* [Legacy interface](#legacy-interface)
+* [Implementations](#implementations)
+  * [Multibase codecs](#multibase-codecs)
+  * [Multihash hashers](#multihash-hashers-1)
+  * [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
+* [TypeScript support](#typescript-support)
+* [License](#license)
+  * [Contribution](#contribution)
+
 This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase, and CID). They can be used to implement custom custom base encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
 This library provides implementations for most basics and many others can be found in linked repositories.
@@ -124,13 +138,18 @@ CID.create(1, json.code, hash)
 //> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
 ```
 
-# Implementations
+## Legacy interface
+
+[`blockcodec-to-ipld-format`](https://github.com/ipld/js-blockcodec-to-ipld-format) converts a multiformats [`BlockCodec`](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts#L21) into an
+[`interface-ipld-format`](https://github.com/ipld/interface-ipld-format) for use with the [`ipld`](https://github.com/ipld/ipld) package. This can help bridge IPLD codecs implemented using the structure and interfaces defined here to existing code that assumes, or requires `interface-ipld-format`. This bridge also includes the relevant TypeScript definitions.
+
+## Implementations
 
 By default, no base encodings (other than base32 & base58btc), hash functions,
 or codec implementations are included exposed by `multiformats`, you need to
 import the ones you need yourself.
 
-## Multibase codecs
+### Multibase codecs
 
 | bases | import | repo |
  --- | --- | --- |
@@ -139,7 +158,7 @@ import the ones you need yourself.
 `base64`, `base64pad`, `base64url`, `base64urlpad` | `multiformats/bases/base64` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 `base58btc`, `base58flick4` | `multiformats/bases/base58` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 
-## Multihash hashers
+### Multihash hashers
 
 | hashes | import | repo |
 | --- | --- | --- |
@@ -149,7 +168,7 @@ import the ones you need yourself.
 | `murmur3-128`, `murmur3-32` | `@multiformats/murmur3` | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3) |
 | `blake2b-*`, `blake2s-*` | `@multiformats/blake2` | [multiformats/js-blake2](https://github.com/multiformats/js-blake2) |
 
-## Codec Implementations (multicodec)
+### IPLD codecs (multicodec)
 
 | codec | import | repo |
 | --- | --- | --- |
