@@ -10,7 +10,6 @@
   * [Multibase codecs](#multibase-codecs)
   * [Multihash hashers](#multihash-hashers-1)
   * [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
-* [TypeScript support](#typescript-support)
 * [License](#license)
   * [Contribution](#contribution)
 
@@ -178,12 +177,6 @@ import the ones you need yourself.
 | `dag-json` | `@ipld/dag-json` | [ipld/js-dag-json](https://github.com/ipld/js-dag-json) |
 | `dag-pb` | `@ipld/dag-pb` | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb) |
 | `dag-jose` | `dag-jose`| [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose) |
-
-## TypeScript support
-
-This project is distributed with type definitions for TypeScript. 
-
-[A bug in TypeScript < 4.2](https://github.com/microsoft/TypeScript/issues/41258) causes typechecking errors in these type definitions when compiling a project that uses them. This is fixed in [TypeScript v4.2](https://github.com/microsoft/TypeScript/releases/tag/v4.2.2) so please upgrade if you hit that issue.
 
 ## License
 
