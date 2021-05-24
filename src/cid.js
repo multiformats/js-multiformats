@@ -6,6 +6,7 @@ import { coerce } from './bytes.js'
 
 /**
  * @typedef {import('./hashes/interface').MultihashDigest} MultihashDigest
+ * @typedef {0 | 1} CIDVersion
  */
 
 /**
@@ -20,7 +21,7 @@ import { coerce } from './bytes.js'
 
 export class CID {
   /**
-   * @param {0|1} version
+   * @param {CIDVersion} version
    * @param {number} code
    * @param {MultihashDigest} multihash
    * @param {Uint8Array} bytes
@@ -218,7 +219,7 @@ export class CID {
 
   /**
  *
- * @param {number} version - Version of the CID
+ * @param {CIDVersion} version - Version of the CID
  * @param {number} code - Code of the codec content is encoded in.
  * @param {MultihashDigest} digest - (Multi)hash of the of the content.
  * @returns {CID}
@@ -318,7 +319,7 @@ export class CID {
    * inspection.
    *
    * @param {Uint8Array} initialBytes
-   * @returns {{ version:number, codec:number, multihashCode:number, digestSize:number, multihashSize:number, size:number }}
+   * @returns {{ version:CIDVersion, codec:number, multihashCode:number, digestSize:number, multihashSize:number, size:number }}
    */
   static inspectBytes (initialBytes) {
     let offset = 0
@@ -335,7 +336,9 @@ export class CID {
       offset = 0
     } else if (version === 1) {
       codec = next()
-    } else if (version !== 1) {
+    }
+
+    if (version !== 0 && version !== 1) {
       throw new RangeError(`Invalid CID version ${version}`)
     }
 
@@ -444,8 +447,7 @@ const DAG_PB_CODE = 0x70
 const SHA_256_CODE = 0x12
 
 /**
-     *
- * @param {number} version
+ * @param {CIDVersion} version
  * @param {number} code
  * @param {Uint8Array} multihash
  * @returns {Uint8Array}
