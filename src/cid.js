@@ -396,7 +396,7 @@ const parseCIDtoBytes = (source, base) => {
     }
     default: {
       if (base == null) {
-        throw Error('To parse non base32 or base56btc encoded CID multibase decoder must be provided')
+        throw Error('To parse non base32 or base58btc encoded CID multibase decoder must be provided')
       }
       return [source[0], base.decode(source)]
     }
