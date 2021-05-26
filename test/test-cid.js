@@ -506,7 +506,7 @@ describe('CID', () => {
     test('fails to parse base64 encoded CIDv1', async () => {
       const hash = await sha256.digest(Buffer.from('abc'))
       const cid = CID.create(1, 112, hash)
-      const msg = 'To parse non base32 or base56btc encoded CID multibase decoder must be provided'
+      const msg = 'To parse non base32 or base58btc encoded CID multibase decoder must be provided'
 
       await testThrow(() => CID.parse(cid.toString(base64)), msg)
     })
