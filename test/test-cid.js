@@ -518,6 +518,16 @@ describe('CID', () => {
       const parsed = CID.parse(cid.toString(base64), base64)
       digestsame(cid, parsed)
     })
+
+    test('parses base58btc implicit encoded identity CIDv0', async () => {
+      const prefix = '1'
+      const hash = '6Uiu2HAmGKisxKeBRLyGyKD8MuQFAiUUnPABGhvWna28CSd7WzFE'
+      const cid = CID.parse(`${prefix}${hash}`)
+
+      assert.strictEqual(cid.multihash.code, 0x00)
+
+      same(cid.multihash.digest, base58btc.decode(`z${hash}`).slice(1))
+    })
   })
 
   test('inspect bytes', () => {

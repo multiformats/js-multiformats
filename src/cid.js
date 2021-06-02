@@ -331,7 +331,8 @@ export class CID {
 
     let version = next()
     let codec = DAG_PB_CODE
-    if (version === 18) { // CIDv0
+
+    if (version === 18 || version === 0) { // CIDv0 sha2-256 or identity
       version = 0
       offset = 0
     } else if (version === 1) {
@@ -382,7 +383,8 @@ export class CID {
 const parseCIDtoBytes = (source, base) => {
   switch (source[0]) {
     // CIDv0 is parsed differently
-    case 'Q': {
+    case 'Q': // sha2-256
+    case '1': { // identity
       const decoder = base || base58btc
       return [base58btc.prefix, decoder.decode(`${base58btc.prefix}${source}`)]
     }
