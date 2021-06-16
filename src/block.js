@@ -14,6 +14,7 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  */
 const links = function * (source, base) {
   if (source == null) return
+  if (source instanceof Uint8Array) return
   for (const [key, value] of Object.entries(source)) {
     const path = [...base, key]
     if (value != null && typeof value === 'object') {
