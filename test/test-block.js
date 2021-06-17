@@ -26,7 +26,7 @@ describe('block', () => {
     same(block.cid.equals(block2.cid), true)
   })
   describe('reader', () => {
-    const value = { link, nope: 'skip', arr: [link], obj: { arr: [{ obj: {} }] } }
+    const value = { link, nope: 'skip', arr: [link], obj: { arr: [{ obj: {} }] }, bytes: Uint8Array.from('1234') }
     const block = main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
     test('links', () => {
       const expected = ['link', 'arr/0']
@@ -36,7 +36,7 @@ describe('block', () => {
       }
     })
     test('tree', () => {
-      const expected = ['link', 'nope', 'arr', 'arr/0', 'obj', 'obj/arr', 'obj/arr/0', 'obj/arr/0/obj']
+      const expected = ['link', 'nope', 'arr', 'arr/0', 'obj', 'obj/arr', 'obj/arr/0', 'obj/arr/0/obj', 'bytes']
       for (const path of block.tree()) {
         same(path, expected.shift())
       }
