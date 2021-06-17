@@ -51,7 +51,7 @@ const tree = function * (source, base) {
   for (const [key, value] of Object.entries(source)) {
     const path = [...base, key]
     yield path.join('/')
-    if (value != null && typeof value === 'object' && !CID.asCID(value)) {
+    if (value != null && !(value instanceof Uint8Array) && typeof value === 'object' && !CID.asCID(value)) {
       if (Array.isArray(value)) {
         for (const [index, element] of value.entries()) {
           const elementPath = [...path, index]
