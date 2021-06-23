@@ -42,5 +42,10 @@ export interface MultihashHasher {
    * @param {Uint8Array} input
    */
   digest(input: Uint8Array): Promise<MultihashDigest>
+
+  /**
+   * Name of the multihash
+   */
+   name: string
 }
 
