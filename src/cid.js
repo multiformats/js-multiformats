@@ -285,7 +285,7 @@ export class CID {
   }
 
   /**
-   * Decoded a CID from its binary representation at the begining of a byte
+   * Decoded a CID from its binary representation at the beginning of a byte
    * array.
    *
    * Returns an array with the first element containing the CID and the second
