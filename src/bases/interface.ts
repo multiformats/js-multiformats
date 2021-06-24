@@ -1,5 +1,5 @@
 // Base encoders / decoders just base encode / decode between binary and
-// textual represenatinon. They are unaware of multibase.
+// textual representation. They are unaware of multibase.
 
 /**
  * Base encoder just encodes bytes into base encoded string.
@@ -18,9 +18,9 @@ export interface BaseEncoder {
  */
 export interface BaseDecoder {
   /**
-   * Decodes **plain** (and not a multibase) string. Unilke
-   * decode 
-   * @param text 
+   * Decodes **plain** (and not a multibase) string. Unlike
+   * decode
+   * @param text
    */
   baseDecode(text: string): Uint8Array
 }
@@ -34,7 +34,7 @@ export interface BaseCodec {
 }
 
 /**
- * Multibase represets base encoded strings with a prefix first character
+ * Multibase represents base encoded strings with a prefix first character
  * describing it's encoding.
  */
 export type Multibase<Prefix extends string> =
@@ -70,8 +70,8 @@ export interface MultibaseEncoder<Prefix extends string> {
 export interface MultibaseDecoder<Prefix extends string> {
   /**
    * Decodes **multibase** string (which must have a multibase prefix added).
-   * If prefix does not match 
-   * @param multibase 
+   * If prefix does not match
+   * @param multibase
    */
   decode(multibase: Multibase<Prefix>): Uint8Array
 }

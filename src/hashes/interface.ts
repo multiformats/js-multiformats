@@ -2,7 +2,7 @@
 
 /**
  * Represents a multihash digest which carries information about the
- * hashing alogrithm and an actual hash digest.
+ * hashing algorithm and an actual hash digest.
  */
 // Note: In the current version there is no first class multihash
 // representation (plain Uint8Array is used instead) instead there seems to be
@@ -31,7 +31,6 @@ export interface MultihashDigest {
   bytes: Uint8Array
 }
 
-
 /**
  * Hasher represents a hashing algorithm implementation that produces as
  * `MultihashDigest`.
@@ -47,5 +46,9 @@ export interface MultihashHasher {
    * Name of the multihash
    */
    name: string
-}
 
+  /**
+   * Code of the multihash
+   */
+  code: number
+}
