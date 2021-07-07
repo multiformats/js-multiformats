@@ -75,10 +75,26 @@ export const base32 = withAlphabet({
   decode
 })
 
+export const base32upper = withAlphabet({
+  prefix: 'B',
+  name: 'base32upper',
+  alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+  encode,
+  decode
+})
+
 export const base32pad = withAlphabet({
   prefix: 'c',
   name: 'base32pad',
   alphabet: 'abcdefghijklmnopqrstuvwxyz234567=',
+  encode,
+  decode
+})
+
+export const base32padupper = withAlphabet({
+  prefix: 'C',
+  name: 'base32padupper',
+  alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=',
   encode,
   decode
 })
@@ -91,10 +107,26 @@ export const base32hex = withAlphabet({
   decode
 })
 
+export const base32hexupper = withAlphabet({
+  prefix: 'V',
+  name: 'base32hexupper',
+  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV',
+  encode,
+  decode
+})
+
 export const base32hexpad = withAlphabet({
   prefix: 't',
   name: 'base32hexpad',
   alphabet: '0123456789abcdefghijklmnopqrstuv=',
+  encode,
+  decode
+})
+
+export const base32hexpadupper = withAlphabet({
+  prefix: 'T',
+  name: 'base32hexpadupper',
+  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV=',
   encode,
   decode
 })
