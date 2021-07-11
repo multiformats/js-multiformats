@@ -3,6 +3,7 @@ import * as bytes from '../src/bytes.js'
 import assert from 'assert'
 import * as b16 from 'multiformats/bases/base16'
 import * as b32 from 'multiformats/bases/base32'
+import * as b36 from 'multiformats/bases/base36'
 import * as b58 from 'multiformats/bases/base58'
 import * as b64 from 'multiformats/bases/base64'
 
@@ -87,6 +88,9 @@ describe('multibase', () => {
   describe('base32', () => {
     baseTest(b32)
   })
+  describe('base36', () => {
+    baseTest(b36)
+  })
   describe('base58', () => {
     baseTest(b58)
   })
@@ -116,7 +120,7 @@ describe('multibase', () => {
     const baseExt = base.or(base64)
     same(baseExt.decode(b64), bytes.fromString('test'))
 
-    // original composition stayes intact
+    // original composition stays intact
     testThrow(() => base.decode(b64), msg)
   })
 })

@@ -51,6 +51,9 @@
     "./bases/base32": {
       "import": "./src/bases/base32.js"
     },
+    "./bases/base36": {
+      "import": "./src/bases/base36.js"
+    },
     "./bases/base58": {
       "import": "./src/bases/base58.js"
     },
