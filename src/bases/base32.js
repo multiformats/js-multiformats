@@ -2,7 +2,7 @@ import { withAlphabet } from './base.js'
 
 /**
  * @param {string} input
- * @param {input} alphabet
+ * @param {string} alphabet
  */
 function decode (input, alphabet) {
   input = input.replace(/=/g, '')

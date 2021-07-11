@@ -1,3 +1,6 @@
+import baseX from '../../vendor/base-x.js'
+import { coerce } from '../bytes.js'
+
 /**
  * @typedef {import('./interface').BaseEncoder} BaseEncoder
  * @typedef {import('./interface').BaseDecoder} BaseDecoder
@@ -275,3 +278,17 @@ export const withSettings = ({ name, prefix, settings, encode, decode }) =>
  */
 export const from = ({ name, prefix, encode, decode }) =>
   new Codec(name, prefix, encode, decode)
+
+/**
+ * @param {string} alphabet
+ */
+export const implement = (alphabet) => {
+  const { encode, decode } = baseX(alphabet)
+  return {
+    encode,
+    /**
+     * @param {string} text
+     */
+    decode: text => coerce(decode(text))
+  }
+}
