@@ -2,7 +2,8 @@
 
 import OLDCID from 'cids'
 import assert from 'assert'
-import { fromHex, toHex, equals } from '../src/bytes.js'
+import { equals } from '../src/bytes.js'
+import { fromHex, toHex } from './fixtures/bytes.js'
 import { varint, CID } from 'multiformats'
 import { base58btc } from 'multiformats/bases/base58'
 import { base32 } from 'multiformats/bases/base32'

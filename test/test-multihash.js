@@ -1,5 +1,6 @@
 /* globals describe, it */
-import { coerce, fromHex, fromString } from '../src/bytes.js'
+import { coerce, fromString } from '../src/bytes.js'
+import { fromHex } from './fixtures/bytes.js'
 import assert from 'assert'
 import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'

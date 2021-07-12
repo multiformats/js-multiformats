@@ -58,8 +58,7 @@
       "import": "./src/bases/base58.js"
     },
     "./bases/base64": {
-      "browser": "./src/bases/base64-browser.js",
-      "import": "./src/bases/base64-import.js"
+      "import": "./src/bases/base64.js"
     },
     "./hashes/hasher": {
       "import": "./src/hashes/hasher.js"
@@ -114,9 +113,6 @@
   "homepage": "https://github.com/multiformats/js-multiformats#readme",
   "typesVersions": {
     "*": {
-      "bases/base64": [
-        "types/bases/base64-import.d.ts"
-      ],
       "*": [
         "types/*"
       ],
