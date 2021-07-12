@@ -15,5 +15,3 @@ export const sha512 = from({
   code: 0x13,
   encode: input => coerce(crypto.createHash('sha512').update(input).digest())
 })
-
-export const __browser = false

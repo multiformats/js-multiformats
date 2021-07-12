@@ -22,5 +22,3 @@ export const sha512 = from({
   code: 0x13,
   encode: sha('SHA-512')
 })
-
-export const __browser = true

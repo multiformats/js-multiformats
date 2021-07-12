@@ -5,7 +5,7 @@ import assert from 'assert'
 import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
 import crypto from 'crypto'
-import { sha256, sha512, __browser } from 'multiformats/hashes/sha2'
+import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import { identity } from 'multiformats/hashes/identity'
 import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
 const test = it
@@ -110,8 +110,5 @@ describe('multihash', () => {
   })
   test('throw on hashing non-buffer', async () => {
     await testThrowAsync(() => sha256.digest('asdf'), 'Unknown type, must be binary type')
-  })
-  test('browser', () => {
-    same(__browser, !!process.browser)
   })
 })
