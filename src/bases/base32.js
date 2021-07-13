@@ -1,140 +1,64 @@
-import { withAlphabet } from './base.js'
+import { rfc4648 } from './base.js'
 
-/**
- * @param {string} input
- * @param {string} alphabet
- */
-function decode (input, alphabet) {
-  input = input.replace(/=/g, '')
-  const length = input.length
-
-  let bits = 0
-  let value = 0
-
-  let index = 0
-  const output = new Uint8Array((length * 5 / 8) | 0)
-
-  for (let i = 0; i < length; i++) {
-    value = (value << 5) | alphabet.indexOf(input[i])
-    bits += 5
-
-    if (bits >= 8) {
-      output[index++] = (value >>> (bits - 8)) & 255
-      bits -= 8
-    }
-  }
-
-  return output
-}
-
-/**
- * @param {Uint8Array} buffer
- * @param {string} alphabet
- */
-function encode (buffer, alphabet) {
-  const length = buffer.byteLength
-  const view = new Uint8Array(buffer)
-  const padding = alphabet.indexOf('=') === alphabet.length - 1
-
-  if (padding) {
-    alphabet = alphabet.substring(0, alphabet.length - 1)
-  }
-
-  let bits = 0
-  let value = 0
-  let output = ''
-
-  for (let i = 0; i < length; i++) {
-    value = (value << 8) | view[i]
-    bits += 8
-
-    while (bits >= 5) {
-      output += alphabet[(value >>> (bits - 5)) & 31]
-      bits -= 5
-    }
-  }
-
-  if (bits > 0) {
-    output += alphabet[(value << (5 - bits)) & 31]
-  }
-
-  if (padding) {
-    while ((output.length % 8) !== 0) {
-      output += '='
-    }
-  }
-
-  return output
-}
-
-export const base32 = withAlphabet({
+export const base32 = rfc4648({
   prefix: 'b',
   name: 'base32',
   alphabet: 'abcdefghijklmnopqrstuvwxyz234567',
-  encode,
-  decode
+  bitsPerChar: 5
 })
 
-export const base32upper = withAlphabet({
+export const base32upper = rfc4648({
   prefix: 'B',
   name: 'base32upper',
   alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
-  encode,
-  decode
+  bitsPerChar: 5
 })
 
-export const base32pad = withAlphabet({
+export const base32pad = rfc4648({
   prefix: 'c',
   name: 'base32pad',
-  alphabet: 'abcdefghijklmnopqrstuvwxyz234567=',
-  encode,
-  decode
+  alphabet: 'abcdefghijklmnopqrstuvwxyz234567',
+  bitsPerChar: 5
 })
 
-export const base32padupper = withAlphabet({
+export const base32padupper = rfc4648({
   prefix: 'C',
   name: 'base32padupper',
-  alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=',
-  encode,
-  decode
+  alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+  bitsPerChar: 5
 })
 
-export const base32hex = withAlphabet({
+export const base32hex = rfc4648({
   prefix: 'v',
   name: 'base32hex',
   alphabet: '0123456789abcdefghijklmnopqrstuv',
-  encode,
-  decode
+  bitsPerChar: 5
 })
 
-export const base32hexupper = withAlphabet({
+export const base32hexupper = rfc4648({
   prefix: 'V',
   name: 'base32hexupper',
   alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV',
-  encode,
-  decode
+  bitsPerChar: 5
 })
 
-export const base32hexpad = withAlphabet({
+export const base32hexpad = rfc4648({
   prefix: 't',
   name: 'base32hexpad',
-  alphabet: '0123456789abcdefghijklmnopqrstuv=',
-  encode,
-  decode
+  alphabet: '0123456789abcdefghijklmnopqrstuv',
+  bitsPerChar: 5
 })
 
-export const base32hexpadupper = withAlphabet({
+export const base32hexpadupper = rfc4648({
   prefix: 'T',
   name: 'base32hexpadupper',
-  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV=',
-  encode,
-  decode
+  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV',
+  bitsPerChar: 5
 })
 
-export const base32z = withAlphabet({
+export const base32z = rfc4648({
   prefix: 'h',
   name: 'base32z',
   alphabet: 'ybndrfg8ejkmcpqxot1uwisza345h769',
-  encode,
-  decode
+  bitsPerChar: 5
 })

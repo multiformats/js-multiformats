@@ -24,10 +24,6 @@ const testThrow = (fn, message) => {
 }
 
 describe('multibase', () => {
-  test('browser', () => {
-    same(!!b64.__browser, !!process.browser)
-  })
-
   for (const base of [base16, base32, base58btc, base64]) {
     describe(`basics ${base.name}`, () => {
       test('encode/decode', () => {
@@ -69,6 +65,8 @@ describe('multibase', () => {
   })
 
   const buff = bytes.fromString('test')
+  const nonPrintableBuff = Uint8Array.from([239, 250, 254])
+
   const baseTest = bases => {
     for (const base of Object.values(bases)) {
       if (base && base.name) {
@@ -78,6 +76,14 @@ describe('multibase', () => {
           same(decoded, buff)
           same(encoded, base.encoder.encode(buff))
           same(buff, base.decoder.decode(encoded))
+        })
+
+        test(`encode/decode ${base.name} with non-printable values`, () => {
+          const encoded = base.encode(nonPrintableBuff)
+          const decoded = base.decode(encoded)
+          same(decoded, nonPrintableBuff)
+          same(encoded, base.encoder.encode(nonPrintableBuff))
+          same(nonPrintableBuff, base.decoder.decode(encoded))
         })
       }
     }
@@ -98,13 +104,13 @@ describe('multibase', () => {
     baseTest(b64)
   })
 
-  describe('multibase mismatch', () => {
+  test('multibase mismatch', () => {
     const b64 = base64.encode(bytes.fromString('test'))
     const msg = `Unable to decode multibase string "${b64}", base32 decoder only supports inputs prefixed with ${base32.prefix}`
     testThrow(() => base32.decode(b64), msg)
   })
 
-  describe('decoder composition', () => {
+  test('decoder composition', () => {
     const base = base32.decoder.or(base58btc.decoder)
 
     const b32 = base32.encode(bytes.fromString('test'))
@@ -122,5 +128,11 @@ describe('multibase', () => {
 
     // original composition stays intact
     testThrow(() => base.decode(b64), msg)
+  })
+
+  test('truncated data', () => {
+    const b64 = base64.encode(Uint8Array.from([245, 250]))
+
+    testThrow(() => base64.decode(b64.substring(0, b64.length - 1)), 'unexpected end of data')
   })
 })
