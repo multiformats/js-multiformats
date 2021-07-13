@@ -11,6 +11,7 @@ import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import util from 'util'
 import { Buffer } from 'buffer'
 import invalidMultihash from './fixtures/invalid-multihash.js'
+import testThrow from './fixtures/test-throw.js'
 
 const test = it
 
@@ -21,18 +22,6 @@ const same = (actual, expected) => {
   return assert.deepStrictEqual(actual, expected)
 }
 
-// eslint-disable-next-line no-unused-vars
-
-const testThrow = async (fn, message) => {
-  try {
-    await fn()
-  } catch (e) {
-    if (e.message !== message) throw e
-    return
-  }
-  /* c8 ignore next */
-  throw new Error('Test failed to throw')
-}
 const testThrowAny = async fn => {
   try {
     await fn()
@@ -80,7 +69,7 @@ describe('CID', () => {
     })
 
     test('throws on invalid BS58Str multihash ', async () => {
-      const msg = 'Non-base58 character'
+      const msg = 'Non-base58btc character'
       await testThrow(() => CID.parse('QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zIII'), msg)
     })
 

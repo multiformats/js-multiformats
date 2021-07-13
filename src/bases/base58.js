@@ -1,13 +1,13 @@
-import { from, implement } from './base.js'
+import { baseX } from './base.js'
 
-export const base58btc = from({
+export const base58btc = baseX({
   name: 'base58btc',
   prefix: 'z',
-  ...implement('123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz')
+  alphabet: '123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'
 })
 
-export const base58flickr = from({
+export const base58flickr = baseX({
   name: 'base58flickr',
   prefix: 'Z',
-  ...implement('123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ')
+  alphabet: '123456789abcdefghijkmnopqrstuvwxyzABCDEFGHJKLMNPQRSTUVWXYZ'
 })

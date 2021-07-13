@@ -48,6 +48,18 @@
     "./block": {
       "import": "./src/block.js"
     },
+    "./bases/identity": {
+      "import": "./src/bases/identity.js"
+    },
+    "./bases/base2": {
+      "import": "./src/bases/base2.js"
+    },
+    "./bases/base8": {
+      "import": "./src/bases/base8.js"
+    },
+    "./bases/base10": {
+      "import": "./src/bases/base10.js"
+    },
     "./bases/base16": {
       "import": "./src/bases/base16.js"
     },
