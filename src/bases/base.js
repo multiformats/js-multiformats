@@ -1,4 +1,4 @@
-import baseX from '../../vendor/base-x.js'
+import basex from '../../vendor/base-x.js'
 import { coerce } from '../bytes.js'
 
 /**
@@ -234,17 +234,25 @@ export const from = ({ name, prefix, encode, decode }) =>
   new Codec(name, prefix, encode, decode)
 
 /**
- * @param {string} alphabet
+ * @template {string} Base
+ * @template {string} Prefix
+ * @param {Object} options
+ * @param {Base} options.name
+ * @param {Prefix} options.prefix
+ * @param {string} options.alphabet
+ * @returns {Codec<Base, Prefix>}
  */
-export const implement = (alphabet) => {
-  const { encode, decode } = baseX(alphabet)
-  return {
+export const baseX = ({ prefix, name, alphabet }) => {
+  const { encode, decode } = basex(alphabet, name)
+  return from({
+    prefix,
+    name,
     encode,
     /**
      * @param {string} text
      */
     decode: text => coerce(decode(text))
-  }
+  })
 }
 
 /**
@@ -279,7 +287,7 @@ const decode = (string, alphabet, bitsPerChar, name) => {
     // Read one character from the string:
     const value = codes[string[i]]
     if (value === undefined) {
-      throw new SyntaxError(`invalid ${name} character`)
+      throw new SyntaxError(`Non-${name} character`)
     }
 
     // Append the bits to the buffer:
@@ -295,7 +303,7 @@ const decode = (string, alphabet, bitsPerChar, name) => {
 
   // Verify that we have received just enough bits:
   if (bits >= bitsPerChar || 0xff & (buffer << (8 - bits))) {
-    throw new SyntaxError('unexpected end of data')
+    throw new SyntaxError('Unexpected end of data')
   }
 
   return out

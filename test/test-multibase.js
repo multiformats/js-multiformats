@@ -1,27 +1,20 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
 import assert from 'assert'
+import * as b2 from 'multiformats/bases/base2'
+import * as b8 from 'multiformats/bases/base8'
+import * as b10 from 'multiformats/bases/base10'
 import * as b16 from 'multiformats/bases/base16'
 import * as b32 from 'multiformats/bases/base32'
 import * as b36 from 'multiformats/bases/base36'
 import * as b58 from 'multiformats/bases/base58'
 import * as b64 from 'multiformats/bases/base64'
+import testThrow from './fixtures/test-throw.js'
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
 
 const same = assert.deepStrictEqual
 const test = it
-
-const testThrow = (fn, message) => {
-  try {
-    fn()
-  } catch (e) {
-    if (e.message !== message) throw e
-    return
-  }
-  /* c8 ignore next */
-  throw new Error('Test failed to throw')
-}
 
 describe('multibase', () => {
   for (const base of [base16, base32, base58btc, base64]) {
@@ -46,7 +39,7 @@ describe('multibase', () => {
       })
       test('bad chars', () => {
         const str = base.prefix + '#$%^&*&^%$#'
-        const msg = base === base58btc ? 'Non-base58 character' : `invalid ${base.name} character`
+        const msg = `Non-${base.name} character`
         testThrow(() => base.decode(str), msg)
       })
     })
@@ -88,6 +81,15 @@ describe('multibase', () => {
       }
     }
   }
+  describe('base2', () => {
+    baseTest(b2)
+  })
+  describe('base8', () => {
+    baseTest(b8)
+  })
+  describe('base10', () => {
+    baseTest(b10)
+  })
   describe('base16', () => {
     baseTest(b16)
   })
@@ -133,6 +135,6 @@ describe('multibase', () => {
   test('truncated data', () => {
     const b64 = base64.encode(Uint8Array.from([245, 250]))
 
-    testThrow(() => base64.decode(b64.substring(0, b64.length - 1)), 'unexpected end of data')
+    testThrow(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
   })
 })

@@ -3,20 +3,10 @@ import * as bytes from '../src/bytes.js'
 import assert from 'assert'
 import * as raw from 'multiformats/codecs/raw'
 import * as json from 'multiformats/codecs/json'
+import testThrow from './fixtures/test-throw.js'
 
 const same = assert.deepStrictEqual
 const test = it
-
-const testThrow = async (fn, message) => {
-  try {
-    await fn()
-  } catch (e) {
-    if (e.message !== message) throw e
-    return
-  }
-  /* c8 ignore next */
-  throw new Error('Test failed to throw')
-}
 
 describe('multicodec', () => {
   test('encode/decode raw', () => {

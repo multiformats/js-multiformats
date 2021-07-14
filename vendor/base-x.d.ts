@@ -1,4 +1,4 @@
-declare function base(ALPHABET: string): base.BaseConverter;
+declare function base(ALPHABET: string, name: string): base.BaseConverter;
 export = base;
 declare namespace base {
     interface BaseConverter {

@@ -1,13 +1,13 @@
-import { from, implement } from './base.js'
+import { baseX } from './base.js'
 
-export const base36 = from({
+export const base36 = baseX({
   prefix: 'k',
   name: 'base36',
-  ...implement('0123456789abcdefghijklmnopqrstuvwxyz')
+  alphabet: '0123456789abcdefghijklmnopqrstuvwxyz'
 })
 
-export const base36upper = from({
+export const base36upper = baseX({
   prefix: 'K',
   name: 'base36upper',
-  ...implement('0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ')
+  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 })

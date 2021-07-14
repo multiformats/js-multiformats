@@ -17,14 +17,14 @@ export const base32upper = rfc4648({
 export const base32pad = rfc4648({
   prefix: 'c',
   name: 'base32pad',
-  alphabet: 'abcdefghijklmnopqrstuvwxyz234567',
+  alphabet: 'abcdefghijklmnopqrstuvwxyz234567=',
   bitsPerChar: 5
 })
 
 export const base32padupper = rfc4648({
   prefix: 'C',
   name: 'base32padupper',
-  alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567',
+  alphabet: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ234567=',
   bitsPerChar: 5
 })
 
@@ -45,14 +45,14 @@ export const base32hexupper = rfc4648({
 export const base32hexpad = rfc4648({
   prefix: 't',
   name: 'base32hexpad',
-  alphabet: '0123456789abcdefghijklmnopqrstuv',
+  alphabet: '0123456789abcdefghijklmnopqrstuv=',
   bitsPerChar: 5
 })
 
 export const base32hexpadupper = rfc4648({
   prefix: 'T',
   name: 'base32hexpadupper',
-  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV',
+  alphabet: '0123456789ABCDEFGHIJKLMNOPQRSTUV=',
   bitsPerChar: 5
 })
 
