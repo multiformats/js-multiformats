@@ -4,6 +4,8 @@ import { base58btc } from './bases/base58.js'
 import { base32 } from './bases/base32.js'
 import { coerce } from './bytes.js'
 
+const symbol = Symbol.for('@ipld/js-multiformats/CID')
+
 /**
  * @typedef {import('./hashes/interface').MultihashDigest} MultihashDigest
  * @typedef {0 | 1} CIDVersion
@@ -59,6 +61,8 @@ export class CID {
       _baseCache: hidden,
       asCID: hidden
     })
+    
+    Object.defineProperty(this, symbol, { value: true })
   }
 
   /**
