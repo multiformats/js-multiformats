@@ -34,7 +34,7 @@ const cid = CID.create(1, json.code, hash)
 ### Creating Blocks
 
 ```js
-import Block from 'multiformats/block'
+import * as Block from 'multiformats/block'
 import * as codec from '@ipld/dag-cbor'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 
