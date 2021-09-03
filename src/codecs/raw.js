@@ -3,24 +3,21 @@
 import { coerce } from '../bytes.js'
 
 /**
- * @template {number} Code
  * @template T
- * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
+ * @typedef {import('./interface').ByteView<T>} ByteView
  */
 
+export const name = 'raw'
+export const code = 0x55
+
 /**
- * @param {Uint8Array} bytes
+ * @param {Uint8Array} node
+ * @returns {ByteView<Uint8Array>}
+ */
+export const encode = (node) => coerce(node)
+
+/**
+ * @param {ByteView<Uint8Array>} data
  * @returns {Uint8Array}
  */
-const raw = (bytes) => coerce(bytes)
-
-/**
- * @template T
- * @type {BlockCodec<0x55, Uint8Array>}
- */
-export const { name, code, encode, decode } = {
-  name: 'raw',
-  code: 0x55,
-  decode: raw,
-  encode: raw
-}
+export const decode = (data) => coerce(data)

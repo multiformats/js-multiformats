@@ -1,18 +1,26 @@
 // @ts-check
 
 /**
- * @template {number} Code
  * @template T
- * @typedef {import('./interface').BlockCodec<Code, T>} BlockCodec
+ * @typedef {import('./interface').ByteView<T>} ByteView
  */
+
+const textEncoder = new TextEncoder()
+const textDecoder = new TextDecoder()
+
+export const name = 'json'
+export const code = 0x0200
 
 /**
  * @template T
- * @type {BlockCodec<0x0200, T>}
+ * @param {T} node
+ * @returns {ByteView<T>}
  */
-export const { name, code, encode, decode } = {
-  name: 'json',
-  code: 0x0200,
-  encode: json => new TextEncoder().encode(JSON.stringify(json)),
-  decode: bytes => JSON.parse(new TextDecoder().decode(bytes))
-}
+export const encode = (node) => textEncoder.encode(JSON.stringify(node))
+
+/**
+ * @template T
+ * @param {ByteView<T>} data
+ * @returns {T}
+ */
+export const decode = (data) => JSON.parse(textDecoder.decode(data))
