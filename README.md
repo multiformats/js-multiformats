@@ -5,6 +5,7 @@
   * [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
   * [Multicodec Encoders / Decoders / Codecs](#multicodec-encoders--decoders--codecs)
   * [Multihash Hashers](#multihash-hashers)
+  * [Traversal](#traversal)
 * [Legacy interface](#legacy-interface)
 * [Implementations](#implementations)
   * [Multibase codecs](#multibase-codecs)
@@ -135,6 +136,42 @@ const hash = await sha256.digest(json.encode({ hello: 'world' }))
 CID.create(1, json.code, hash)
 
 //> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
+```
+
+### Traversal
+
+This library contains higher-order functions for traversing graphs of data easily.
+
+`walk()` walks through the links in each block of a DAG calling a user-supplied loader function for each one, in depth-first order with no duplicate block visits. The loader should return a `Block` object and can be used to inspect and collect block ordering for a full DAG walk. The loader should `throw` on error, and return `null` if a block should be skipped by `walk()`.
+
+```js
+import { walk } from 'multiformats/traversal'
+import * as Block from 'multiformats/block'
+import * as codec from 'multiformats/codecs/json'
+import { sha256 as hasher } from 'multiformats/hashes/sha2'
+
+// build a DAG (a single block for this simple example)
+const value = { hello: 'world' }
+const block = await Block.encode({ value, codec, hasher })
+const { cid } = block
+console.log(cid)
+//> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
+
+// create a loader function that also collects CIDs of blocks in
+// their traversal order
+const load = (cid, blocks) => async (cid) => {
+  // fetch a block using its cid
+  // e.g.: const block = await fetchBlockByCID(cid)
+  blocks.push(cid)
+  return block
+}
+
+// collect blocks in this DAG starting from the root `cid`
+const blocks = []
+await walk({ cid, load: load(cid, blocks) })
+
+console.log(blocks)
+//> [CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)]
 ```
 
 ## Legacy interface
