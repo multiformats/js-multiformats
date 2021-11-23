@@ -11,9 +11,35 @@ import { coerce } from '../bytes.js'
  * @template {string} T
  * @typedef {import('./interface').Multibase<T>} Multibase
  */
+
 /**
  * @template {string} T
  * @typedef {import('./interface').MultibaseEncoder<T>} MultibaseEncoder
+ */
+
+/**
+ * @template {string} Prefix
+ * @typedef {import('./interface').CombobaseDecoder<Prefix>} CombobaseDecoder
+ */
+
+/**
+ * @template {string} Prefix
+ * @typedef {Record<Prefix, UnibaseDecoder<Prefix>>} Decoders
+ */
+
+/**
+ * @template {string} Prefix
+ * @typedef {import('./interface').MultibaseDecoder<Prefix>} MultibaseDecoder
+ */
+
+/**
+ * @template {string} Prefix
+ * @typedef {import('./interface').UnibaseDecoder<Prefix>} UnibaseDecoder
+ */
+
+/**
+ * @template T
+ * @typedef {import('./interface').MultibaseCodec<T>} MultibaseCodec
  */
 
 /**
@@ -50,16 +76,6 @@ class Encoder {
     }
   }
 }
-
-/**
- * @template {string} Prefix
- * @typedef {import('./interface').MultibaseDecoder<Prefix>} MultibaseDecoder
- */
-
-/**
- * @template {string} Prefix
- * @typedef {import('./interface').UnibaseDecoder<Prefix>} UnibaseDecoder
- */
 
 /**
  * @template {string} Prefix
@@ -111,25 +127,18 @@ class Decoder {
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
-    /** @type {Decoders<Prefix|OtherPrefix>} */
-    const decoders = ({
-      [this.prefix]: this,
-      ...decoder.decoders || ({ [decoder.prefix]: decoder })
-    })
+    /** @type {Partial<Decoders<Prefix|OtherPrefix>>} */
+    const decoders = {}
+    decoders[this.prefix] = this
+    if (decoder.decoders) {
+      Object.assign(decoders, decoder.decoders)
+    } else if ('prefix' in decoder) {
+      decoders[decoder.prefix] = decoder
+    }
 
-    return new ComposedDecoder(decoders)
+    return new ComposedDecoder(/** @type {Decoders<Prefix|OtherPrefix>} */ (decoders))
   }
 }
-
-/**
- * @template {string} Prefix
- * @typedef {import('./interface').CombobaseDecoder<Prefix>} CombobaseDecoder
- */
-
-/**
- * @template {string} Prefix
- * @typedef {Record<Prefix, UnibaseDecoder<Prefix>>} Decoders
- */
 
 /**
  * @template {string} Prefix
@@ -150,12 +159,15 @@ class ComposedDecoder {
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
-    /** @type {Decoders<OtherPrefix>} */
-    const other = (decoder.decoders || { [decoder.prefix]: decoder })
-    return new ComposedDecoder({
-      ...this.decoders,
-      ...other
-    })
+    /** @type {Decoders<Prefix|OtherPrefix>} */
+    const decoders = Object.assign({}, /** @type {Decoders<Prefix|OtherPrefix>} */ (this.decoders))
+    if (decoder.decoders) {
+      Object.assign(decoders, decoder.decoders)
+    } else if ('prefix' in decoder) {
+      decoders[decoder.prefix] = decoder
+    }
+
+    return new ComposedDecoder(/** @type {Decoders<Prefix|OtherPrefix>} */ (decoders))
   }
 
   /**
@@ -172,11 +184,6 @@ class ComposedDecoder {
     }
   }
 }
-
-/**
- * @template T
- * @typedef {import('./interface').MultibaseCodec<T>} MultibaseCodec
- */
 
 /**
  * @class

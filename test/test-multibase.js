@@ -130,6 +130,14 @@ describe('multibase', () => {
 
     // original composition stays intact
     testThrow(() => base.decode(b64), msg)
+
+    // non-composed combined with composed
+    const baseExt2 = base32.decoder.or(base64.decoder.or(base16.decoder))
+    same(baseExt2.decode(b64), bytes.fromString('test'))
+
+    // composed combined with composed
+    const baseExt3 = base.or(base64.decoder.or(base16.decoder))
+    same(baseExt3.decode(b64), bytes.fromString('test'))
   })
 
   test('truncated data', () => {
