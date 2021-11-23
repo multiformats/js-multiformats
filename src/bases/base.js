@@ -111,13 +111,7 @@ class Decoder {
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
-    /** @type {Decoders<Prefix|OtherPrefix>} */
-    const decoders = ({
-      [this.prefix]: this,
-      ...decoder.decoders || ({ [decoder.prefix]: decoder })
-    })
-
-    return new ComposedDecoder(decoders)
+    return or(this, decoder)
   }
 }
 
@@ -150,12 +144,7 @@ class ComposedDecoder {
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
-    /** @type {Decoders<OtherPrefix>} */
-    const other = (decoder.decoders || { [decoder.prefix]: decoder })
-    return new ComposedDecoder({
-      ...this.decoders,
-      ...other
-    })
+    return or(this, decoder)
   }
 
   /**
@@ -172,6 +161,18 @@ class ComposedDecoder {
     }
   }
 }
+
+/**
+ * @template {string} L
+ * @template {string} R
+ * @param {UnibaseDecoder<L>|CombobaseDecoder<L>} left
+ * @param {UnibaseDecoder<R>|CombobaseDecoder<R>} right
+ * @returns {ComposedDecoder<L|R>}
+ */
+export const or = (left, right) => new ComposedDecoder(/** @type {Decoders<L|R>} */({
+  ...(left.decoders || { [/** @type UnibaseDecoder<L> */(left).prefix]: left }),
+  ...(right.decoders || { [/** @type UnibaseDecoder<R> */(right).prefix]: right })
+}))
 
 /**
  * @template T
