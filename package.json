@@ -107,7 +107,7 @@
     "mocha": "^9.1.1",
     "polendina": "^1.1.0",
     "standard": "^16.0.3",
-    "typescript": "^4.4.2"
+    "typescript": "~4.4.2"
   },
   "standard": {
     "ignore": [
