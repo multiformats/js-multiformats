@@ -14,7 +14,7 @@ import { base58btc } from 'multiformats/bases/base58'
  * @param {Object} options
  * @param {CID} options.cid
  * @param {(cid: CID) => Promise<Block<T>|null>} options.load
- * @param {Set<string>?} options.seen
+ * @param {Set<string>} [options.seen]
  */
 const walk = async ({ cid, load, seen }) => {
   seen = seen || new Set()
