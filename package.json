@@ -139,8 +139,5 @@
         "types/*"
       ]
     }
-  },
-  "dependencies": {
-    "@ipld/dag-cbor": "^6.0.14"
   }
 }
