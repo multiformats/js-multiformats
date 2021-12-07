@@ -1,25 +1,26 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
-import { deepStrictEqual } from 'assert'
-const test = it
-const same = deepStrictEqual
+import { assert } from 'chai'
 
 describe('bytes', () => {
-  test('isBinary', () => {
-    same(bytes.isBinary(new ArrayBuffer()), true)
-    same(bytes.isBinary(new DataView(new ArrayBuffer())), true)
+  it('isBinary', () => {
+    assert.deepStrictEqual(bytes.isBinary(new ArrayBuffer()), true)
+    assert.deepStrictEqual(bytes.isBinary(new DataView(new ArrayBuffer())), true)
   })
-  test('coerce', () => {
+
+  it('coerce', () => {
     const fixture = bytes.fromString('test')
-    same(bytes.coerce(fixture.buffer), fixture)
-    same(bytes.coerce(new DataView(fixture.buffer)), fixture)
+    assert.deepStrictEqual(bytes.coerce(fixture.buffer), fixture)
+    assert.deepStrictEqual(bytes.coerce(new DataView(fixture.buffer)), fixture)
   })
-  test('equals', () => {
+
+  it('equals', () => {
     const fixture = bytes.fromString('test')
-    same(bytes.equals(fixture, bytes.fromString('asdfadf')), false)
+    assert.deepStrictEqual(bytes.equals(fixture, bytes.fromString('asdfadf')), false)
   })
-  test('toString()', () => {
+
+  it('toString()', () => {
     const fixture = 'hello world'
-    same(bytes.toString(bytes.fromString(fixture)), fixture)
+    assert.deepStrictEqual(bytes.toString(bytes.fromString(fixture)), fixture)
   })
 })
