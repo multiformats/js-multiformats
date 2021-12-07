@@ -20,7 +20,9 @@ jobs:
           npm install --no-progress
       - name: Run tests
         run: |
-          npm_config_yes=true npx best-test@latest
+          npm config set script-shell bash
+          npm config set yes true
+          npx best-test@latest
   release:
     name: Release
     needs: test

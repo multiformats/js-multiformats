@@ -3,7 +3,7 @@
 
 import { bases } from 'multiformats/basics'
 import { fromString } from '../src/bytes.js'
-import { deepStrictEqual } from 'assert'
+import { assert } from 'chai'
 import testThrow from './fixtures/test-throw.js'
 
 const encoded = [
@@ -176,11 +176,11 @@ describe('spec test', () => {
         describe(name, () => {
           it('should encode buffer', () => {
             const out = base.encode(fromString(input))
-            deepStrictEqual(out, output)
+            assert.deepStrictEqual(out, output)
           })
 
           it('should decode string', () => {
-            deepStrictEqual(base.decode(output), fromString(input))
+            assert.deepStrictEqual(base.decode(output), fromString(input))
           })
         })
       }

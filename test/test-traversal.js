@@ -4,9 +4,8 @@ import * as dagPB from '@ipld/dag-pb'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { walk } from 'multiformats/traversal'
-import { deepStrictEqual as same } from 'assert'
+import { assert } from 'chai'
 
-const test = it
 const { createLink, createNode } = dagPB
 
 describe('traversal', () => {
@@ -66,7 +65,7 @@ describe('traversal', () => {
       return load(cid)
     }
 
-    test('block with no links', async () => {
+    it('block with no links', async () => {
       // Test Case 1
       // Input DAG
       //            D
@@ -78,11 +77,11 @@ describe('traversal', () => {
       await walk({ cid: cidD, load: loadWrapper(load, callArray) })
 
       expectedCallArray.forEach((value, index) => {
-        same(value, callArray[index])
+        assert.deepStrictEqual(value, callArray[index])
       })
     })
 
-    test('block with links', async () => {
+    it('block with links', async () => {
       // Test Case 2
       // Input
       //            C
@@ -96,11 +95,11 @@ describe('traversal', () => {
       await walk({ cid: cidC, load: loadWrapper(load, callArray) })
 
       expectedCallArray.forEach((value, index) => {
-        same(value, callArray[index])
+        assert.deepStrictEqual(value, callArray[index])
       })
     })
 
-    test('block with matching links', async () => {
+    it('block with matching links', async () => {
       // Test Case 3
       // Input
       //            B
@@ -114,11 +113,11 @@ describe('traversal', () => {
       await walk({ cid: cidB, load: loadWrapper(load, callArray) })
 
       expectedCallArray.forEach((value, index) => {
-        same(value, callArray[index])
+        assert.deepStrictEqual(value, callArray[index])
       })
     })
 
-    test('depth first with duplicated block', async () => {
+    it('depth first with duplicated block', async () => {
       // Test Case 4
       // Input
       //             A
@@ -140,11 +139,11 @@ describe('traversal', () => {
       await walk({ cid: cidA, load: loadWrapper(load, callArray) })
 
       expectedCallArray.forEach((value, index) => {
-        same(value, callArray[index])
+        assert.deepStrictEqual(value, callArray[index])
       })
     })
 
-    test('null return', async () => {
+    it('null return', async () => {
       const links = []
       const value = createNode(Uint8Array.from('test'), links)
       const block = await main.encode({ value: value, codec, hasher })
@@ -155,7 +154,7 @@ describe('traversal', () => {
       await walk({ cid, load: loadWrapper(load, callArray) })
 
       expectedCallArray.forEach((value, index) => {
-        same(value, callArray[index])
+        assert.deepStrictEqual(value, callArray[index])
       })
     })
   })
