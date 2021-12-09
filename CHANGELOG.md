@@ -1,3 +1,10 @@
+### [9.5.4](https://github.com/multiformats/js-multiformats/compare/v9.5.3...v9.5.4) (2021-12-09)
+
+
+### Bug Fixes
+
+* remove publish script ([da1d722](https://github.com/multiformats/js-multiformats/commit/da1d7228aca1eebf749f0a922a3f7e90b805009d))
+
 ### [9.5.3](https://github.com/multiformats/js-multiformats/compare/v9.5.2...v9.5.3) (2021-12-09)
 
 
