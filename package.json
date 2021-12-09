@@ -104,9 +104,9 @@
     "@ipld/dag-pb": "^2.1.14",
     "@stablelib/sha256": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
-    "@types/node": "^16.11.11",
-    "@typescript-eslint/eslint-plugin": "^5.5.0",
-    "@typescript-eslint/parser": "^5.5.0",
+    "@types/node": "^16.11.12",
+    "@typescript-eslint/eslint-plugin": "^5.6.0",
+    "@typescript-eslint/parser": "^5.6.0",
     "buffer": "^6.0.3",
     "c8": "^7.10.0",
     "chai": "^4.3.4",
@@ -220,7 +220,12 @@
         }
       ],
       "@semantic-release/changelog",
-      "@semantic-release/npm",
+      [
+        "@semantic-release/npm",
+        {
+          "pkgRoot": "dist"
+        }
+      ],
       "@semantic-release/github",
       "@semantic-release/git"
     ]
