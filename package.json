@@ -13,7 +13,6 @@
     "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
     "build:vendor:varint": "npm_config_yes=true npx brrp -x varint > vendor/varint.js",
     "build:vendor:base-x": "npm_config_yes=true npx brrp -x @multiformats/base-x > vendor/base-x.js",
-    "publish": "ipjs publish",
     "lint": "standard",
     "test:cjs": "npm run build:js && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
     "test:esm": "npm run build:js && mocha dist/esm/node-test/test-*.js && npm run test:esm:browser",
