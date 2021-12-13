@@ -74,6 +74,11 @@ export interface MultibaseDecoder<Prefix extends string> {
    * @param multibase
    */
   decode(multibase: Multibase<Prefix>): Uint8Array
+
+  /**
+   * Compose a new MultibaseDecoder that supports either prefix
+   */
+   or <T extends string> (other: MultibaseDecoder<T>): MultibaseDecoder<Prefix | T>
 }
 
 /**
