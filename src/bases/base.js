@@ -58,11 +58,6 @@ class Encoder {
 
 /**
  * @template {string} Prefix
- * @typedef {import('./interface').UnibaseDecoder<Prefix>} UnibaseDecoder
- */
-
-/**
- * @template {string} Prefix
  */
 /**
  * Class represents both BaseDecoder and MultibaseDecoder so it could be used
@@ -72,7 +67,7 @@ class Encoder {
  * @template {string} Base
  * @template {string} Prefix
  * @implements {MultibaseDecoder<Prefix>}
- * @implements {UnibaseDecoder<Prefix>}
+ * @implements {CombobaseDecoder<Prefix>}
  * @implements {BaseDecoder}
  */
 class Decoder {
@@ -85,6 +80,22 @@ class Decoder {
     this.name = name
     this.prefix = prefix
     this.baseDecode = baseDecode
+  }
+
+  /**
+   * @returns {CombobaseDecoder<Prefix>}
+   */
+  get composed () {
+    return this
+  }
+
+  /**
+   * @type {{[K in Prefix]: MultibaseDecoder<Prefix>}}
+   */
+  get decoders () {
+    return /** @type {{[K in Prefix]: MultibaseDecoder<Prefix>}} */({
+      [this.prefix]: /** @type {MultibaseDecoder<Prefix>} */(this)
+    })
   }
 
   /**
@@ -107,7 +118,7 @@ class Decoder {
 
   /**
    * @template {string} OtherPrefix
-   * @param {UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
+   * @param {CombobaseDecoder<OtherPrefix>} decoder
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
@@ -122,7 +133,7 @@ class Decoder {
 
 /**
  * @template {string} Prefix
- * @typedef {Record<Prefix, UnibaseDecoder<Prefix>>} Decoders
+ * @typedef {Record<Prefix, MultibaseDecoder<Prefix>>} Decoders
  */
 
 /**
@@ -132,7 +143,7 @@ class Decoder {
  */
 class ComposedDecoder {
   /**
-   * @param {Record<Prefix, UnibaseDecoder<Prefix>>} decoders
+   * @param {{[K in Prefix]: MultibaseDecoder<K>}} decoders
    */
   constructor (decoders) {
     this.decoders = decoders
@@ -140,7 +151,7 @@ class ComposedDecoder {
 
   /**
    * @template {string} OtherPrefix
-   * @param {UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
+   * @param {CombobaseDecoder<OtherPrefix>} decoder
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
@@ -165,13 +176,13 @@ class ComposedDecoder {
 /**
  * @template {string} L
  * @template {string} R
- * @param {UnibaseDecoder<L>|CombobaseDecoder<L>} left
- * @param {UnibaseDecoder<R>|CombobaseDecoder<R>} right
+ * @param {CombobaseDecoder<L>} left
+ * @param {CombobaseDecoder<R>} right
  * @returns {ComposedDecoder<L|R>}
  */
 export const or = (left, right) => new ComposedDecoder(/** @type {Decoders<L|R>} */({
-  ...(left.decoders || { [/** @type UnibaseDecoder<L> */(left).prefix]: left }),
-  ...(right.decoders || { [/** @type UnibaseDecoder<R> */(right).prefix]: right })
+  ...left.decoders,
+  ...right.decoders
 }))
 
 /**
@@ -204,6 +215,10 @@ export class Codec {
     this.baseDecode = baseDecode
     this.encoder = new Encoder(name, prefix, baseEncode)
     this.decoder = new Decoder(name, prefix, baseDecode)
+  }
+
+  get decoders () {
+    return this.decoder.decoders
   }
 
   /**
@@ -353,9 +368,11 @@ const encode = (data, alphabet, bitsPerChar) => {
 /**
  * RFC4648 Factory
  *
+ * @template {string} Base
+ * @template {string} Prefix
  * @param {Object} options
- * @param {string} options.name
- * @param {string} options.prefix
+ * @param {Base} options.name
+ * @param {Prefix} options.prefix
  * @param {string} options.alphabet
  * @param {number} options.bitsPerChar
  */

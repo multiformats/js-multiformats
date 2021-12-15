@@ -1,3 +1,4 @@
+/* eslint-disable no-use-before-define */
 // Base encoders / decoders just base encode / decode between binary and
 // textual representation. They are unaware of multibase.
 
@@ -83,17 +84,9 @@ export interface MultibaseCodec<Prefix extends string> {
   name: string
   prefix: Prefix
   encoder: MultibaseEncoder<Prefix>
-  decoder: MultibaseDecoder<Prefix>
-}
-
-
-export interface UnibaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
-  // Reserve this property so it can be used to derive type.
-  readonly decoders?: null
-
-  readonly prefix: Prefix
+  decoder: CombobaseDecoder<Prefix>
 }
 
 export interface CombobaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
-  readonly decoders: Record<Prefix, UnibaseDecoder<Prefix>>
+  readonly decoders: {[K in Prefix]?: MultibaseDecoder<K>}
 }

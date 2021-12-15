@@ -1,6 +1,7 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
 import { assert } from 'chai'
+import * as b from 'multiformats/bases/base'
 import * as b2 from 'multiformats/bases/base2'
 import * as b8 from 'multiformats/bases/base8'
 import * as b10 from 'multiformats/bases/base10'
@@ -9,7 +10,7 @@ import * as b32 from 'multiformats/bases/base32'
 import * as b36 from 'multiformats/bases/base36'
 import * as b58 from 'multiformats/bases/base58'
 import * as b64 from 'multiformats/bases/base64'
-import testThrow from './fixtures/test-throw.js'
+import { testThrowAsync as testThrow } from './fixtures/test-throw.js'
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
 
@@ -47,19 +48,26 @@ describe('multibase', () => {
 
   it('encode string failure', () => {
     const msg = 'Unknown type, must be binary type'
+    // @ts-expect-error - expects bytes
     testThrow(() => base32.encode('asdf'), msg)
+    // @ts-expect-error - expects bytes
     testThrow(() => base32.encoder.encode('asdf'), msg)
   })
 
   it('decode int failure', () => {
     const msg = 'Can only multibase decode strings'
+    // @ts-expect-error - 'number' is not assignable to parameter of type 'string'
     testThrow(() => base32.decode(1), msg)
+    // @ts-expect-error - 'number' is not assignable to parameter of type 'string'
     testThrow(() => base32.decoder.decode(1), msg)
   })
 
   const buff = bytes.fromString('test')
   const nonPrintableBuff = Uint8Array.from([239, 250, 254])
 
+  /**
+   * @param {typeof b2|b8|b10|b16|b32|b36|b58|b64} bases
+   */
   const baseTest = bases => {
     for (const base of Object.values(bases)) {
       if (base && base.name) {
@@ -152,5 +160,37 @@ describe('multibase', () => {
     const b64 = base64.encode(Uint8Array.from([245, 250]))
 
     testThrow(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
+  })
+
+  it('infers prefix and name corretly', () => {
+    /** @type {'base32'} */
+    const name = base32.name
+
+    /** @type {'base16'} */
+    // @ts-expect-error - TS catches mismatch
+    const name2 = base32.name
+
+    /** @type {'b'} */
+    const prefix = base32.prefix
+    assert.equal(prefix, 'b')
+    assert.equal(name, 'base32')
+    assert.equal(name2, name)
+  })
+
+  it('can utilize or combinator', () => {
+    const bases = {
+      ...b32,
+      ...b36,
+      ...b58,
+      ...b64
+    }
+
+    const composite = Object
+      .values(bases)
+      .map(codec => codec.decoder.composed)
+      .reduce(b.or)
+
+    assert.equal(bytes.toString(composite.decode(base32.encode(bytes.fromString('test')))), 'test')
+    assert.equal(bytes.toString(composite.decode(base64.encode(bytes.fromString('test')))), 'test')
   })
 })
