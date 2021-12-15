@@ -9,10 +9,13 @@ import { base32 } from 'multiformats/bases/base32'
 import { base64 } from 'multiformats/bases/base64'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import invalidMultihash from './fixtures/invalid-multihash.js'
-import testThrow from './fixtures/test-throw.js'
+import { testThrowSync as testThrow } from './fixtures/test-throw.js'
 
 const textEncoder = new TextEncoder()
 
+/**
+ * @param {Function} fn
+ */
 const testThrowAny = async fn => {
   try {
     await fn()
@@ -99,7 +102,7 @@ describe('CID', () => {
       const cidStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const oldCid = CID.parse(cidStr)
       const newCid = CID.asCID(oldCid)
-      assert.deepStrictEqual(newCid.toString(), cidStr)
+      assert.deepStrictEqual(/** @type {CID} */(newCid).toString(), cidStr)
     })
 
     it('inspect bytes', () => {
@@ -156,7 +159,7 @@ describe('CID', () => {
       const cid = CID.create(1, 0x71, hash)
       assert.deepStrictEqual(cid.code, 0x71)
       assert.deepStrictEqual(cid.version, 1)
-      assert.ok(equals(cid.multihash, hash))
+      equalDigest(cid.multihash, hash)
     })
 
     it('can roundtrip through cid.toString()', async () => {
@@ -203,7 +206,7 @@ describe('CID', () => {
       const cidStr = 'bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u'
       const oldCid = CID.parse(cidStr)
       const newCid = CID.asCID(oldCid)
-      assert.deepStrictEqual(newCid.toString(), cidStr)
+      assert.deepStrictEqual(/** @type {CID} */(newCid).toString(), cidStr)
     })
   })
 
@@ -254,6 +257,7 @@ describe('CID', () => {
 
     it('works with deepEquals', () => {
       const ch1 = CID.parse(h1)
+      // @ts-expect-error - '_baseCache' is private
       ch1._baseCache.set('herp', 'derp')
       assert.deepStrictEqual(ch1, CID.parse(h1))
       assert.notDeepEqual(ch1, CID.parse(h2))
@@ -291,6 +295,7 @@ describe('CID', () => {
       const form = JSON.stringify(hash.toString())
       const mh = hash instanceof Uint8Array ? `textEncoder.encode(${form})` : form
       const name = `CID.create(${version}, ${code}, ${mh})`
+      // @ts-expect-error - version issn't always 0|1
       it(name, async () => await testThrowAny(() => CID.create(version, code, hash)))
     }
 
@@ -362,16 +367,22 @@ describe('CID', () => {
     it('should cache string representation when it matches the multibaseName it was constructed with', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
+
+      // @ts-expect-error - _baseCache is private
       assert.deepStrictEqual(cid._baseCache.size, 0)
 
       assert.deepStrictEqual(cid.toString(base64), 'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
+
+      // @ts-expect-error - _baseCache is private
       assert.deepStrictEqual(cid._baseCache.get(base64.prefix), 'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
 
+      // @ts-expect-error - _baseCache is private
       assert.deepStrictEqual(cid._baseCache.has(base32.prefix), false)
 
       const base32String = 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
       assert.deepStrictEqual(cid.toString(), base32String)
 
+      // @ts-expect-error - _baseCache is private
       assert.deepStrictEqual(cid._baseCache.get(base32.prefix), base32String)
       assert.deepStrictEqual(cid.toString(base64), 'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt')
     })
@@ -379,6 +390,7 @@ describe('CID', () => {
     it('should cache string representation when constructed with one', () => {
       const base32String = 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
       const cid = CID.parse(base32String)
+      // @ts-expect-error - _baseCache is private
       assert.deepStrictEqual(cid._baseCache.get(base32.prefix), base32String)
     })
   })
@@ -401,6 +413,11 @@ describe('CID', () => {
   it('asCID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     class IncompatibleCID {
+      /**
+       * @param {number} version
+       * @param {number} code
+       * @param {import('multiformats/hashes/interface').MultihashDigest} multihash
+       */
       constructor (version, code, multihash) {
         this.version = version
         this.code = code
@@ -419,44 +436,61 @@ describe('CID', () => {
     const incompatibleCID = new IncompatibleCID(version, code, hash)
     assert.ok(CID.isCID(incompatibleCID))
     assert.strictEqual(incompatibleCID.toString(), '[object Object]')
+    // @ts-expect-error - no such method
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
 
-    const cid1 = CID.asCID(incompatibleCID)
+    const cid1 = /** @type {CID} */(CID.asCID(incompatibleCID))
     assert.ok(cid1 instanceof CID)
     assert.strictEqual(cid1.code, code)
     assert.strictEqual(cid1.version, version)
-    assert.ok(equals(cid1.multihash, hash))
+    assert.ok(equals(cid1.multihash.bytes, hash.bytes))
 
     const cid2 = CID.asCID({ version, code, hash })
     assert.strictEqual(cid2, null)
 
     const duckCID = { version, code, multihash: hash }
+    // @ts-expect-error - no such property
     duckCID.asCID = duckCID
-    const cid3 = CID.asCID(duckCID)
+    const cid3 = /** @type {CID} */ (CID.asCID(duckCID))
     assert.ok(cid3 instanceof CID)
     assert.strictEqual(cid3.code, code)
     assert.strictEqual(cid3.version, version)
-    assert.ok(equals(cid3.multihash, hash))
+    assert.ok(equals(cid3.multihash.bytes, hash.bytes))
 
     const cid4 = CID.asCID(cid3)
     assert.strictEqual(cid3, cid4)
 
-    const cid5 = CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes)))
+    const cid5 = /** @type {CID} */(CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))))
     assert.ok(cid5 instanceof CID)
     assert.strictEqual(cid5.version, 1)
-    assert.ok(equals(cid5.multihash, hash))
+    assert.ok(equals(cid5.multihash.bytes, hash.bytes))
     assert.strictEqual(cid5.code, 85)
   })
 
+  /**
+   * @param {CID} x
+   * @param {CID} y
+   */
   const digestsame = (x, y) => {
-    assert.deepStrictEqual(x.digest, y.digest)
+    // @ts-ignore - not sure what this supposed to be
     assert.deepStrictEqual(x.hash, y.hash)
     assert.deepStrictEqual(x.bytes, y.bytes)
     if (x.multihash) {
-      digestsame(x.multihash, y.multihash)
+      equalDigest(x.multihash, y.multihash)
     }
     const empty = { hash: null, bytes: null, digest: null, multihash: null }
     assert.deepStrictEqual({ ...x, ...empty }, { ...y, ...empty })
+  }
+
+  /**
+   * @typedef {import('multiformats/hashes/interface').MultihashDigest} MultihashDigest
+   * @param {MultihashDigest} x
+   * @param {MultihashDigest} y
+   */
+  const equalDigest = (x, y) => {
+    assert.deepStrictEqual(x.digest, y.digest)
+    assert.deepStrictEqual(x.code, y.code)
+    assert.deepStrictEqual(x.digest, y.digest)
   }
 
   describe('CID.parse', async () => {
@@ -472,7 +506,7 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
 
-      const parsed = CID.parse(cid.toString(base58btc))
+      const parsed = /** @type {CID} */(CID.parse(cid.toString(base58btc)))
       digestsame(cid, parsed)
     })
 
@@ -532,17 +566,19 @@ describe('CID', () => {
 
   it('new CID from old CID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
-    const cid = CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes)))
+    const cid = /** @type {CID} */ (CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))))
     assert.deepStrictEqual(cid.version, 1)
 
-    assert.ok(equals(cid.multihash, hash))
+    equalDigest(cid.multihash, hash)
     assert.deepStrictEqual(cid.code, 85)
   })
 
   it('util.inspect', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     const cid = CID.create(1, 112, hash)
+    // @ts-expect-error - no such method is known
     assert.deepStrictEqual(typeof cid[Symbol.for('nodejs.util.inspect.custom')], 'function')
+    // @ts-expect-error - no such method is known
     assert.deepStrictEqual(cid[Symbol.for('nodejs.util.inspect.custom')](), 'CID(bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu)')
   })
 
@@ -551,6 +587,7 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
       await testThrow(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
+      // @ts-expect-error - 'string' is not assignable to parameter of type 'number'
       await testThrow(() => CID.create(1, 'dag-pb', hash), 'String codecs are no longer supported')
     })
 
@@ -569,6 +606,7 @@ describe('CID', () => {
     it('toBaseEncodedString()', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
+      // @ts-expect-error - deprecated
       await testThrow(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
     })
   })

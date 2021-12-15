@@ -4,6 +4,7 @@ import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { CID, bytes } from 'multiformats'
 import { assert } from 'chai'
+import { testThrowAsync, testThrowSync } from './fixtures/test-throw.js'
 
 const fixture = { hello: 'world' }
 const link = CID.parse('bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae')
@@ -27,7 +28,15 @@ describe('block', () => {
   })
 
   describe('reader', () => {
-    const value = { link, nope: 'skip', arr: [link], obj: { arr: [{ obj: {} }] }, bytes: Uint8Array.from('1234') }
+    const value = {
+      link,
+      nope: 'skip',
+      arr: [link],
+      obj: { arr: [{ obj: {} }] },
+      // @ts-expect-error - 'string' is not assignable to parameter of type 'ArrayLike<number>'
+      bytes: Uint8Array.from('1234')
+    }
+    // @ts-expect-error - 'boolean' is not assignable to type 'CID'
     const block = main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
 
     it('links', () => {
@@ -50,11 +59,20 @@ describe('block', () => {
       assert.deepStrictEqual(ret.remaining, 'test')
       assert.deepStrictEqual(ret.value.toString(), link.toString())
       ret = block.get('nope')
+      // @ts-expect-error - 'string' is not expected
       assert.deepStrictEqual(ret, { value: 'skip' })
     })
 
     it('null links/tree', () => {
-      const block = main.createUnsafe({ value: null, codec, hasher, bytes: true, cid: true })
+      const block = main.createUnsafe({
+        value: null,
+        codec,
+        hasher,
+        // @ts-expect-error - 'boolean' is not assignable to type 'ByteView<unknown>'
+        bytes: true,
+        // @ts-expect-error - 'boolean' is not assignable to type 'CID'
+        cid: true
+      })
       // eslint-disable-next-line
       for (const x of block.tree()) {
         throw new Error(`tree should have nothing, got "${x}"`)
@@ -68,58 +86,58 @@ describe('block', () => {
 
   it('kitchen sink', () => {
     const sink = { one: { two: { arr: [true, false, null], three: 3, buff, link } } }
-    const block = main.createUnsafe({ value: sink, codec, bytes: true, cid: true })
+    const block = main.createUnsafe({
+      value: sink,
+      codec,
+      // @ts-expect-error - 'boolean' is not assignable to type 'ByteView<unknown>'
+      bytes: true,
+      // @ts-expect-error - 'boolean' is not assignable to type 'CID'
+      cid: true
+    })
     assert.deepStrictEqual(sink, block.value)
   })
 
   describe('errors', () => {
     it('constructor missing args', () => {
-      let threw = true
-      try {
-        threw = new main.Block({})
-        threw = false
-      } catch (e) {
-        if (e.message !== 'Missing required argument') throw e
-      }
-      assert.deepStrictEqual(threw, true)
+      testThrowSync(
+        // @ts-expect-error - missing properties
+        () => new main.Block({}),
+        'Missing required argument'
+      )
     })
 
-    const errTest = async (method, arg, message) => {
-      let threw = true
-      try {
-        await method(arg)
-        threw = false
-      } catch (e) {
-        if (e.message !== message) throw e
-      }
-      assert.deepStrictEqual(threw, true)
-    }
-
     it('encode', async () => {
-      await errTest(main.encode, {}, 'Missing required argument "value"')
-      await errTest(main.encode, { value: true }, 'Missing required argument: codec or hasher')
+      // @ts-expect-error
+      await testThrowAsync(() => main.encode({}), 'Missing required argument "value"')
+      // @ts-expect-error
+      await testThrowAsync(() => main.encode({ value: true }), 'Missing required argument: codec or hasher')
     })
 
     it('decode', async () => {
-      await errTest(main.decode, {}, 'Missing required argument "bytes"')
-      await errTest(main.decode, { bytes: true }, 'Missing required argument: codec or hasher')
+      // @ts-expect-error
+      await testThrowAsync(() => main.decode({}), 'Missing required argument "bytes"')
+      // @ts-expect-error
+      await testThrowAsync(() => main.decode({ bytes: true }), 'Missing required argument: codec or hasher')
     })
 
     it('createUnsafe', async () => {
-      await errTest(main.createUnsafe, {}, 'Missing required argument, must either provide "value" or "codec"')
+      // @ts-expect-error
+      await testThrowAsync(() => main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
     })
 
     it('create', async () => {
-      await errTest(main.create, {}, 'Missing required argument "bytes"')
-      await errTest(main.create, { bytes: true }, 'Missing required argument "hasher"')
+      // @ts-expect-error
+      await testThrowAsync(() => main.create({}), 'Missing required argument "bytes"')
+      // @ts-expect-error
+      await testThrowAsync(() => main.create({ bytes: true }), 'Missing required argument "hasher"')
       const block = await main.encode({ value: fixture, codec, hasher })
       const block2 = await main.encode({ value: { ...fixture, test: 'blah' }, codec, hasher })
-      await errTest(main.create, { bytes: block.bytes, cid: block2.cid, codec, hasher }, 'CID hash does not match bytes')
+      await testThrowAsync(() => main.create({ bytes: block.bytes, cid: block2.cid, codec, hasher }), 'CID hash does not match bytes')
     })
 
     it('get', async () => {
       const block = await main.encode({ value: fixture, codec, hasher })
-      await errTest(path => block.get(path), '/asd/fs/dfasd/f', 'Object has no property at ["asd"]')
+      await testThrowAsync(() => block.get('/asd/fs/dfasd/f'), 'Object has no property at ["asd"]')
     })
   })
 })

@@ -4,8 +4,8 @@ import { assert } from 'chai'
 
 describe('bytes', () => {
   it('isBinary', () => {
-    assert.deepStrictEqual(bytes.isBinary(new ArrayBuffer()), true)
-    assert.deepStrictEqual(bytes.isBinary(new DataView(new ArrayBuffer())), true)
+    assert.deepStrictEqual(bytes.isBinary(new ArrayBuffer(0)), true)
+    assert.deepStrictEqual(bytes.isBinary(new DataView(new ArrayBuffer(0))), true)
   })
 
   it('coerce', () => {

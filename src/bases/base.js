@@ -352,7 +352,7 @@ const encode = (data, alphabet, bitsPerChar) => {
 
 /**
  * RFC4648 Factory
- * 
+ *
  * @template {string} Base
  * @template {string} Prefix
  * @param {Object} options
