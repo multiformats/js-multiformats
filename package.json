@@ -52,6 +52,9 @@
     "./traversal": {
       "import": "./src/traversal.js"
     },
+    "./bases/base": {
+      "import": "./src/bases/base.js"
+    },
     "./bases/identity": {
       "import": "./src/bases/identity.js"
     },

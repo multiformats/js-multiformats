@@ -48,6 +48,9 @@
       "multiformats/traversal": [
         "./src/traversal.js"
       ],
+      "multiformats/bases/base": [
+        "./src/bases/base.js"
+      ],
       "multiformats/bases/identity": [
         "./src/bases/identity.js"
       ],

@@ -1,6 +1,7 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
 import { assert } from 'chai'
+import * as b from 'multiformats/bases/base'
 import * as b2 from 'multiformats/bases/base2'
 import * as b8 from 'multiformats/bases/base8'
 import * as b10 from 'multiformats/bases/base10'
@@ -174,5 +175,22 @@ describe('multibase', () => {
     assert.equal(prefix, 'b')
     assert.equal(name, 'base32')
     assert.equal(name2, name)
+  })
+
+  it('can utilize or combinator', () => {
+    const bases = {
+      ...b32,
+      ...b36,
+      ...b58,
+      ...b64
+    }
+
+    const composite = Object
+      .values(bases)
+      .map(codec => codec.decoder.composed)
+      .reduce(b.or)
+
+    assert.equal(bytes.toString(composite.decode(base32.encode(bytes.fromString('test')))), 'test')
+    assert.equal(bytes.toString(composite.decode(base64.encode(bytes.fromString('test')))), 'test')
   })
 })
