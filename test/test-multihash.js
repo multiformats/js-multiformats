@@ -8,25 +8,23 @@ import invalid from './fixtures/invalid-multihash.js'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import { identity } from 'multiformats/hashes/identity'
 import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
+import { testThrowAsync } from './fixtures/test-throw.js'
 
+/**
+ * @param {number|string} code
+ * @param {number} size
+ * @param {string} hex
+ */
 const sample = (code, size, hex) => {
+  /**
+   * @param {number|string} i
+   */
   const toHex = (i) => {
     if (typeof i === 'string') return i
     const h = i.toString(16)
     return h.length % 2 === 1 ? `0${h}` : h
   }
   return fromHex(`${toHex(code)}${toHex(size)}${hex}`)
-}
-
-const testThrowAsync = async (fn, message) => {
-  try {
-    await fn()
-  } catch (e) {
-    if (e.message !== message) throw e
-    return
-  }
-  /* c8 ignore next */
-  throw new Error('Test failed to throw')
 }
 
 describe('multihash', () => {
@@ -104,6 +102,7 @@ describe('multihash', () => {
   })
 
   it('throw on hashing non-buffer', async () => {
+    // @ts-expect-error - string is incompatible arg
     await testThrowAsync(() => sha256.digest('asdf'), 'Unknown type, must be binary type')
   })
 })
