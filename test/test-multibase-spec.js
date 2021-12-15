@@ -4,7 +4,7 @@
 import { bases } from 'multiformats/basics'
 import { fromString } from '../src/bytes.js'
 import { assert } from 'chai'
-import testThrow from './fixtures/test-throw.js'
+import { testThrowSync as testThrow } from './fixtures/test-throw.js'
 
 const encoded = [
   {
@@ -171,7 +171,7 @@ describe('spec test', () => {
   for (const { input, tests } of encoded) {
     describe(`multibase spec ${index++}`, () => {
       for (const [name, output] of tests) {
-        const base = bases[name]
+        const base = bases[/** @type {keyof bases} */(name)]
 
         describe(name, () => {
           it('should encode buffer', () => {

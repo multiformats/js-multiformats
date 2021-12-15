@@ -5,6 +5,7 @@ import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { walk } from 'multiformats/traversal'
 import { assert } from 'chai'
+import { fromString } from '../src/bytes.js'
 
 const { createLink, createNode } = dagPB
 
@@ -16,31 +17,34 @@ describe('traversal', () => {
     //          B     C
     //         / \   / \
     //        D   D D   E
-    const linksE = []
-    const valueE = createNode(Uint8Array.from('string E qacdswa'), linksE)
+    const linksE = /** @type {[]} */([])
+    const valueE = createNode(fromString('string E qacdswa'), linksE)
     const blockE = await main.encode({ value: valueE, codec, hasher })
     const cidE = blockE.cid
 
-    const linksD = []
-    const valueD = createNode(Uint8Array.from('string D zasa'), linksD)
+    const linksD = /** @type {[]} */([])
+    const valueD = createNode(fromString('string D zasa'), linksD)
     const blockD = await main.encode({ value: valueD, codec, hasher })
     const cidD = blockD.cid
 
     const linksC = [createLink('link1', 100, cidD), createLink('link2', 100, cidE)]
-    const valueC = createNode(Uint8Array.from('string C zxc'), linksC)
+    const valueC = createNode(fromString('string C zxc'), linksC)
     const blockC = await main.encode({ value: valueC, codec, hasher })
     const cidC = blockC.cid
 
     const linksB = [createLink('link1', 100, cidD), createLink('link2', 100, cidD)]
-    const valueB = createNode(Uint8Array.from('string B lpokjiasd'), linksB)
+    const valueB = createNode(fromString('string B lpokjiasd'), linksB)
     const blockB = await main.encode({ value: valueB, codec, hasher })
     const cidB = blockB.cid
 
     const linksA = [createLink('link1', 100, cidB), createLink('link2', 100, cidC)]
-    const valueA = createNode(Uint8Array.from('string A qwertcfdgshaa'), linksA)
+    const valueA = createNode(fromString('string A qwertcfdgshaa'), linksA)
     const blockA = await main.encode({ value: valueA, codec, hasher })
     const cidA = blockA.cid
 
+    /**
+     * @param {import('multiformats').CID} cid
+     */
     const load = async (cid) => {
       if (cid.equals(cidE)) {
         return blockE
@@ -60,10 +64,18 @@ describe('traversal', () => {
       return null
     }
 
-    const loadWrapper = (load, arr = []) => (cid) => {
-      arr.push(cid.toString())
-      return load(cid)
-    }
+    /**
+     * @param {typeof load} load
+     * @param {string[]} arr
+     */
+    const loadWrapper = (load, arr = []) =>
+      /**
+       * @param {import('multiformats').CID} cid
+       */
+      (cid) => {
+        arr.push(cid.toString())
+        return load(cid)
+      }
 
     it('block with no links', async () => {
       // Test Case 1
@@ -72,6 +84,7 @@ describe('traversal', () => {
       //
       // Expect load to be called with D
       const expectedCallArray = [cidD.toString()]
+      /** @type {string[]} */
       const callArray = []
 
       await walk({ cid: cidD, load: loadWrapper(load, callArray) })
@@ -90,6 +103,7 @@ describe('traversal', () => {
       //
       // Expect load to be called with C, then D, then E
       const expectedCallArray = [cidC.toString(), cidD.toString(), cidE.toString()]
+      /** @type {string[]} */
       const callArray = []
 
       await walk({ cid: cidC, load: loadWrapper(load, callArray) })
@@ -108,6 +122,7 @@ describe('traversal', () => {
       //
       // Expect load to be called with B, then D
       const expectedCallArray = [cidB.toString(), cidD.toString()]
+      /** @type {string[]} */
       const callArray = []
 
       await walk({ cid: cidB, load: loadWrapper(load, callArray) })
@@ -134,6 +149,7 @@ describe('traversal', () => {
         cidC.toString(),
         cidE.toString()
       ]
+      /** @type {string[]} */
       const callArray = []
 
       await walk({ cid: cidA, load: loadWrapper(load, callArray) })
@@ -144,11 +160,13 @@ describe('traversal', () => {
     })
 
     it('null return', async () => {
+      /** @type {[]} */
       const links = []
-      const value = createNode(Uint8Array.from('test'), links)
+      const value = createNode(fromString('test'), links)
       const block = await main.encode({ value: value, codec, hasher })
       const cid = block.cid
       const expectedCallArray = [cid.toString()]
+      /** @type {string[]} */
       const callArray = []
 
       await walk({ cid, load: loadWrapper(load, callArray) })
