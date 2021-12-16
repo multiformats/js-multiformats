@@ -138,6 +138,14 @@ export class CID {
     }
   }
 
+  /**
+   * @param {string} cidString
+   * @returns {string}
+   */
+  truncate (cidString) {
+    return `${cidString.substr(0, 4)}...${cidString.substr(cidString.length - 4, cidString.length)}`
+  }
+
   get [Symbol.toStringTag] () {
     return 'CID'
   }

@@ -392,6 +392,13 @@ describe('CID', () => {
     assert.ok(equals(json.hash, hash.bytes))
   })
 
+  it('truncate()', async () => {
+    const cidString = 'QmbWqxBEKC3P8tqsKc98xmWNzrzDtRLMiMPL8wBuTGsMnR'
+    const truncatedCidString = CID.truncate(cidString)
+
+    assert.ok(equals(truncatedCidString, 'QmbW...sMnR'))    
+  })
+
   it('isCID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     const cid = CID.create(1, 112, hash)
