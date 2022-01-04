@@ -1,3 +1,10 @@
+### [9.5.6](https://github.com/multiformats/js-multiformats/compare/v9.5.5...v9.5.6) (2022-01-04)
+
+
+### Bug Fixes
+
+* **types:** fix publishing of types ([58b5604](https://github.com/multiformats/js-multiformats/commit/58b5604fff734ca997dbedf0d8309247f4e518e4)), closes [#150](https://github.com/multiformats/js-multiformats/issues/150)
+
 ### [9.5.5](https://github.com/multiformats/js-multiformats/compare/v9.5.4...v9.5.5) (2022-01-04)
 
 
