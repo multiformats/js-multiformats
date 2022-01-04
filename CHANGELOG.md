@@ -1,3 +1,17 @@
+### [9.5.5](https://github.com/multiformats/js-multiformats/compare/v9.5.4...v9.5.5) (2022-01-04)
+
+
+### Bug Fixes
+
+* enable ts on tests ([62774c2](https://github.com/multiformats/js-multiformats/commit/62774c2bca1b2c4eb7c125bd092f6f9dcadb19e5))
+* type inference for base32 ([b912ecc](https://github.com/multiformats/js-multiformats/commit/b912ecc136908eaa8dd4f9e5fae48b7b52132651))
+
+
+### Trivial Changes
+
+* **no-release:** bump @types/node from 16.11.14 to 17.0.0 ([#145](https://github.com/multiformats/js-multiformats/issues/145)) ([66aaf0f](https://github.com/multiformats/js-multiformats/commit/66aaf0fa8cfb6d0a41e12e3f3463147a0bbda0ea))
+* **no-release:** bump actions/setup-node from 2.5.0 to 2.5.1 ([#147](https://github.com/multiformats/js-multiformats/issues/147)) ([32cf7bd](https://github.com/multiformats/js-multiformats/commit/32cf7bd9709173683e194c7c0e7b8f4acf49e9a5))
+
 ### [9.5.4](https://github.com/multiformats/js-multiformats/compare/v9.5.3...v9.5.4) (2021-12-09)
 
 
