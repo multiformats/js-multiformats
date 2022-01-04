@@ -1,7 +1,6 @@
 /* globals describe, it */
 
 import OLDCID from 'cids'
-import { assert } from 'chai'
 import { fromHex, toHex, equals } from '../src/bytes.js'
 import { varint, CID } from 'multiformats'
 import { base58btc } from 'multiformats/bases/base58'
@@ -9,22 +8,13 @@ import { base32 } from 'multiformats/bases/base32'
 import { base64 } from 'multiformats/bases/base64'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import invalidMultihash from './fixtures/invalid-multihash.js'
-import { testThrowSync as testThrow } from './fixtures/test-throw.js'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+const { assert } = chai
 
 const textEncoder = new TextEncoder()
-
-/**
- * @param {Function} fn
- */
-const testThrowAny = async fn => {
-  try {
-    await fn()
-  } catch (e) {
-    return
-  }
-  /* c8 ignore next */
-  throw new Error('Test failed to throw')
-}
 
 describe('CID', () => {
   describe('v0', () => {
@@ -64,13 +54,13 @@ describe('CID', () => {
 
     it('throws on invalid BS58Str multihash ', async () => {
       const msg = 'Non-base58btc character'
-      await testThrow(() => CID.parse('QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zIII'), msg)
+      assert.throws(() => CID.parse('QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zIII'), msg)
     })
 
     it('throws on trying to create a CIDv0 with a codec other than dag-pb', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const msg = 'Version 0 CID must use dag-pb (code: 112) block encoding'
-      await testThrow(() => CID.create(0, 113, hash), msg)
+      assert.throws(() => CID.create(0, 113, hash), msg)
     })
 
     // This was failing for quite some time, test just missed await so it went
@@ -78,14 +68,14 @@ describe('CID', () => {
     // it('throws on trying to pass specific base encoding [deprecated]', async () => {
     //   const hash = await sha256.digest(textEncoder.encode('abc'))
     //   const msg = 'No longer supported, cannot specify base encoding in instantiation'
-    //   await testThrow(() => CID.create(0, 112, hash, 'base32'), msg)
+    //   assert.throws(() => CID.create(0, 112, hash, 'base32'), msg)
     // })
 
     it('throws on trying to base encode CIDv0 in other base than base58btc', async () => {
       const mhStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const cid = CID.parse(mhStr)
       const msg = 'Cannot string encode V0 in base32 encoding'
-      await testThrow(() => cid.toString(base32), msg)
+      assert.throws(() => cid.toString(base32), msg)
     })
 
     it('.bytes', async () => {
@@ -272,7 +262,7 @@ describe('CID', () => {
 
     for (const i of parse) {
       const name = `CID.parse(${JSON.stringify(i)})`
-      it(name, async () => await testThrowAny(() => CID.parse(i)))
+      it(name, async () => assert.throws(() => CID.parse(i)))
     }
 
     const decode = [
@@ -282,7 +272,7 @@ describe('CID', () => {
 
     for (const i of decode) {
       const name = `CID.decode(textEncoder.encode(${JSON.stringify(i.toString())}))`
-      it(name, async () => await testThrowAny(() => CID.decode(i)))
+      it(name, async () => assert.throws(() => CID.decode(i)))
     }
 
     const create = [
@@ -296,7 +286,7 @@ describe('CID', () => {
       const mh = hash instanceof Uint8Array ? `textEncoder.encode(${form})` : form
       const name = `CID.create(${version}, ${code}, ${mh})`
       // @ts-expect-error - version issn't always 0|1
-      it(name, async () => await testThrowAny(() => CID.create(version, code, hash)))
+      it(name, async () => assert.throws(() => CID.create(version, code, hash)))
     }
 
     it('invalid fixtures', async () => {
@@ -333,13 +323,13 @@ describe('CID', () => {
     it('should not convert v1 to v0 if not dag-pb codec', async () => {
       const hash = await sha256.digest(textEncoder.encode(`TEST${Date.now()}`))
       const cid = CID.create(1, 0x71, hash)
-      await testThrow(() => cid.toV0(), 'Cannot convert a non dag-pb CID to CIDv0')
+      assert.throws(() => cid.toV0(), 'Cannot convert a non dag-pb CID to CIDv0')
     })
 
     it('should not convert v1 to v0 if not sha2-256 multihash', async () => {
       const hash = await sha512.digest(textEncoder.encode(`TEST${Date.now()}`))
       const cid = CID.create(1, 112, hash)
-      await testThrow(() => cid.toV0(), 'Cannot convert non sha2-256 multihash CID to CIDv0')
+      assert.throws(() => cid.toV0(), 'Cannot convert non sha2-256 multihash CID to CIDv0')
     })
 
     it('should return assert.deepStrictEqual instance when converting v1 to v1', async () => {
@@ -523,7 +513,7 @@ describe('CID', () => {
       const cid = CID.create(1, 112, hash)
       const msg = 'To parse non base32 or base58btc encoded CID multibase decoder must be provided'
 
-      await testThrow(() => CID.parse(cid.toString(base64)), msg)
+      assert.throws(() => CID.parse(cid.toString(base64)), msg)
     })
 
     it('parses base64 encoded CIDv1 if base64 is provided', async () => {
@@ -586,39 +576,39 @@ describe('CID', () => {
     it('codec', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
-      await testThrow(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
+      assert.throws(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
       // @ts-expect-error - 'string' is not assignable to parameter of type 'number'
-      await testThrow(() => CID.create(1, 'dag-pb', hash), 'String codecs are no longer supported')
+      assert.throws(() => CID.create(1, 'dag-pb', hash), 'String codecs are no longer supported')
     })
 
     it('multibaseName', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
-      await testThrow(() => cid.multibaseName, '"multibaseName" property is deprecated')
+      assert.throws(() => cid.multibaseName, '"multibaseName" property is deprecated')
     })
 
     it('prefix', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
-      await testThrow(() => cid.prefix, '"prefix" property is deprecated')
+      assert.throws(() => cid.prefix, '"prefix" property is deprecated')
     })
 
     it('toBaseEncodedString()', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
       // @ts-expect-error - deprecated
-      await testThrow(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
+      assert.throws(() => cid.toBaseEncodedString(), 'Deprecated, use .toString()')
     })
   })
 
   it('invalid CID version', async () => {
     const encoded = varint.encodeTo(2, new Uint8Array(32))
-    await testThrow(() => CID.decode(encoded), 'Invalid CID version 2')
+    assert.throws(() => CID.decode(encoded), 'Invalid CID version 2')
   })
 
   it('buffer', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     const cid = CID.create(1, 112, hash)
-    await testThrow(() => cid.buffer, 'Deprecated .buffer property, use .bytes to get Uint8Array instead')
+    assert.throws(() => cid.buffer, 'Deprecated .buffer property, use .bytes to get Uint8Array instead')
   })
 })

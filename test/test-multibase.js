@@ -1,6 +1,5 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
-import { assert } from 'chai'
 import * as b2 from 'multiformats/bases/base2'
 import * as b8 from 'multiformats/bases/base8'
 import * as b10 from 'multiformats/bases/base10'
@@ -9,7 +8,11 @@ import * as b32 from 'multiformats/bases/base32'
 import * as b36 from 'multiformats/bases/base36'
 import * as b58 from 'multiformats/bases/base58'
 import * as b64 from 'multiformats/bases/base64'
-import { testThrowAsync as testThrow } from './fixtures/test-throw.js'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+const { assert } = chai
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
 
@@ -40,7 +43,7 @@ describe('multibase', () => {
       it('bad chars', () => {
         const str = base.prefix + '#$%^&*&^%$#'
         const msg = `Non-${base.name} character`
-        testThrow(() => base.decode(str), msg)
+        assert.throws(() => base.decode(str), msg)
       })
     })
   }
@@ -48,17 +51,17 @@ describe('multibase', () => {
   it('encode string failure', () => {
     const msg = 'Unknown type, must be binary type'
     // @ts-expect-error - expects bytes
-    testThrow(() => base32.encode('asdf'), msg)
+    assert.throws(() => base32.encode('asdf'), msg)
     // @ts-expect-error - expects bytes
-    testThrow(() => base32.encoder.encode('asdf'), msg)
+    assert.throws(() => base32.encoder.encode('asdf'), msg)
   })
 
   it('decode int failure', () => {
     const msg = 'Can only multibase decode strings'
     // @ts-expect-error - 'number' is not assignable to parameter of type 'string'
-    testThrow(() => base32.decode(1), msg)
+    assert.throws(() => base32.decode(1), msg)
     // @ts-expect-error - 'number' is not assignable to parameter of type 'string'
-    testThrow(() => base32.decoder.decode(1), msg)
+    assert.throws(() => base32.decoder.decode(1), msg)
   })
 
   const buff = bytes.fromString('test')
@@ -124,7 +127,7 @@ describe('multibase', () => {
   it('multibase mismatch', () => {
     const b64 = base64.encode(bytes.fromString('test'))
     const msg = `Unable to decode multibase string "${b64}", base32 decoder only supports inputs prefixed with ${base32.prefix}`
-    testThrow(() => base32.decode(b64), msg)
+    assert.throws(() => base32.decode(b64), msg)
   })
 
   it('decoder composition', () => {
@@ -138,13 +141,13 @@ describe('multibase', () => {
 
     const b64 = base64.encode(bytes.fromString('test'))
     const msg = `Unable to decode multibase string "${b64}", only inputs prefixed with ${base32.prefix},${base58btc.prefix} are supported`
-    testThrow(() => base.decode(b64), msg)
+    assert.throws(() => base.decode(b64), msg)
 
     const baseExt = base.or(base64)
     assert.deepStrictEqual(baseExt.decode(b64), bytes.fromString('test'))
 
     // original composition stays intact
-    testThrow(() => base.decode(b64), msg)
+    assert.throws(() => base.decode(b64), msg)
 
     // non-composed combined with composed
     const baseExt2 = base32.decoder.or(base64.decoder.or(base16.decoder))
@@ -158,7 +161,7 @@ describe('multibase', () => {
   it('truncated data', () => {
     const b64 = base64.encode(Uint8Array.from([245, 250]))
 
-    testThrow(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
+    assert.throws(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
   })
 
   it('infers prefix and name corretly', () => {

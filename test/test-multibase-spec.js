@@ -3,8 +3,11 @@
 
 import { bases } from 'multiformats/basics'
 import { fromString } from '../src/bytes.js'
-import { assert } from 'chai'
-import { testThrowSync as testThrow } from './fixtures/test-throw.js'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+const { assert } = chai
 
 const encoded = [
   {
@@ -194,7 +197,7 @@ describe('spec test', () => {
       }
 
       console.info('expect', `Non-${base.name} character`)
-      testThrow(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
+      assert.throws(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
     })
   }
 })
