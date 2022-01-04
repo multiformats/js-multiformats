@@ -99,8 +99,7 @@
     }
   },
   "include": [
-    "src",
-    "test"
+    "src"
   ],
   "exclude": [
     "vendor",
