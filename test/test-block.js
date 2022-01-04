@@ -3,8 +3,11 @@ import * as codec from 'multiformats/codecs/json'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { CID, bytes } from 'multiformats'
-import { assert } from 'chai'
-import { testThrowAsync, testThrowSync } from './fixtures/test-throw.js'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+const { assert } = chai
 
 const fixture = { hello: 'world' }
 const link = CID.parse('bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae')
@@ -99,7 +102,7 @@ describe('block', () => {
 
   describe('errors', () => {
     it('constructor missing args', () => {
-      testThrowSync(
+      assert.throws(
         // @ts-expect-error - missing properties
         () => new main.Block({}),
         'Missing required argument'
@@ -108,36 +111,36 @@ describe('block', () => {
 
     it('encode', async () => {
       // @ts-expect-error
-      await testThrowAsync(() => main.encode({}), 'Missing required argument "value"')
+      await assert.isRejected(main.encode({}), 'Missing required argument "value"')
       // @ts-expect-error
-      await testThrowAsync(() => main.encode({ value: true }), 'Missing required argument: codec or hasher')
+      await assert.isRejected(main.encode({ value: true }), 'Missing required argument: codec or hasher')
     })
 
     it('decode', async () => {
       // @ts-expect-error
-      await testThrowAsync(() => main.decode({}), 'Missing required argument "bytes"')
+      await assert.isRejected(main.decode({}), 'Missing required argument "bytes"')
       // @ts-expect-error
-      await testThrowAsync(() => main.decode({ bytes: true }), 'Missing required argument: codec or hasher')
+      await assert.isRejected(main.decode({ bytes: true }), 'Missing required argument: codec or hasher')
     })
 
     it('createUnsafe', async () => {
       // @ts-expect-error
-      await testThrowAsync(() => main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
+      assert.throws(() => main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
     })
 
     it('create', async () => {
       // @ts-expect-error
-      await testThrowAsync(() => main.create({}), 'Missing required argument "bytes"')
+      await assert.isRejected(main.create({}), 'Missing required argument "bytes"')
       // @ts-expect-error
-      await testThrowAsync(() => main.create({ bytes: true }), 'Missing required argument "hasher"')
+      await assert.isRejected(main.create({ bytes: true }), 'Missing required argument "hasher"')
       const block = await main.encode({ value: fixture, codec, hasher })
       const block2 = await main.encode({ value: { ...fixture, test: 'blah' }, codec, hasher })
-      await testThrowAsync(() => main.create({ bytes: block.bytes, cid: block2.cid, codec, hasher }), 'CID hash does not match bytes')
+      await assert.isRejected(main.create({ bytes: block.bytes, cid: block2.cid, codec, hasher }), 'CID hash does not match bytes')
     })
 
     it('get', async () => {
       const block = await main.encode({ value: fixture, codec, hasher })
-      await testThrowAsync(() => block.get('/asd/fs/dfasd/f'), 'Object has no property at ["asd"]')
+      assert.throws(() => block.get('/asd/fs/dfasd/f'), 'Object has no property at ["asd"]')
     })
   })
 })

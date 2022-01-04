@@ -1,6 +1,5 @@
 /* globals describe, it */
 import { fromHex, fromString } from '../src/bytes.js'
-import { assert } from 'chai'
 import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
 import valid from './fixtures/valid-multihash.js'
@@ -8,7 +7,11 @@ import invalid from './fixtures/invalid-multihash.js'
 import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import { identity } from 'multiformats/hashes/identity'
 import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
-import { testThrowAsync } from './fixtures/test-throw.js'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+const { assert } = chai
 
 /**
  * @param {number|string} code
@@ -96,13 +99,13 @@ describe('multihash', () => {
     it('invalid fixtures', async () => {
       for (const test of invalid) {
         const buff = fromHex(test.hex)
-        await testThrowAsync(() => decodeDigest(buff), test.message)
+        assert.throws(() => decodeDigest(buff), test.message)
       }
     })
   })
 
   it('throw on hashing non-buffer', async () => {
     // @ts-expect-error - string is incompatible arg
-    await testThrowAsync(() => sha256.digest('asdf'), 'Unknown type, must be binary type')
+    await assert.isRejected(sha256.digest('asdf'), 'Unknown type, must be binary type')
   })
 })

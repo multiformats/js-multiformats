@@ -1,9 +1,12 @@
 /* globals describe, it */
 import * as bytes from '../src/bytes.js'
-import { assert } from 'chai'
 import * as raw from 'multiformats/codecs/raw'
 import * as json from 'multiformats/codecs/json'
-import { testThrowAsync } from './fixtures/test-throw.js'
+import chai from 'chai'
+import chaiAsPromised from 'chai-as-promised'
+
+chai.use(chaiAsPromised)
+const { assert } = chai
 
 describe('multicodec', () => {
   it('encode/decode raw', () => {
@@ -20,6 +23,6 @@ describe('multicodec', () => {
 
   it('raw cannot encode string', async () => {
     // @ts-expect-error - 'string' is not assignable to parameter of type 'Uint8Array'
-    await testThrowAsync(() => raw.encode('asdf'), 'Unknown type, must be binary type')
+    assert.throws(() => raw.encode('asdf'), 'Unknown type, must be binary type')
   })
 })
