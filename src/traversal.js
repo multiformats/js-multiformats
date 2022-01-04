@@ -1,4 +1,4 @@
-import { base58btc } from 'multiformats/bases/base58'
+import { base58btc } from './bases/base58.js'
 
 /**
  * @typedef {import('./cid.js').CID} CID
