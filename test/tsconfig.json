@@ -1,4 +1,9 @@
 {
+  "references": [
+    {
+      "path": "../src/"
+    }
+  ],
   "compilerOptions": {
     "allowJs": true,
     "checkJs": true,
