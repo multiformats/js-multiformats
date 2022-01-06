@@ -26,6 +26,7 @@
     "resolveJsonModule": true,
     "emitDeclarationOnly": true,
     "baseUrl": ".",
+    "composite": true
   },
   "include": [
     "."
