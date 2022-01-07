@@ -1,3 +1,16 @@
+### [9.5.7](https://github.com/multiformats/js-multiformats/compare/v9.5.6...v9.5.7) (2022-01-07)
+
+
+### Bug Fixes
+
+* **types:** combine composite tsconfigs ([18c5734](https://github.com/multiformats/js-multiformats/commit/18c5734060c972cbcb45d6acea1642b2d09fde13))
+
+
+### Trivial Changes
+
+* **types:** re-enable typechecks for tests by split tsconfig ([4c017dc](https://github.com/multiformats/js-multiformats/commit/4c017dc80280bb42b0e2da07eb5f5da58c2efd76))
+* **types:** remove explicit typecheck action ([b0467e5](https://github.com/multiformats/js-multiformats/commit/b0467e52870a91f3fc3122afb969505a31dc3210))
+
 ### [9.5.6](https://github.com/multiformats/js-multiformats/compare/v9.5.5...v9.5.6) (2022-01-04)
 
 
