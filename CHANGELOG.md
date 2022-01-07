@@ -1,3 +1,10 @@
+### [9.5.8](https://github.com/multiformats/js-multiformats/compare/v9.5.7...v9.5.8) (2022-01-07)
+
+
+### Trivial Changes
+
+* **test:** use chai throws() & chai-as-promised isRejected() ([6e4ba86](https://github.com/multiformats/js-multiformats/commit/6e4ba86a59ef1f5a93b1869f1650073da184ebe4))
+
 ### [9.5.7](https://github.com/multiformats/js-multiformats/compare/v9.5.6...v9.5.7) (2022-01-07)
 
 
