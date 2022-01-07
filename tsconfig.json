@@ -20,7 +20,7 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
-    "outDir": "../types",
+    "outDir": "./types",
     "skipLibCheck": true,
     "stripInternal": true,
     "resolveJsonModule": true,
@@ -29,7 +29,7 @@
     "composite": true
   },
   "include": [
-    "."
+    "src"
   ],
   "exclude": [],
   "compileOnSave": false
