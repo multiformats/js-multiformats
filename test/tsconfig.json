@@ -1,7 +1,7 @@
 {
   "references": [
     {
-      "path": "../src/"
+      "path": "../"
     }
   ],
   "compilerOptions": {
@@ -25,19 +25,10 @@
     "moduleResolution": "node",
     "declaration": true,
     "declarationMap": true,
-    "outDir": "../types",
     "skipLibCheck": true,
     "stripInternal": true,
     "resolveJsonModule": true,
-    "noEmit": true,
-    "paths": {
-      "multiformats": [
-        "../src/index.js"
-      ],
-      "multiformats/*": [
-        "../src/*.js"
-      ]
-    }
+    "noEmit": true
   },
   "include": [
     "test/",
