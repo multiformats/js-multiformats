@@ -1,3 +1,10 @@
+### [9.5.9](https://github.com/multiformats/js-multiformats/compare/v9.5.8...v9.5.9) (2022-01-18)
+
+
+### Trivial Changes
+
+* Reanable tsc action and reconfigure project slightly ([#157](https://github.com/multiformats/js-multiformats/issues/157)) ([c936a6d](https://github.com/multiformats/js-multiformats/commit/c936a6d3f125b6032358ffcc0e9c71e2bf986bf3))
+
 ### [9.5.8](https://github.com/multiformats/js-multiformats/compare/v9.5.7...v9.5.8) (2022-01-07)
 
 
