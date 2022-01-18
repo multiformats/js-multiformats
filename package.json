@@ -21,7 +21,6 @@
     "test:esm:browser": "polendina --page --worker --serviceworker --cleanup dist/esm/browser-test/test-*.js",
     "test:ts": "npm run build:types && npm run test --prefix test/ts-use",
     "test": "npm run lint && npm run test:node && npm run test:esm && npm run test:ts",
-    "typecheck": "tsc --build test/tsconfig.json",
     "test:ci": "npm run lint && npm run test:node && npm run test:esm && npm run test:cjs && npm run test:ts",
     "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080"
   },
