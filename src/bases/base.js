@@ -131,13 +131,9 @@ class ComposedDecoder {
     if (decoder) {
       return decoder.decode(input)
     } else {
-      throw RangeError(
-        `Unable to decode multibase string ${JSON.stringify(
-          input
-        )}, only inputs prefixed with ${Object.keys(
-          this.decoders
-        )} are supported`
-      )
+      throw RangeError(`Unable to decode multibase string
+  ${JSON.stringify(input)}, only inputs prefixed with
+  ${Object.keys(this.decoders)} are supported`)
     }
   }
 }
