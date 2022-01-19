@@ -55,7 +55,7 @@ export const asCID = (input) => {
 /**
  * @deprecated
  * @param {any} value
- * @returns {value is CID}
+ * @returns {value is API.CID}
  */
 export const isCID = (value) => {
   deprecate(/^0\.0/, IS_CID_DEPRECATION)
