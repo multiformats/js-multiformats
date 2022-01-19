@@ -7,8 +7,8 @@ import { coerce } from './bytes.js'
 // eslint-disable-next-line
 import * as API from './interface.js'
 
+// This way TS will also expose all the types from module
 export * from './interface.js'
-export { API }
 
 /**
  * @template {number} Format
