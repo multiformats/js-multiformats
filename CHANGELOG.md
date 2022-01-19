@@ -1,3 +1,10 @@
+## [9.6.0](https://github.com/multiformats/js-multiformats/compare/v9.5.9...v9.6.0) (2022-01-19)
+
+
+### Features
+
+* add sync multihash hasher ([#160](https://github.com/multiformats/js-multiformats/issues/160)) ([c3a650c](https://github.com/multiformats/js-multiformats/commit/c3a650c8b48989ea52045d85eb06eebee8bb59d1))
+
 ### [9.5.9](https://github.com/multiformats/js-multiformats/compare/v9.5.8...v9.5.9) (2022-01-18)
 
 
