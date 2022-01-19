@@ -4,6 +4,8 @@ import * as dagPB from '@ipld/dag-pb'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { walk } from 'multiformats/traversal'
+// eslint-disable-next-line
+import * as API from 'multiformats/interface'
 import { assert } from 'chai'
 import { fromString } from '../src/bytes.js'
 
@@ -43,7 +45,7 @@ describe('traversal', () => {
     const cidA = blockA.cid
 
     /**
-     * @param {import('multiformats').CID} cid
+     * @param {API.CID} cid
      */
     const load = async (cid) => {
       if (cid.equals(cidE)) {
@@ -70,7 +72,7 @@ describe('traversal', () => {
      */
     const loadWrapper = (load, arr = []) =>
       /**
-       * @param {import('multiformats').CID} cid
+       * @param {API.CID} cid
        */
       (cid) => {
         arr.push(cid.toString())
