@@ -97,6 +97,9 @@
     },
     "./codecs/raw": {
       "import": "./src/codecs/raw.js"
+    },
+    "./interface": {
+      "import": "./src/interface.js"
     }
   },
   "devDependencies": {
