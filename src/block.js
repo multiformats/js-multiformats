@@ -1,4 +1,7 @@
 import { bytes as binary, CID } from './index.js'
+import * as API from './interface.js'
+
+export { API }
 
 const readonly = ({ enumerable = true, configurable = false } = {}) => ({
   enumerable,
@@ -10,7 +13,7 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
- * @returns {Iterable<[string, CID]>}
+ * @returns {Iterable<[string, CID.CID]>}
  */
 const links = function * (source, base) {
   if (source == null) return
@@ -93,8 +96,8 @@ const get = (source, path) => {
 class Block {
   /**
    * @param {Object} options
-   * @param {CID} options.cid
-   * @param {ByteView<T>} options.bytes
+   * @param {CID.CID} options.cid
+   * @param {API.ByteView<T>} options.bytes
    * @param {T} options.value
    */
   constructor ({ cid, bytes, value }) {
@@ -133,11 +136,11 @@ class Block {
 /**
  * @template T
  * @template {number} Code
- * @template {number} Algorithm
+ * @template {number} Alg
  * @param {Object} options
  * @param {T} options.value
- * @param {BlockEncoder<Code, T>} options.codec
- * @param {Hasher<Algorithm>} options.hasher
+ * @param {API.BlockEncoder<Code, T>} options.codec
+ * @param {API.MultihashHasher<Alg>} options.hasher
  * @returns {Promise<Block<T>>}
  */
 const encode = async ({ value, codec, hasher }) => {
@@ -154,11 +157,11 @@ const encode = async ({ value, codec, hasher }) => {
 /**
  * @template T
  * @template {number} Code
- * @template {number} Algorithm
+ * @template {number} Alg
  * @param {Object} options
- * @param {ByteView<T>} options.bytes
- * @param {BlockDecoder<Code, T>} options.codec
- * @param {Hasher<Algorithm>} options.hasher
+ * @param {API.ByteView<T>} options.bytes
+ * @param {API.BlockDecoder<Code, T>} options.codec
+ * @param {API.MultihashHasher<Alg>} options.hasher
  * @returns {Promise<Block<T>>}
  */
 const decode = async ({ bytes, codec, hasher }) => {
@@ -174,13 +177,13 @@ const decode = async ({ bytes, codec, hasher }) => {
 
 /**
  * @typedef {Object} RequiredCreateOptions
- * @property {CID} options.cid
+ * @property {CID.CID} options.cid
  */
 
 /**
  * @template T
  * @template {number} Code
- * @param {{ cid: CID, value:T, codec?: BlockDecoder<Code, T>, bytes: ByteView<T> }|{cid:CID, bytes:ByteView<T>, value?:void, codec:BlockDecoder<Code, T>}} options
+ * @param {{ cid: CID.CID, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:CID.CID, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
  * @returns {Block<T>}
  */
 const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
@@ -196,12 +199,12 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
 /**
  * @template T
  * @template {number} Code
- * @template {number} Algorithm
+ * @template {number} Alg
  * @param {Object} options
- * @param {CID} options.cid
- * @param {ByteView<T>} options.bytes
- * @param {BlockDecoder<Code, T>} options.codec
- * @param {Hasher<Algorithm>} options.hasher
+ * @param {CID.CID} options.cid
+ * @param {API.ByteView<T>} options.bytes
+ * @param {API.BlockDecoder<Code, T>} options.codec
+ * @param {API.MultihashHasher<Alg>} options.hasher
  * @returns {Promise<Block<T>>}
  */
 const create = async ({ bytes, cid, hasher, codec }) => {
@@ -217,25 +220,3 @@ const create = async ({ bytes, cid, hasher, codec }) => {
 }
 
 export { encode, decode, create, createUnsafe, Block }
-
-/**
- * @template T
- * @typedef {import('./codecs/interface').ByteView<T>} ByteView
- */
-
-/**
- * @template {number} Code
- * @template T
- * @typedef {import('./codecs/interface').BlockEncoder<Code, T>} BlockEncoder
- */
-
-/**
- * @template {number} Code
- * @template T
- * @typedef {import('./codecs/interface').BlockDecoder<Code, T>} BlockDecoder
- */
-
-/**
- * @template Algorithm
- * @typedef {import('./hashes/interface').MultihashHasher} Hasher
- */
