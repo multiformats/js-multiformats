@@ -10,9 +10,9 @@ import { sha256, sha512 } from 'multiformats/hashes/sha2'
 import invalidMultihash from './fixtures/invalid-multihash.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
 import * as API from 'multiformats/interface'
-
-export { API }
 
 chai.use(chaiAsPromised)
 const { assert } = chai
