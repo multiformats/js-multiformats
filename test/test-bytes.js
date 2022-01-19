@@ -1,5 +1,5 @@
 /* globals describe, it */
-import * as bytes from '../src/bytes.js'
+import * as bytes from 'multiformats/bytes'
 import { assert } from 'chai'
 
 describe('bytes', () => {

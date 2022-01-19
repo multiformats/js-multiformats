@@ -1,19 +1,24 @@
 import { base58btc } from './bases/base58.js'
 
 /**
- * @typedef {import('./cid.js').CID} CID
+ * @template [C=number] - multicodec code corresponding to codec used to encode the block
+ * @template [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template [V=0|1] - CID version
+ * @typedef {import('./cid').CID<unknown, C, A, V>} CID
  */
 
 /**
- * @template T
- * @typedef {import('./block.js').Block<T>} Block
+ * @template [T=unknown] - Logical type of the data encoded in the block
+ * @template [C=number] - multicodec code corresponding to codec used to encode the block
+ * @template [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template [V=0|1] - CID version
+ * @typedef {import('./block/interface').BlockView<T, C, A, V>} BlockView
  */
 
 /**
- * @template T
  * @param {Object} options
  * @param {CID} options.cid
- * @param {(cid: CID) => Promise<Block<T>|null>} options.load
+ * @param {(cid: CID) => Promise<BlockView|null>} options.load
  * @param {Set<string>} [options.seen]
  */
 const walk = async ({ cid, load, seen }) => {

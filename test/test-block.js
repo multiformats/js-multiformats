@@ -60,9 +60,9 @@ describe('block', () => {
     it('get', () => {
       let ret = block.get('link/test')
       assert.deepStrictEqual(ret.remaining, 'test')
-      assert.deepStrictEqual(ret.value.toString(), link.toString())
+      assert.deepStrictEqual(String(ret.value), link.toString())
       ret = block.get('nope')
-      // @ts-expect-error - 'string' is not expected
+
       assert.deepStrictEqual(ret, { value: 'skip' })
     })
 

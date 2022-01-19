@@ -5,7 +5,7 @@ import { sha256 as hasher } from 'multiformats/hashes/sha2'
 import * as main from 'multiformats/block'
 import { walk } from 'multiformats/traversal'
 import { assert } from 'chai'
-import { fromString } from '../src/bytes.js'
+import { fromString } from 'multiformats/bytes'
 
 const { createLink, createNode } = dagPB
 

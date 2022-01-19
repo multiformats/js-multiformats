@@ -2,7 +2,7 @@
 'use strict'
 
 import { bases } from 'multiformats/basics'
-import { fromString } from '../src/bytes.js'
+import { fromString } from 'multiformats/bytes'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 

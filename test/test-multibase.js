@@ -1,5 +1,5 @@
 /* globals describe, it */
-import * as bytes from '../src/bytes.js'
+import * as bytes from 'multiformats/bytes'
 import * as b2 from 'multiformats/bases/base2'
 import * as b8 from 'multiformats/bases/base8'
 import * as b10 from 'multiformats/bases/base10'

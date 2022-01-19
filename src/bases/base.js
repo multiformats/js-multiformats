@@ -1,20 +1,8 @@
 import basex from '../../vendor/base-x.js'
 import { coerce } from '../bytes.js'
-
-/**
- * @typedef {import('./interface').BaseEncoder} BaseEncoder
- * @typedef {import('./interface').BaseDecoder} BaseDecoder
- * @typedef {import('./interface').BaseCodec} BaseCodec
- */
-
-/**
- * @template {string} T
- * @typedef {import('./interface').Multibase<T>} Multibase
- */
-/**
- * @template {string} T
- * @typedef {import('./interface').MultibaseEncoder<T>} MultibaseEncoder
- */
+// Linter can't see that API is used in types.
+// eslint-disable-next-line
+import * as API from './interface.js'
 
 /**
  * Class represents both BaseEncoder and MultibaseEncoder meaning it
@@ -23,8 +11,8 @@ import { coerce } from '../bytes.js'
  * @class
  * @template {string} Base
  * @template {string} Prefix
- * @implements {MultibaseEncoder<Prefix>}
- * @implements {BaseEncoder}
+ * @implements {API.MultibaseEncoder<Prefix>}
+ * @implements {API.BaseEncoder}
  */
 class Encoder {
   /**
@@ -40,7 +28,7 @@ class Encoder {
 
   /**
    * @param {Uint8Array} bytes
-   * @returns {Multibase<Prefix>}
+   * @returns {API.Multibase<Prefix>}
    */
   encode (bytes) {
     if (bytes instanceof Uint8Array) {
@@ -53,27 +41,16 @@ class Encoder {
 
 /**
  * @template {string} Prefix
- * @typedef {import('./interface').MultibaseDecoder<Prefix>} MultibaseDecoder
- */
-
-/**
- * @template {string} Prefix
- * @typedef {import('./interface').UnibaseDecoder<Prefix>} UnibaseDecoder
- */
-
-/**
- * @template {string} Prefix
  */
 /**
  * Class represents both BaseDecoder and MultibaseDecoder so it could be used
  * to decode multibases (with matching prefix) or just base decode strings
  * with corresponding base encoding.
- * @class
  * @template {string} Base
  * @template {string} Prefix
- * @implements {MultibaseDecoder<Prefix>}
- * @implements {UnibaseDecoder<Prefix>}
- * @implements {BaseDecoder}
+ * @implements {API.MultibaseDecoder<Prefix>}
+ * @implements {API.UnibaseDecoder<Prefix>}
+ * @implements {API.BaseDecoder}
  */
 class Decoder {
   /**
@@ -109,7 +86,7 @@ class Decoder {
 
   /**
    * @template {string} OtherPrefix
-   * @param {UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
+   * @param {API.UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
@@ -119,22 +96,17 @@ class Decoder {
 
 /**
  * @template {string} Prefix
- * @typedef {import('./interface').CombobaseDecoder<Prefix>} CombobaseDecoder
+ * @typedef {Record<Prefix, API.UnibaseDecoder<Prefix>>} Decoders
  */
 
 /**
  * @template {string} Prefix
- * @typedef {Record<Prefix, UnibaseDecoder<Prefix>>} Decoders
- */
-
-/**
- * @template {string} Prefix
- * @implements {MultibaseDecoder<Prefix>}
- * @implements {CombobaseDecoder<Prefix>}
+ * @implements {API.MultibaseDecoder<Prefix>}
+ * @implements {API.CombobaseDecoder<Prefix>}
  */
 class ComposedDecoder {
   /**
-   * @param {Record<Prefix, UnibaseDecoder<Prefix>>} decoders
+   * @param {Decoders<Prefix>} decoders
    */
   constructor (decoders) {
     this.decoders = decoders
@@ -142,7 +114,7 @@ class ComposedDecoder {
 
   /**
    * @template {string} OtherPrefix
-   * @param {UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
+   * @param {API.UnibaseDecoder<OtherPrefix>|ComposedDecoder<OtherPrefix>} decoder
    * @returns {ComposedDecoder<Prefix|OtherPrefix>}
    */
   or (decoder) {
@@ -167,30 +139,25 @@ class ComposedDecoder {
 /**
  * @template {string} L
  * @template {string} R
- * @param {UnibaseDecoder<L>|CombobaseDecoder<L>} left
- * @param {UnibaseDecoder<R>|CombobaseDecoder<R>} right
+ * @param {API.UnibaseDecoder<L>|API.CombobaseDecoder<L>} left
+ * @param {API.UnibaseDecoder<R>|API.CombobaseDecoder<R>} right
  * @returns {ComposedDecoder<L|R>}
  */
 export const or = (left, right) => new ComposedDecoder(/** @type {Decoders<L|R>} */({
-  ...(left.decoders || { [/** @type UnibaseDecoder<L> */(left).prefix]: left }),
-  ...(right.decoders || { [/** @type UnibaseDecoder<R> */(right).prefix]: right })
+  ...(left.decoders || { [/** @type API.UnibaseDecoder<L> */(left).prefix]: left }),
+  ...(right.decoders || { [/** @type API.UnibaseDecoder<R> */(right).prefix]: right })
 }))
-
-/**
- * @template T
- * @typedef {import('./interface').MultibaseCodec<T>} MultibaseCodec
- */
 
 /**
  * @class
  * @template {string} Base
  * @template {string} Prefix
- * @implements {MultibaseCodec<Prefix>}
- * @implements {MultibaseEncoder<Prefix>}
- * @implements {MultibaseDecoder<Prefix>}
- * @implements {BaseCodec}
- * @implements {BaseEncoder}
- * @implements {BaseDecoder}
+ * @implements {API.MultibaseCodec<Prefix>}
+ * @implements {API.MultibaseEncoder<Prefix>}
+ * @implements {API.MultibaseDecoder<Prefix>}
+ * @implements {API.BaseCodec}
+ * @implements {API.BaseEncoder}
+ * @implements {API.BaseDecoder}
  */
 export class Codec {
   /**
