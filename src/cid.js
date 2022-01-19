@@ -285,16 +285,16 @@ const baseCache = (cid) => {
 
 /**
  * @template {number} Format
- * @template {number} Algorithm
+ * @template {number} Alg
  * @template {API.CIDVersion} Version
- * @implements {API.CID<Format, Algorithm, Version>}
+ * @implements {API.CID<Format, Alg, Version>}
  */
 
 class CIDView {
   /**
    * @param {Version} version
    * @param {Format} code
-   * @param {API.MultihashDigest<Algorithm>} multihash
+   * @param {API.MultihashDigest<Alg>} multihash
    * @param {Uint8Array} bytes
    *
    */
@@ -349,9 +349,7 @@ class CIDView {
 
         // sha2-256
         if (multihash.code !== SHA_256_CODE) {
-          throw new Error(
-            'Cannot convert non sha2-256 multihash CID to CIDv0'
-          )
+          throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
         }
 
         return createV0(
@@ -367,7 +365,7 @@ class CIDView {
   }
 
   /**
-   * @returns {API.CIDv1<Format, Algorithm>}
+   * @returns {API.CIDv1<Format, Alg>}
    */
   toV1 () {
     switch (this.version) {
@@ -377,7 +375,7 @@ class CIDView {
         return createV1(this.code, multihash)
       }
       case 1: {
-        return /** @type {API.CIDv1<Format, Algorithm>} */ (this)
+        return /** @type {API.CIDv1<Format, Alg>} */ (this)
       }
       default: {
         throw Error(
@@ -389,7 +387,7 @@ class CIDView {
 
   /**
    * @param {unknown} other
-   * @returns {other is API.CID<Format, Algorithm, Version>}
+   * @returns {other is API.CID<Format, Alg, Version>}
    */
   equals (other) {
     return equals(this, other)
