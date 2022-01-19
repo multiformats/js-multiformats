@@ -10,12 +10,12 @@ export type SHA_256 = 0x12
 
 export interface CID<
   Format extends number = number,
-  Algorithm extends number = number,
+  Alg extends number = number,
   Version extends CIDVersion = CIDVersion
 > {
   readonly version: Version
   readonly code: Format
-  readonly multihash: MultihashDigest<Algorithm>
+  readonly multihash: MultihashDigest<Alg>
 
   readonly byteOffset: number
   readonly byteLength: number
@@ -23,7 +23,7 @@ export interface CID<
 
   readonly asCID: this
 
-  equals(other: unknown): other is CID<Format, Algorithm, Version>
+  equals(other: unknown): other is CID<Format, Alg, Version>
 
   toString(base?: MultibaseEncoder<string>): string
   toJSON(): {version: Version, code:Format, hash:Uint8Array}
@@ -38,7 +38,7 @@ export interface CIDv0 extends CID<DAG_PB, SHA_256, 0> {
 
 export interface CIDv1<
   Format extends number = number,
-  Algorithm extends number = number
-> extends CID<Format, Algorithm, 1> {
+  Alg extends number = number
+> extends CID<Format, Alg, 1> {
   readonly version: 1
 }
