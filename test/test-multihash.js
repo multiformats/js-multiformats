@@ -53,6 +53,22 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
 
+    if (typeof navigator === 'undefined') {
+      it('sync sha-256', () => {
+        const hash = sha256.digest(fromString('test'))
+        if (hash instanceof Promise) {
+          assert.fail('expected sync result')
+        } else {
+          assert.deepStrictEqual(hash.code, sha256.code)
+          assert.deepStrictEqual(hash.digest, slSha256(fromString('test')))
+
+          const hash2 = decodeDigest(hash.bytes)
+          assert.deepStrictEqual(hash2.code, sha256.code)
+          assert.deepStrictEqual(hash2.bytes, hash.bytes)
+        }
+      })
+    }
+
     it('hash sha2-512', async () => {
       const hash = await sha512.digest(fromString('test'))
       assert.deepStrictEqual(hash.code, sha512.code)
@@ -63,8 +79,19 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
 
-    it('hash identity', async () => {
+    it('hash identity async', async () => {
       const hash = await identity.digest(fromString('test'))
+      assert.deepStrictEqual(hash.code, identity.code)
+      assert.deepStrictEqual(identity.code, 0)
+      assert.deepStrictEqual(hash.digest, fromString('test'))
+
+      const hash2 = decodeDigest(hash.bytes)
+      assert.deepStrictEqual(hash2.code, identity.code)
+      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash identity sync', () => {
+      const hash = identity.digest(fromString('test'))
       assert.deepStrictEqual(hash.code, identity.code)
       assert.deepStrictEqual(identity.code, 0)
       assert.deepStrictEqual(hash.digest, fromString('test'))
@@ -105,7 +132,11 @@ describe('multihash', () => {
   })
 
   it('throw on hashing non-buffer', async () => {
-    // @ts-expect-error - string is incompatible arg
-    await assert.isRejected(sha256.digest('asdf'), 'Unknown type, must be binary type')
+    try {
+      // @ts-expect-error - string is incompatible arg
+      await sha256.digest('asdf')
+    } catch (error) {
+      assert.match(String(error), /Unknown type, must be binary type/)
+    }
   })
 })

@@ -8,3 +8,4 @@ node_modules
 yarn.lock
 types
 test/ts-use/tsconfig.tsbuildinfo
+test/tsconfig.tsbuildinfo

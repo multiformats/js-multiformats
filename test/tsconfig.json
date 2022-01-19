@@ -5,6 +5,7 @@
     }
   ],
   "compilerOptions": {
+    "composite": true,
     "allowJs": true,
     "checkJs": true,
     "forceConsistentCasingInFileNames": true,
@@ -28,13 +29,21 @@
     "skipLibCheck": true,
     "stripInternal": true,
     "resolveJsonModule": true,
-    "noEmit": true
+    "noEmit": true,
+    "paths": {
+      "multiformats": [
+        "../types/src/index"
+      ],
+      "multiformats/*": [
+        "../types/src/*"
+      ]
+    }
   },
   "include": [
-    "test/",
     "."
   ],
   "exclude": [
-    "ts-use/"
+    "ts-use/",
+    "node_modules"
   ]
 }
