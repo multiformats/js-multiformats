@@ -1,7 +1,7 @@
 import { bytes as binary, CID } from './index.js'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
 import * as API from './interface.js'
-
-export { API }
 
 const readonly = ({ enumerable = true, configurable = false } = {}) => ({
   enumerable,
@@ -13,7 +13,7 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
- * @returns {Iterable<[string, CID.CID]>}
+ * @returns {Iterable<[string, API.CID]>}
  */
 const links = function * (source, base) {
   if (source == null) return
@@ -97,7 +97,7 @@ const get = (source, path) => {
 class Block {
   /**
    * @param {Object} options
-   * @param {CID.CID} options.cid
+   * @param {API.CID} options.cid
    * @param {API.ByteView<T>} options.bytes
    * @param {T} options.value
    */
@@ -178,13 +178,13 @@ const decode = async ({ bytes, codec, hasher }) => {
 
 /**
  * @typedef {Object} RequiredCreateOptions
- * @property {CID.CID} options.cid
+ * @property {API.CID} options.cid
  */
 
 /**
  * @template T
  * @template {number} Code
- * @param {{ cid: CID.CID, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:CID.CID, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
+ * @param {{ cid: API.CID, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:API.CID, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
  * @returns {Block<T>}
  */
 const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
@@ -202,7 +202,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @template {number} Code
  * @template {number} Alg
  * @param {Object} options
- * @param {CID.CID<Code, Alg>} options.cid
+ * @param {API.CID<Code, Alg>} options.cid
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
