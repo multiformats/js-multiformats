@@ -5,6 +5,7 @@
     }
   ],
   "compilerOptions": {
+    "composite": true,
     "allowJs": true,
     "checkJs": true,
     "forceConsistentCasingInFileNames": true,
