@@ -63,8 +63,19 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
 
-    it('hash identity', async () => {
+    it('hash identity async', async () => {
       const hash = await identity.digest(fromString('test'))
+      assert.deepStrictEqual(hash.code, identity.code)
+      assert.deepStrictEqual(identity.code, 0)
+      assert.deepStrictEqual(hash.digest, fromString('test'))
+
+      const hash2 = decodeDigest(hash.bytes)
+      assert.deepStrictEqual(hash2.code, identity.code)
+      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash identity sync', () => {
+      const hash = identity.digest(fromString('test'))
       assert.deepStrictEqual(hash.code, identity.code)
       assert.deepStrictEqual(identity.code, 0)
       assert.deepStrictEqual(hash.digest, fromString('test'))
