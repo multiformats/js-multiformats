@@ -201,7 +201,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @template {number} Code
  * @template {number} Alg
  * @param {Object} options
- * @param {CID.CID} options.cid
+ * @param {CID.CID<Code, Alg>} options.cid
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
