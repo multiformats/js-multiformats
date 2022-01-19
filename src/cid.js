@@ -3,6 +3,8 @@ import * as Digest from './hashes/digest.js'
 import { base58btc } from './bases/base58.js'
 import { base32 } from './bases/base32.js'
 import { coerce } from './bytes.js'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
 import * as API from './interface.js'
 
 export * from './interface.js'
