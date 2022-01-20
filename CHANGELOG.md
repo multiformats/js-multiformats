@@ -1,3 +1,11 @@
+### [9.6.2](https://github.com/multiformats/js-multiformats/compare/v9.6.1...v9.6.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* add encode to identity ([2724f8a](https://github.com/multiformats/js-multiformats/commit/2724f8aa8e0e7c24db7594eb29f683b1c01f3e42)), closes [#160](https://github.com/multiformats/js-multiformats/issues/160)
+* coverage by using encode ([132d829](https://github.com/multiformats/js-multiformats/commit/132d829eb84776afd3820788df024a7a9f6d8834))
+
 ### [9.6.1](https://github.com/multiformats/js-multiformats/compare/v9.6.0...v9.6.1) (2022-01-20)
 
 
