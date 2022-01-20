@@ -1,3 +1,10 @@
+### [9.6.1](https://github.com/multiformats/js-multiformats/compare/v9.6.0...v9.6.1) (2022-01-20)
+
+
+### Bug Fixes
+
+* export only `identity` hasher const ([330082a](https://github.com/multiformats/js-multiformats/commit/330082aeaf2f493e351c413411ce9a4db25ebe5f))
+
 ## [9.6.0](https://github.com/multiformats/js-multiformats/compare/v9.5.9...v9.6.0) (2022-01-19)
 
 
