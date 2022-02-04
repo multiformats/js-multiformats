@@ -1,6 +1,11 @@
 import * as Digest from './digest.js'
 
 /**
+ * @template T
+ * @typedef {import('./interface').Await<T>} Await<T>
+ */
+
+/**
  * @template {string} Name
  * @template {number} Code
  * @param {Object} options
@@ -53,9 +58,4 @@ export class Hasher {
 /**
  * @template {number} Alg
  * @typedef {import('./interface').MultihashHasher} MultihashHasher
- */
-
-/**
- * @template T
- * @typedef {Promise<T>|T} Await
  */

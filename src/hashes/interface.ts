@@ -1,5 +1,7 @@
 // # Multihash
 
+export type Await<T> = Promise<T> | T
+
 /**
  * Represents a multihash digest which carries information about the
  * hashing algorithm and an actual hash digest.
@@ -37,14 +39,30 @@ export interface MultihashDigest<Code extends number = number> {
  */
 export interface MultihashHasher<Code extends number = number> {
   /**
-   * Takes binary `input` and returns it (multi) hash digest. Return value is
+   * Takes binary `input` and returns it multihash digest. Return value is
    * either promise of a digest or a digest. This way general use can `await`
    * while performance critical code may asses return value to decide whether
    * await is needed.
    *
    * @param {Uint8Array} input
    */
-  digest(input: Uint8Array): Promise<MultihashDigest> | MultihashDigest
+  digest(input: Uint8Array): Await<MultihashDigest>
+
+  /**
+   * Takes binary `input` and returns it plain hash digest. Return value is
+   * either promise of a digest or a digest. This way general use can `await`
+   * while performance critical code may asses return value to decide whether
+   * await is needed.
+   *
+   * This is distinct from `digest()` which returns a multihash (prefixed)
+   * digest for this hasher as it only returns the encoded bytes that may
+   * otherwise be obtained from `digest().digest`. Only use `encode()` if you
+   * need to use this hasher as a standard hash digest generator; multihashes
+   * should otherwise be preferred.
+   *
+   * @param {Uint8Array} input
+   */
+  encode(input: Uint8Array): Await<Uint8Array>
 
   /**
    * Name of the multihash
@@ -69,4 +87,5 @@ export interface MultihashHasher<Code extends number = number> {
  */
 export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
   digest(input: Uint8Array): MultihashDigest
+  encode(input: Uint8Array): Uint8Array
 }
