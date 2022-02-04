@@ -21,7 +21,7 @@ jobs:
       - name: Run tests
         run: |
           npm config set script-shell bash
-          npm test
+          npm run test:ci
   release:
     name: Release
     needs: test
