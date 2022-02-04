@@ -1,3 +1,10 @@
+### [9.6.3](https://github.com/multiformats/js-multiformats/compare/v9.6.2...v9.6.3) (2022-02-04)
+
+
+### Bug Fixes
+
+* run test:ci in CI, fix package.json keywords ([#139](https://github.com/multiformats/js-multiformats/issues/139)) ([8ec8eb0](https://github.com/multiformats/js-multiformats/commit/8ec8eb0ca29ed51d244495a0d6c7d7a08a31ac39))
+
 ### [9.6.2](https://github.com/multiformats/js-multiformats/compare/v9.6.1...v9.6.2) (2022-01-20)
 
 
