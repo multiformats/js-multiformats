@@ -101,7 +101,9 @@ v0.toV1().toString()
 
 ### Multicodec Encoders / Decoders / Codecs
 
-This library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts). Codec implementations should conform to the `BlockCodec` interface which implements both `BlockEncoder` and `BlockDecoder`.
+This library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts).
+Codec implementations should conform to the `BlockCodec` interface which implements both `BlockEncoder` and `BlockDecoder`.
+Here is an example implementation of JSON `BlockCodec`.
 
 ```js
 /**
@@ -182,7 +184,7 @@ console.log(blocks)
 ## Implementations
 
 By default, no base encodings (other than base32 & base58btc), hash functions,
-or codec implementations are included exposed by `multiformats`, you need to
+or codec implementations are exposed by `multiformats`, you need to
 import the ones you need yourself.
 
 ### Multibase codecs

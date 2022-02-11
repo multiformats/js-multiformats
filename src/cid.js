@@ -205,7 +205,7 @@ export class CID {
       return new CID(version, code, multihash, bytes || encodeCID(version, code, multihash.bytes))
     } else if (value != null && value[cidSymbol] === true) {
     // If value is a CID from older implementation that used to be tagged via
-    // symbol we still rebase it to the this `CID` implementation by
+    // symbol we still rebase it to this `CID` implementation by
     // delegating that to a constructor.
       const { version, multihash, code } = value
       const digest = Digest.decode(multihash)
