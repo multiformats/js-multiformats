@@ -1,3 +1,10 @@
+### [9.6.4](https://github.com/multiformats/js-multiformats/compare/v9.6.3...v9.6.4) (2022-02-14)
+
+
+### Trivial Changes
+
+* clean typos and formatting ([0d976fd](https://github.com/multiformats/js-multiformats/commit/0d976fd33923e8b9cbe1535d3bc269affe151d66))
+
 ### [9.6.3](https://github.com/multiformats/js-multiformats/compare/v9.6.2...v9.6.3) (2022-02-04)
 
 
