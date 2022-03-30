@@ -13,7 +13,7 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
- * @returns {Iterable<[string, API.CID]>}
+ * @returns {Iterable<[string, CID]>}
  */
 const links = function * (source, base) {
   if (source == null) return
@@ -104,7 +104,7 @@ class Block {
   constructor ({ cid, bytes, value }) {
     if (!cid || !bytes || typeof value === 'undefined') throw new Error('Missing required argument')
 
-    this.cid = cid
+    this.cid = /** @type {CID} */(cid)
     this.bytes = bytes
     this.value = value
     this.asBlock = this
