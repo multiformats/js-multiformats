@@ -95,7 +95,7 @@ describe('CID', () => {
       const cidStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const oldCid = CID.parse(cidStr)
       const newCid = CID.asCID(oldCid)
-      assert.deepStrictEqual(/** @type {API.CID} */(newCid).toString(), cidStr)
+      assert.deepStrictEqual(newCid.toString(), cidStr)
     })
 
     it('inspect bytes', () => {
@@ -199,7 +199,7 @@ describe('CID', () => {
       const cidStr = 'bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u'
       const oldCid = CID.parse(cidStr)
       const newCid = CID.asCID(oldCid)
-      assert.deepStrictEqual(/** @type {API.CID} */(newCid).toString(), cidStr)
+      assert.deepStrictEqual(newCid.toString(), cidStr)
     })
   })
 
@@ -459,7 +459,6 @@ describe('CID', () => {
 
     const version = 1
     const code = 112
-    const cid = CID.create(version, code, hash)
 
     const incompatibleCID = new IncompatibleCID(version, code, hash)
     assert.ok(CID.isCID(incompatibleCID))
@@ -467,8 +466,8 @@ describe('CID', () => {
     // @ts-expect-error - no such method
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
 
-    const cid1 = /** @type {API.CID} */(CID.asCID(incompatibleCID))
-    assert.ok(cid1 instanceof cid.constructor)
+    const cid1 = /** @type {CID} */(CID.asCID(incompatibleCID))
+    assert.ok(cid1 instanceof CID)
     assert.strictEqual(cid1.code, code)
     assert.strictEqual(cid1.version, version)
     assert.ok(equals(cid1.multihash.bytes, hash.bytes))
@@ -479,8 +478,8 @@ describe('CID', () => {
     const duckCID = { version, code, multihash: hash }
     // @ts-expect-error - no such property
     duckCID.asCID = duckCID
-    const cid3 = /** @type {API.CID} */ (CID.asCID(duckCID))
-    assert.ok(cid3 instanceof cid.constructor)
+    const cid3 = /** @type {CID} */ (CID.asCID(duckCID))
+    assert.ok(cid3 instanceof CID)
     assert.strictEqual(cid3.code, code)
     assert.strictEqual(cid3.version, version)
     assert.ok(equals(cid3.multihash.bytes, hash.bytes))
@@ -488,8 +487,8 @@ describe('CID', () => {
     const cid4 = CID.asCID(cid3)
     assert.strictEqual(cid3, cid4)
 
-    const cid5 = /** @type {API.CID} */(CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))))
-    assert.ok(cid5 instanceof cid.constructor)
+    const cid5 = /** @type {CID} */(CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))))
+    assert.ok(cid5 instanceof CID)
     assert.strictEqual(cid5.version, 1)
     assert.ok(equals(cid5.multihash.bytes, hash.bytes))
     assert.strictEqual(cid5.code, 85)
@@ -594,7 +593,7 @@ describe('CID', () => {
 
   it('new CID from old CID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
-    const cid = /** @type {API.CID} */ (CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))))
+    const cid = /** @type {CID} */ (CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))))
     assert.deepStrictEqual(cid.version, 1)
 
     equalDigest(cid.multihash, hash)
@@ -615,7 +614,6 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
 
-      // @ts-expect-error - codec is not defined property
       assert.throws(() => cid.codec, '"codec" property is deprecated, use integer "code" property instead')
       // @ts-expect-error - 'string' is not assignable to parameter of type 'number'
       assert.throws(() => CID.create(1, 'dag-pb', hash), 'String codecs are no longer supported')
@@ -624,16 +622,12 @@ describe('CID', () => {
     it('multibaseName', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
-
-      // @ts-ignore - multibaseName is not defined property
       assert.throws(() => cid.multibaseName, '"multibaseName" property is deprecated')
     })
 
     it('prefix', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
-
-      // @ts-ignore - prefix is not defined property
       assert.throws(() => cid.prefix, '"prefix" property is deprecated')
     })
 
@@ -653,8 +647,6 @@ describe('CID', () => {
   it('buffer', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     const cid = CID.create(1, 112, hash)
-
-    // @ts-expect-error - cid.buffer is not defined property
     assert.throws(() => cid.buffer, 'Deprecated .buffer property, use .bytes to get Uint8Array instead')
   })
 })
