@@ -1,14 +1,16 @@
 import { coerce } from '../bytes.js'
 import * as Digest from './digest.js'
 
-export const code = 0x0
-export const name = 'identity'
+const code = 0x0
+const name = 'identity'
+
+/** @type {(input:Uint8Array) => Uint8Array} */
+const encode = coerce
 
 /**
  * @param {Uint8Array} input
  * @returns {Digest.Digest<typeof code, number>}
  */
-export const digest = (input) => Digest.create(code, coerce(input))
+const digest = (input) => Digest.create(code, encode(input))
 
-/** @type {import('./interface').SyncMultihashHasher<typeof code>} */
-export const identity = { code, name, digest }
+export const identity = { code, name, encode, digest }

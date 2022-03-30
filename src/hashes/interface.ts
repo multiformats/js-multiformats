@@ -26,7 +26,7 @@ export interface MultihashDigest<Code extends number = number> {
   size: number
 
   /**
-   * Binary representation of the this multihash digest.
+   * Binary representation of this multihash digest.
    */
   bytes: Uint8Array
 }

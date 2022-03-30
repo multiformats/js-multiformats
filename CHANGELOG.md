@@ -1,3 +1,39 @@
+### [9.6.4](https://github.com/multiformats/js-multiformats/compare/v9.6.3...v9.6.4) (2022-02-14)
+
+
+### Trivial Changes
+
+* clean typos and formatting ([0d976fd](https://github.com/multiformats/js-multiformats/commit/0d976fd33923e8b9cbe1535d3bc269affe151d66))
+
+### [9.6.3](https://github.com/multiformats/js-multiformats/compare/v9.6.2...v9.6.3) (2022-02-04)
+
+
+### Bug Fixes
+
+* run test:ci in CI, fix package.json keywords ([#139](https://github.com/multiformats/js-multiformats/issues/139)) ([8ec8eb0](https://github.com/multiformats/js-multiformats/commit/8ec8eb0ca29ed51d244495a0d6c7d7a08a31ac39))
+
+### [9.6.2](https://github.com/multiformats/js-multiformats/compare/v9.6.1...v9.6.2) (2022-01-20)
+
+
+### Bug Fixes
+
+* add encode to identity ([2724f8a](https://github.com/multiformats/js-multiformats/commit/2724f8aa8e0e7c24db7594eb29f683b1c01f3e42)), closes [#160](https://github.com/multiformats/js-multiformats/issues/160)
+* coverage by using encode ([132d829](https://github.com/multiformats/js-multiformats/commit/132d829eb84776afd3820788df024a7a9f6d8834))
+
+### [9.6.1](https://github.com/multiformats/js-multiformats/compare/v9.6.0...v9.6.1) (2022-01-20)
+
+
+### Bug Fixes
+
+* export only `identity` hasher const ([330082a](https://github.com/multiformats/js-multiformats/commit/330082aeaf2f493e351c413411ce9a4db25ebe5f))
+
+## [9.6.0](https://github.com/multiformats/js-multiformats/compare/v9.5.9...v9.6.0) (2022-01-19)
+
+
+### Features
+
+* add sync multihash hasher ([#160](https://github.com/multiformats/js-multiformats/issues/160)) ([c3a650c](https://github.com/multiformats/js-multiformats/commit/c3a650c8b48989ea52045d85eb06eebee8bb59d1))
+
 ### [9.5.9](https://github.com/multiformats/js-multiformats/compare/v9.5.8...v9.5.9) (2022-01-18)
 
 
