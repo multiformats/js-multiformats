@@ -5,10 +5,10 @@ import { base32 } from './bases/base32.js'
 import { coerce } from './bytes.js'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
-import * as API from './interface.js'
+import * as API from './cid/interface.js'
 
 // This way TS will also expose all the types from module
-export * from './interface.js'
+export * from './cid/interface.js'
 
 /**
  * @template {number} Format
