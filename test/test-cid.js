@@ -3,6 +3,7 @@
 import OLDCID from 'cids'
 import { fromHex, toHex, equals } from '../src/bytes.js'
 import { varint, CID } from 'multiformats'
+import * as CIDLib from 'multiformats/cid'
 import { base58btc } from 'multiformats/bases/base58'
 import { base32 } from 'multiformats/bases/base32'
 import { base64 } from 'multiformats/bases/base64'
@@ -42,6 +43,15 @@ describe('CID', () => {
       assert.deepStrictEqual(cid.toString(), base58btc.baseEncode(hash.bytes))
     })
 
+    it('createV0', async () => {
+      const hash = await sha256.digest(textEncoder.encode('abc'))
+      const cid = CIDLib.createV0(hash)
+
+      assert.deepStrictEqual(cid.code, 112)
+      assert.deepStrictEqual(cid.version, 0)
+      assert.deepStrictEqual(cid.multihash, hash)
+      assert.deepStrictEqual(cid.toString(), base58btc.baseEncode(hash.bytes))
+    })
     it('create from multihash', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
 
@@ -150,6 +160,15 @@ describe('CID', () => {
     it('create by parts', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 0x71, hash)
+      assert.deepStrictEqual(cid.code, 0x71)
+      assert.deepStrictEqual(cid.version, 1)
+      equalDigest(cid.multihash, hash)
+    })
+
+    it('createV1', async () => {
+      const hash = await sha256.digest(textEncoder.encode('abc'))
+      const cid = CIDLib.createV1(0x71, hash)
+
       assert.deepStrictEqual(cid.code, 0x71)
       assert.deepStrictEqual(cid.version, 1)
       equalDigest(cid.multihash, hash)
