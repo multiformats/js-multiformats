@@ -20,7 +20,7 @@ export * from './interface.js'
  */
 export const asCID = (input) => {
   const value = /** @type {any} */(input)
-  if (value instanceof CIDView) {
+  if (value instanceof CID) {
     // If value is instance of CID then we're all set.
     return value
   } else if (value != null && value.asCID === value) {
@@ -30,7 +30,7 @@ export const asCID = (input) => {
     // implemnetation so caller is guaranteed to get instance with expected
     // API.
     const { version, code, multihash, bytes } = value
-    return new CIDView(
+    return new CID(
       version,
       code,
       /** @type {API.MultihashDigest<Alg>} */ (multihash),
@@ -53,16 +53,6 @@ export const asCID = (input) => {
 }
 
 /**
- * @deprecated
- * @param {any} value
- * @returns {value is API.CID}
- */
-export const isCID = (value) => {
-  deprecate(/^0\.0/, IS_CID_DEPRECATION)
-  return !!(value && (value[cidSymbol] || value.asCID === value))
-}
-
-/**
  * @template {number} Format
  * @template {number} Alg
  * @template {API.CIDVersion} Version
@@ -81,12 +71,12 @@ export const create = (version, code, digest) => {
       if (code !== DAG_PB_CODE) {
         throw new Error(`Version 0 CID must use dag-pb (code: ${DAG_PB_CODE}) block encoding`)
       } else {
-        return new CIDView(version, code, digest, digest.bytes)
+        return new CID(version, code, digest, digest.bytes)
       }
     }
     case 1: {
       const bytes = encodeCID(version, code, digest.bytes)
-      return new CIDView(version, code, digest, bytes)
+      return new CID(version, code, digest, bytes)
     }
     default: {
       throw new Error('Invalid version')
@@ -284,13 +274,13 @@ const baseCache = (cid) => {
 }
 
 /**
- * @template {number} Format
- * @template {number} Alg
- * @template {API.CIDVersion} Version
+ * @template {number} [Format=number]
+ * @template {number} [Alg=number]
+ * @template {API.CIDVersion} [Version=API.CIDVersion]
  * @implements {API.CID<Format, Alg, Version>}
  */
 
-class CIDView {
+export class CID {
   /**
    * @param {Version} version
    * @param {Format} code
@@ -333,12 +323,12 @@ class CIDView {
   }
 
   /**
-   * @returns {API.CIDv0}
+   * @returns {CID<API.DAG_PB, API.SHA_256, 0>}
    */
   toV0 () {
     switch (this.version) {
       case 0: {
-        return /** @type {API.CIDv0} */ (this)
+        return /** @type {CID<API.DAG_PB, API.SHA_256, 0>} */ (this)
       }
       case 1: {
         const { code, multihash } = this
@@ -352,9 +342,9 @@ class CIDView {
           throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
         }
 
-        return createV0(
+        return /** @type {CID<API.DAG_PB, API.SHA_256, 0>} */(createV0(
           /** @type {API.MultihashDigest<API.SHA_256>} */ (multihash)
-        )
+        ))
       }
       default: {
         throw Error(
@@ -365,17 +355,17 @@ class CIDView {
   }
 
   /**
-   * @returns {API.CIDv1<Format, Alg>}
+   * @returns {CID<Format, Alg, 1>}
    */
   toV1 () {
     switch (this.version) {
       case 0: {
         const { code, digest } = this.multihash
         const multihash = Digest.create(code, digest)
-        return createV1(this.code, multihash)
+        return /** @type {CID<Format, Alg, 1>} */(createV1(this.code, multihash))
       }
       case 1: {
-        return /** @type {API.CIDv1<Format, Alg>} */ (this)
+        return /** @type {CID<Format, Alg, 1>} */ (this)
       }
       default: {
         throw Error(
@@ -387,7 +377,7 @@ class CIDView {
 
   /**
    * @param {unknown} other
-   * @returns {other is API.CID<Format, Alg, Version>}
+   * @returns {other is CID<Format, Alg, Version>}
    */
   equals (other) {
     return equals(this, other)
@@ -419,6 +409,17 @@ class CIDView {
     return `CID(${this.toString()})`
   }
 
+  // Deprecated
+
+  /**
+   * @param {any} value
+   * @returns {value is CID}
+   */
+  static isCID (value) {
+    deprecate(/^0\.0/, IS_CID_DEPRECATION)
+    return !!(value && (value[cidSymbol] || value.asCID === value))
+  }
+
   get toBaseEncodedString () {
     throw new Error('Deprecated, use .toString()')
   }
@@ -441,6 +442,75 @@ class CIDView {
 
   get prefix () {
     throw new Error('"prefix" property is deprecated')
+  }
+
+  /**
+   * @param {any} value
+   */
+  static asCID (value) {
+    return /** @type {CID|null} */(asCID(value))
+  }
+
+  /**
+   * @template {number} Format
+   * @template {number} Alg
+   * @template {API.CIDVersion} Version
+   * @param {Version} version - Version of the CID
+   * @param {Format} code - Code of the codec content is encoded in.
+   * @param {API.MultihashDigest<Alg>} digest - (Multi)hash of the of the content.
+   */
+  static create (version, code, digest) {
+    return /** @type {CID<Format, Alg, Version>} */(create(version, code, digest))
+  }
+
+  /**
+   * Simplified version of `create` for CIDv0.
+   * @param {API.MultihashDigest<typeof SHA_256_CODE>} digest - Multihash.
+   */
+  static createV0 (digest) {
+    return CID.create(0, DAG_PB_CODE, digest)
+  }
+
+  /**
+ * Simplified version of `create` for CIDv1.
+ * @template {number} Code
+ * @template {number} Alg
+ * @param {Code} code - Content encoding format code.
+ * @param {API.MultihashDigest<Alg>} digest - Miltihash of the content.
+ */
+  static createV1 (code, digest) {
+    return CID.create(1, code, digest)
+  }
+
+  /**
+   * @param {Uint8Array} bytes
+   */
+
+  static decode (bytes) {
+    return /** @type {CID} */(decode(bytes))
+  }
+
+  /**
+   * @param {Uint8Array} bytes
+   */
+  static decodeFirst (bytes) {
+    return /** @type {[CID, Uint8Array]} */(decodeFirst(bytes))
+  }
+
+  /**
+   * @param {Uint8Array} initialBytes
+   */
+  static inspectBytes (initialBytes) {
+    return inspectBytes(initialBytes)
+  }
+
+  /**
+   * @template {string} Prefix
+   * @param {string} source
+   * @param {API.MultibaseDecoder<Prefix>} [base]
+   */
+  static parse (source, base) {
+    return /** @type {CID} */(parse(source, base))
   }
 }
 
