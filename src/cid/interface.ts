@@ -42,3 +42,7 @@ export interface CIDv1<
 > extends CID<Format, Alg, 1> {
   readonly version: 1
 }
+
+// Export interface with different name because
+// cid.js will shadow `CID` interface with a class
+export type { CID as CIDType }
