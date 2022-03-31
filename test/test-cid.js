@@ -52,6 +52,16 @@ describe('CID', () => {
       assert.deepStrictEqual(cid.multihash, hash)
       assert.deepStrictEqual(cid.toString(), base58btc.baseEncode(hash.bytes))
     })
+    it('CID.createV0', async () => {
+      const hash = await sha256.digest(textEncoder.encode('abc'))
+      const cid = CID.createV0(hash)
+
+      assert.deepStrictEqual(cid.code, 112)
+      assert.deepStrictEqual(cid.version, 0)
+      assert.deepStrictEqual(cid.multihash, hash)
+      assert.deepStrictEqual(cid.toString(), base58btc.baseEncode(hash.bytes))
+    })
+
     it('create from multihash', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
 
@@ -104,7 +114,7 @@ describe('CID', () => {
     it('should construct from an old CID', () => {
       const cidStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const oldCid = CID.parse(cidStr)
-      const newCid = CID.asCID(oldCid)
+      const newCid = /** @type {CID} */ (CID.asCID(oldCid))
       assert.deepStrictEqual(newCid.toString(), cidStr)
     })
 
@@ -173,6 +183,14 @@ describe('CID', () => {
       assert.deepStrictEqual(cid.version, 1)
       equalDigest(cid.multihash, hash)
     })
+    it('CID.createV1', async () => {
+      const hash = await sha256.digest(textEncoder.encode('abc'))
+      const cid = CID.createV1(0x71, hash)
+
+      assert.deepStrictEqual(cid.code, 0x71)
+      assert.deepStrictEqual(cid.version, 1)
+      equalDigest(cid.multihash, hash)
+    })
 
     it('can roundtrip through cid.toString()', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
@@ -217,7 +235,7 @@ describe('CID', () => {
     it('should construct from an old CID without a multibaseName', () => {
       const cidStr = 'bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u'
       const oldCid = CID.parse(cidStr)
-      const newCid = CID.asCID(oldCid)
+      const newCid = /** @type {} */(CID.asCID(oldCid))
       assert.deepStrictEqual(newCid.toString(), cidStr)
     })
   })
