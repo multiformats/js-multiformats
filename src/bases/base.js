@@ -1,6 +1,6 @@
 import basex from '../../vendor/base-x.js'
 import { coerce } from '../bytes.js'
-// Linter can see that API is used in types.
+// Linter can't see that API is used in types.
 // eslint-disable-next-line
 import * as API from './interface.js'
 
