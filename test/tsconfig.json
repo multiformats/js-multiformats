@@ -32,10 +32,10 @@
     "noEmit": true,
     "paths": {
       "multiformats": [
-        "../dist/types/src/index"
+        "../types/src/index"
       ],
       "multiformats/*": [
-        "../dist/types/src/*"
+        "../types/src/*"
       ]
     }
   },

@@ -13,7 +13,7 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
-import * as API from 'multiformats/interface'
+import * as API from 'multiformats'
 
 chai.use(chaiAsPromised)
 const { assert } = chai
@@ -235,7 +235,7 @@ describe('CID', () => {
     it('should construct from an old CID without a multibaseName', () => {
       const cidStr = 'bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u'
       const oldCid = CID.parse(cidStr)
-      const newCid = /** @type {} */(CID.asCID(oldCid))
+      const newCid = /** @type {CID} */(CID.asCID(oldCid))
       assert.deepStrictEqual(newCid.toString(), cidStr)
     })
   })
