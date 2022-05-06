@@ -22,7 +22,7 @@ import { coerce } from './bytes.js'
 export class CID {
   /**
    * @param {CIDVersion} version
-   * @param {number} code
+   * @param {number} code - multicodec code, see https://github.com/multiformats/multicodec/blob/master/table.csv
    * @param {MultihashDigest} multihash
    * @param {Uint8Array} bytes
    *
