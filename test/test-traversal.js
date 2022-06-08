@@ -163,7 +163,7 @@ describe('traversal', () => {
       /** @type {[]} */
       const links = []
       const value = createNode(fromString('test'), links)
-      const block = await main.encode({ value: value, codec, hasher })
+      const block = await main.encode({ value, codec, hasher })
       const cid = block.cid
       const expectedCallArray = [cid.toString()]
       /** @type {string[]} */

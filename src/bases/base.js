@@ -84,6 +84,12 @@ class Decoder {
   constructor (name, prefix, baseDecode) {
     this.name = name
     this.prefix = prefix
+    /* c8 ignore next 3 */
+    if (prefix.codePointAt(0) === undefined) {
+      throw new Error('Invalid prefix character')
+    }
+    /** @private */
+    this.prefixCodePoint = /** @type {number} */ (prefix.codePointAt(0))
     this.baseDecode = baseDecode
   }
 
@@ -92,8 +98,12 @@ class Decoder {
    */
   decode (text) {
     if (typeof text === 'string') {
-      switch (text[0]) {
-        case this.prefix: {
+      switch (text.codePointAt(0)) {
+        case this.prefixCodePoint: {
+          if (this.prefixCodePoint > 255) {
+            // special case for base256emoji, slow and hacky
+            return this.baseDecode(Array.from(text).slice(1).join(''))
+          }
           return this.baseDecode(text.slice(1))
         }
         default: {
