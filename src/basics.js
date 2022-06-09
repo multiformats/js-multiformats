@@ -9,6 +9,7 @@ import * as base32 from './bases/base32.js'
 import * as base36 from './bases/base36.js'
 import * as base58 from './bases/base58.js'
 import * as base64 from './bases/base64.js'
+import * as base256emoji from './bases/base256emoji.js'
 import * as sha2 from './hashes/sha2.js'
 import * as identity from './hashes/identity.js'
 
@@ -17,7 +18,7 @@ import * as json from './codecs/json.js'
 
 import { CID, hasher, digest, varint, bytes } from './index.js'
 
-const bases = { ...identityBase, ...base2, ...base8, ...base10, ...base16, ...base32, ...base36, ...base58, ...base64 }
+const bases = { ...identityBase, ...base2, ...base8, ...base10, ...base16, ...base32, ...base36, ...base58, ...base64, ...base256emoji }
 const hashes = { ...sha2, ...identity }
 const codecs = { raw, json }
 

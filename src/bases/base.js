@@ -98,18 +98,10 @@ class Decoder {
    */
   decode (text) {
     if (typeof text === 'string') {
-      switch (text.codePointAt(0)) {
-        case this.prefixCodePoint: {
-          if (this.prefixCodePoint > 255) {
-            // special case for base256emoji, slow and hacky
-            return this.baseDecode(Array.from(text).slice(1).join(''))
-          }
-          return this.baseDecode(text.slice(1))
-        }
-        default: {
-          throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`)
-        }
+      if (text.codePointAt(0) !== this.prefixCodePoint) {
+        throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`)
       }
+      return this.baseDecode(text.slice(this.prefix.length))
     } else {
       throw Error('Can only multibase decode strings')
     }

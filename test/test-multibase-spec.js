@@ -5,7 +5,6 @@ import { bases } from 'multiformats/basics'
 import { fromString } from '../src/bytes.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { base256emoji } from '../src/bases/base256emoji.js'
 
 chai.use(chaiAsPromised)
 const { assert } = chai
@@ -163,7 +162,7 @@ describe('spec test', () => {
   for (const { input, tests } of encoded) {
     describe(`multibase spec ${index++}`, () => {
       for (const [name, output] of tests) {
-        const base = name === 'base256emoji' ? base256emoji : bases[/** @type {keyof bases} */(name)]
+        const base = bases[/** @type {keyof bases} */(name)]
 
         describe(name, () => {
           it('should encode buffer', () => {
@@ -179,7 +178,7 @@ describe('spec test', () => {
     })
   }
 
-  for (const base of [...Object.values(bases), base256emoji]) {
+  for (const base of Object.values(bases)) {
     it('should fail decode with invalid char', function () {
       if (base.name === 'identity') {
         return this.skip()
