@@ -1,3 +1,16 @@
+### [9.6.5](https://github.com/multiformats/js-multiformats/compare/v9.6.4...v9.6.5) (2022-05-06)
+
+
+### Trivial Changes
+
+* **no-release:** bump actions/checkout from 2.4.0 to 3 ([#172](https://github.com/multiformats/js-multiformats/issues/172)) ([a1b38c2](https://github.com/multiformats/js-multiformats/commit/a1b38c235809287e284c7bde80634e669e6d1ac6))
+* **no-release:** bump actions/setup-node from 2.5.1 to 3.0.0 ([#169](https://github.com/multiformats/js-multiformats/issues/169)) ([8deb4d5](https://github.com/multiformats/js-multiformats/commit/8deb4d5dae2e01d8fd60f2dd6e944747c4ee2ef1))
+* **no-release:** bump actions/setup-node from 3.0.0 to 3.1.0 ([#174](https://github.com/multiformats/js-multiformats/issues/174)) ([9bcd7fe](https://github.com/multiformats/js-multiformats/commit/9bcd7fef62888d7cefe8e4f5e929d4e3c9dadda9))
+* **no-release:** bump mocha from 9.2.2 to 10.0.0 ([#179](https://github.com/multiformats/js-multiformats/issues/179)) ([b2951dc](https://github.com/multiformats/js-multiformats/commit/b2951dcbee5812522f2336bbf7c28eab9babdfa9))
+* **no-release:** bump polendina from 2.0.15 to 3.0.0 ([#180](https://github.com/multiformats/js-multiformats/issues/180)) ([659516b](https://github.com/multiformats/js-multiformats/commit/659516bb231bcc8332d93ded03ebcfa8e675f2dc))
+* **no-release:** bump standard from 16.0.4 to 17.0.0 ([#178](https://github.com/multiformats/js-multiformats/issues/178)) ([2683344](https://github.com/multiformats/js-multiformats/commit/268334426ca97f38a8c2eab0c834943c6e1a04d0))
+* update tsdoc for CID `code` param to clarify "what kind of code?" ([#181](https://github.com/multiformats/js-multiformats/issues/181)) ([adec0c4](https://github.com/multiformats/js-multiformats/commit/adec0c4714ef39879c3b059dc9a4882e19406420))
+
 ### [9.6.4](https://github.com/multiformats/js-multiformats/compare/v9.6.3...v9.6.4) (2022-02-14)
 
 

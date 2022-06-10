@@ -25,9 +25,9 @@ export const asCID = (input) => {
     return value
   } else if (value != null && value.asCID === value) {
     // If value isn't instance of this CID class but `this.asCID === this` is
-    // true it is CID instance coming from a different implemnetation (diff
+    // true it is CID instance coming from a different implementation (diff
     // version or duplicate). In that case we rebase it to this `CID`
-    // implemnetation so caller is guaranteed to get instance with expected
+    // implementation so caller is guaranteed to get instance with expected
     // API.
     const { version, code, multihash, bytes } = value
     return new CID(
@@ -283,7 +283,7 @@ const baseCache = (cid) => {
 export class CID {
   /**
    * @param {Version} version
-   * @param {Format} code
+   * @param {Format} code - multicodec code, see https://github.com/multiformats/multicodec/blob/master/table.csv
    * @param {API.MultihashDigest<Alg>} multihash
    * @param {Uint8Array} bytes
    *
