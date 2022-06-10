@@ -7,7 +7,7 @@ import { walk } from 'multiformats/traversal'
 // eslint-disable-next-line
 import * as API from 'multiformats/interface'
 import { assert } from 'chai'
-import { fromString } from '../src/bytes.js'
+import { fromString } from 'multiformats/bytes'
 
 const { createLink, createNode } = dagPB
 
@@ -165,7 +165,7 @@ describe('traversal', () => {
       /** @type {[]} */
       const links = []
       const value = createNode(fromString('test'), links)
-      const block = await main.encode({ value: value, codec, hasher })
+      const block = await main.encode({ value, codec, hasher })
       const cid = block.cid
       const expectedCallArray = [cid.toString()]
       /** @type {string[]} */

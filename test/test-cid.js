@@ -1,7 +1,7 @@
 /* globals describe, it */
 
 import OLDCID from 'cids'
-import { fromHex, toHex, equals } from '../src/bytes.js'
+import { fromHex, toHex, equals } from 'multiformats/bytes'
 import { varint, CID } from 'multiformats'
 import * as CIDLib from 'multiformats/cid'
 import { base58btc } from 'multiformats/bases/base58'
