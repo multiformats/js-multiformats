@@ -13,7 +13,7 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
- * @returns {Iterable<[string, CID]>}
+ * @returns {Iterable<[string, API.CIDView]>}
  */
 const links = function * (source, base) {
   if (source == null) return
@@ -74,6 +74,7 @@ const tree = function * (source, base) {
  * @template T
  * @param {T} source
  * @param {string[]} path
+ * @return {API.BlockCursorView}
  */
 const get = (source, path) => {
   let node = /** @type {Record<string, any>} */ (source)
@@ -91,19 +92,23 @@ const get = (source, path) => {
 }
 
 /**
- * @template T
+ * @template {unknown} T - Logical type of the data encoded in the block
+ * @template {number} C - multicodec code corresponding to codec used to encode the block
+ * @template {number} A - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template {API.CIDVersion} V - CID version
+ * @implements {API.BlockView<T, C, A, V>}
  */
 class Block {
   /**
    * @param {Object} options
-   * @param {API.CID} options.cid
+   * @param {API.CIDView<C, A, V>} options.cid
    * @param {API.ByteView<T>} options.bytes
    * @param {T} options.value
    */
   constructor ({ cid, bytes, value }) {
-    if (!cid || !bytes || typeof value === 'undefined') throw new Error('Missing required argument')
+    if (!cid || !bytes || typeof value === 'undefined') { throw new Error('Missing required argument') }
 
-    this.cid = /** @type {CID} */(cid)
+    this.cid = cid
     this.bytes = bytes
     this.value = value
     this.asBlock = this
@@ -126,22 +131,22 @@ class Block {
   }
 
   /**
- * @param {string} [path]
- */
+   * @param {string} [path]
+   */
   get (path = '/') {
     return get(this.value, path.split('/').filter(Boolean))
   }
 }
 
 /**
- * @template T
- * @template {number} Code
- * @template {number} Alg
+ * @template {unknown} T - Logical type of the data encoded in the block
+ * @template {number} Code - multicodec code corresponding to codec used to encode the block
+ * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @param {Object} options
  * @param {T} options.value
  * @param {API.BlockEncoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
- * @returns {Promise<Block<T>>}
+ * @returns {Promise<API.BlockView<T, Code, Alg>>}
  */
 const encode = async ({ value, codec, hasher }) => {
   if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
@@ -149,20 +154,24 @@ const encode = async ({ value, codec, hasher }) => {
 
   const bytes = codec.encode(value)
   const hash = await hasher.digest(bytes)
-  const cid = CID.create(1, codec.code, hash)
+  const cid = CID.create(
+    1,
+    codec.code,
+    hash
+  )
 
   return new Block({ value, bytes, cid })
 }
 
 /**
- * @template T
- * @template {number} Code
- * @template {number} Alg
+ * @template {unknown} T - Logical type of the data encoded in the block
+ * @template {number} Code - multicodec code corresponding to codec used to encode the block
+ * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @param {Object} options
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
- * @returns {Promise<Block<T>>}
+ * @returns {Promise<API.BlockView<T, Code, Alg>>}
  */
 const decode = async ({ bytes, codec, hasher }) => {
   if (!bytes) throw new Error('Missing required argument "bytes"')
@@ -181,10 +190,12 @@ const decode = async ({ bytes, codec, hasher }) => {
  */
 
 /**
- * @template T
- * @template {number} Code
- * @param {{ cid: API.CID, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:API.CID, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
- * @returns {Block<T>}
+ * @template {unknown} T - Logical type of the data encoded in the block
+ * @template {number} Code - multicodec code corresponding to codec used to encode the block
+ * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template {API.CIDVersion} V - CID version
+ * @param {{ cid: API.Link<T, Code, Alg, V>, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:API.Link<T, Code, Alg, V>, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
+ * @returns {API.BlockView<T, Code, Alg, V>}
  */
 const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
   const value = maybeValue !== undefined
@@ -193,19 +204,24 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
 
   if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
 
-  return new Block({ cid, bytes, value })
+  return new Block({
+    cid: /** @type {API.CIDView<Code, Alg, V>} */(cid),
+    bytes,
+    value
+  })
 }
 
 /**
- * @template T
- * @template {number} Code
- * @template {number} Alg
+ * @template {unknown} T - Logical type of the data encoded in the block
+ * @template {number} Code - multicodec code corresponding to codec used to encode the block
+ * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template {API.CIDVersion} V - CID version
  * @param {Object} options
- * @param {API.CID<Code, Alg>} options.cid
+ * @param {API.CID<Code, Alg, V>} options.cid
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
- * @returns {Promise<Block<T>>}
+ * @returns {Promise<API.BlockView<T, Code, Alg, V>>}
  */
 const create = async ({ bytes, cid, hasher, codec }) => {
   if (!bytes) throw new Error('Missing required argument "bytes"')
@@ -216,7 +232,12 @@ const create = async ({ bytes, cid, hasher, codec }) => {
     throw new Error('CID hash does not match bytes')
   }
 
-  return createUnsafe({ bytes, cid, value, codec })
+  return createUnsafe({
+    bytes,
+    cid,
+    value,
+    codec
+  })
 }
 
 export { encode, decode, create, createUnsafe, Block }
