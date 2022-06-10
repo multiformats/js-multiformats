@@ -7,7 +7,7 @@ import { walk } from 'multiformats/traversal'
 // eslint-disable-next-line
 import * as API from 'multiformats/interface'
 import { assert } from 'chai'
-import { fromString } from '../src/bytes.js'
+import { fromString } from 'multiformats/bytes'
 
 const { createLink, createNode } = dagPB
 
