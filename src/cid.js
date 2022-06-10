@@ -14,8 +14,8 @@ export * from './cid/interface.js'
  * @template {number} Format
  * @template {number} Alg
  * @template {API.CIDVersion} Version
- * @template T
- * @param {API.CID<Format, Alg, Version>|T} input
+ * @template {unknown} U
+ * @param {API.CID<Format, Alg, Version>|U} input
  * @returns {API.CID<Format, Alg, Version>|null}
  */
 export const asCID = (input) => {
@@ -342,9 +342,9 @@ export class CID {
           throw new Error('Cannot convert non sha2-256 multihash CID to CIDv0')
         }
 
-        return /** @type {CID<API.DAG_PB, API.SHA_256, 0>} */(createV0(
-          /** @type {API.MultihashDigest<API.SHA_256>} */ (multihash)
-        ))
+        return /** @type {CID<API.DAG_PB, API.SHA_256, 0>} */ (
+          createV0(/** @type {API.MultihashDigest<API.SHA_256>} */ (multihash))
+        )
       }
       default: {
         throw Error(
@@ -362,7 +362,9 @@ export class CID {
       case 0: {
         const { code, digest } = this.multihash
         const multihash = Digest.create(code, digest)
-        return /** @type {CID<Format, Alg, 1>} */(createV1(this.code, multihash))
+        return /** @type {CID<Format, Alg, 1>} */ (
+          createV1(this.code, multihash)
+        )
       }
       case 1: {
         return /** @type {CID<Format, Alg, 1>} */ (this)
@@ -445,10 +447,15 @@ export class CID {
   }
 
   /**
-   * @param {any} value
+   * @template {number} C
+   * @template {number} A
+   * @template {API.CIDVersion} V
+   * @template {unknown} U
+   * @param {API.CID<C, A, V>|U} value
+   * @returns {CID<C, A, V>|null}
    */
   static asCID (value) {
-    return /** @type {CID|null} */(asCID(value))
+    return /** @type {CID<C, A, V>|null} */ (asCID(value))
   }
 
   /**
@@ -460,7 +467,9 @@ export class CID {
    * @param {API.MultihashDigest<Alg>} digest - (Multi)hash of the of the content.
    */
   static create (version, code, digest) {
-    return /** @type {CID<Format, Alg, Version>} */(create(version, code, digest))
+    return /** @type {CID<Format, Alg, Version>} */ (
+      create(version, code, digest)
+    )
   }
 
   /**
@@ -472,12 +481,12 @@ export class CID {
   }
 
   /**
- * Simplified version of `create` for CIDv1.
- * @template {number} Code
- * @template {number} Alg
- * @param {Code} code - Content encoding format code.
- * @param {API.MultihashDigest<Alg>} digest - Miltihash of the content.
- */
+   * Simplified version of `create` for CIDv1.
+   * @template {number} Code
+   * @template {number} Alg
+   * @param {Code} code - Content encoding format code.
+   * @param {API.MultihashDigest<Alg>} digest - Miltihash of the content.
+   */
   static createV1 (code, digest) {
     return CID.create(1, code, digest)
   }
@@ -487,14 +496,14 @@ export class CID {
    */
 
   static decode (bytes) {
-    return /** @type {CID} */(decode(bytes))
+    return /** @type {CID} */ (decode(bytes))
   }
 
   /**
    * @param {Uint8Array} bytes
    */
   static decodeFirst (bytes) {
-    return /** @type {[CID, Uint8Array]} */(decodeFirst(bytes))
+    return /** @type {[CID, Uint8Array]} */ (decodeFirst(bytes))
   }
 
   /**
@@ -510,7 +519,7 @@ export class CID {
    * @param {API.MultibaseDecoder<Prefix>} [base]
    */
   static parse (source, base) {
-    return /** @type {CID} */(parse(source, base))
+    return /** @type {CID} */ (parse(source, base))
   }
 }
 
