@@ -104,6 +104,9 @@
     },
     "./interface": {
       "import": "./src/interface.js"
+    },
+    "./bytes": {
+      "import": "./src/bytes.js"
     }
   },
   "devDependencies": {

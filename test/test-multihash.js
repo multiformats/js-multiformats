@@ -1,5 +1,5 @@
 /* globals describe, it */
-import { fromHex, fromString } from '../src/bytes.js'
+import { fromHex, fromString } from 'multiformats/bytes'
 import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
 import valid from './fixtures/valid-multihash.js'

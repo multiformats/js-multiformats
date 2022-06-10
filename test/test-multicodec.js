@@ -1,5 +1,5 @@
 /* globals describe, it */
-import * as bytes from '../src/bytes.js'
+import * as bytes from 'multiformats/bytes'
 import * as raw from 'multiformats/codecs/raw'
 import * as json from 'multiformats/codecs/json'
 import chai from 'chai'

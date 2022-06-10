@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable no-use-before-define */
 import { Link, CIDView, CIDVersion } from '../cid/interface.js'
 
@@ -51,8 +52,8 @@ export interface Block<
   cid: Link<T, C, A, V>
 }
 
-export type BlockCursorView =
-  | { value: unknown, remaining?: undefined }
+export type BlockCursorView<T extends unknown = unknown> =
+  | { value: T, remaining?: undefined }
   | { value: CIDView, remaining: string }
 
 export interface BlockView<
@@ -66,5 +67,5 @@ export interface BlockView<
 
   links(): Iterable<[string, CIDView]>
   tree(): Iterable<string>
-  get(path:string): BlockCursorView
+  get(path:string): BlockCursorView<unknown>
 }
