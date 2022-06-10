@@ -62,6 +62,7 @@ describe('block', () => {
       assert.deepStrictEqual(ret.remaining, 'test')
       assert.deepStrictEqual(String(ret.value), link.toString())
       ret = block.get('nope')
+
       assert.deepStrictEqual(ret, { value: 'skip' })
     })
 

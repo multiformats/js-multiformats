@@ -74,7 +74,7 @@ const tree = function * (source, base) {
  * @template T
  * @param {T} source
  * @param {string[]} path
- * @return {API.BlockCursorView}
+ * @return {API.BlockCursorView<unknown>}
  */
 const get = (source, path) => {
   let node = /** @type {Record<string, any>} */ (source)
@@ -132,6 +132,7 @@ class Block {
 
   /**
    * @param {string} [path]
+   * @return {API.BlockCursorView<unknown>}
    */
   get (path = '/') {
     return get(this.value, path.split('/').filter(Boolean))
@@ -205,7 +206,8 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
   if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
 
   return new Block({
-    cid: /** @type {API.CIDView<Code, Alg, V>} */(cid),
+    // eslint-disable-next-line object-shorthand
+    cid: /** @type {API.CIDView<Code, Alg, V>} */ (cid),
     bytes,
     value
   })
