@@ -26,13 +26,30 @@
     "resolveJsonModule": true,
     "emitDeclarationOnly": true,
     "baseUrl": ".",
-    "composite": true
+    "composite": true,
+    "paths": {
+      "multiformats": [
+        "./src/index.js"
+      ],
+      "multiformats/interface": [
+        "./src/interface"
+      ],
+      "multiformats/hashes/interface": [
+        "./src/hashes/interface"
+      ],
+      "multiformats/*": [
+        "./src/*.js"
+      ],
+      
+    }
   },
   "include": [
-    "src"
+    "src",
+    "test"
   ],
   "exclude": [
     "vendor",
+    "test/ts-use",
     "node_modules"
   ],
   "compileOnSave": false
