@@ -80,6 +80,9 @@
     "./bases/base64": {
       "import": "./src/bases/base64.js"
     },
+    "./bases/base256emoji": {
+      "import": "./src/bases/base256emoji.js"
+    },
     "./hashes/hasher": {
       "import": "./src/hashes/hasher.js"
     },

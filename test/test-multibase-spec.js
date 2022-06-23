@@ -35,7 +35,8 @@ const encoded = [
       ['base64', 'mRGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ'],
       ['base64pad', 'MRGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ=='],
       ['base64url', 'uRGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ'],
-      ['base64urlpad', 'URGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ==']
+      ['base64urlpad', 'URGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ=='],
+      ['base256emoji', '🚀💛✋💃✋😻😈🥺🤤🍀🌟💐✋😅✋💦✋🥺🏃😈😴🌟😻😝👏👏']
     ]
   },
   {
@@ -63,7 +64,8 @@ const encoded = [
       ['base64', 'meWVzIG1hbmkgIQ'],
       ['base64pad', 'MeWVzIG1hbmkgIQ=='],
       ['base64url', 'ueWVzIG1hbmkgIQ'],
-      ['base64urlpad', 'UeWVzIG1hbmkgIQ==']
+      ['base64urlpad', 'UeWVzIG1hbmkgIQ=='],
+      ['base256emoji', '🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
     ]
   },
   {
@@ -91,7 +93,8 @@ const encoded = [
       ['base64', 'maGVsbG8gd29ybGQ'],
       ['base64pad', 'MaGVsbG8gd29ybGQ='],
       ['base64url', 'uaGVsbG8gd29ybGQ'],
-      ['base64urlpad', 'UaGVsbG8gd29ybGQ=']
+      ['base64urlpad', 'UaGVsbG8gd29ybGQ='],
+      ['base256emoji', '🚀😴✋🍀🍀😓😅✔😓🥺🍀😳']
     ]
   },
   {
@@ -119,7 +122,8 @@ const encoded = [
       ['base64', 'mAHllcyBtYW5pICE'],
       ['base64pad', 'MAHllcyBtYW5pICE='],
       ['base64url', 'uAHllcyBtYW5pICE'],
-      ['base64urlpad', 'UAHllcyBtYW5pICE=']
+      ['base64urlpad', 'UAHllcyBtYW5pICE='],
+      ['base256emoji', '🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
     ]
   },
   {
@@ -147,24 +151,8 @@ const encoded = [
       ['base64', 'mAAB5ZXMgbWFuaSAh'],
       ['base64pad', 'MAAB5ZXMgbWFuaSAh'],
       ['base64url', 'uAAB5ZXMgbWFuaSAh'],
-      ['base64urlpad', 'UAAB5ZXMgbWFuaSAh']
-    ]
-  },
-  {
-    input: 'hello world',
-    tests: [
-      ['base16', 'f68656c6c6f20776f726c64'],
-      ['base16upper', 'F68656C6C6F20776F726C64'],
-      ['base32', 'bnbswy3dpeb3w64tmmq'],
-      ['base32upper', 'BNBSWY3DPEB3W64TMMQ'],
-      ['base32hex', 'vd1imor3f41rmusjccg'],
-      ['base32hexupper', 'VD1IMOR3F41RMUSJCCG'],
-      ['base32pad', 'cnbswy3dpeb3w64tmmq======'],
-      ['base32padupper', 'CNBSWY3DPEB3W64TMMQ======'],
-      ['base32hexpad', 'td1imor3f41rmusjccg======'],
-      ['base32hexpadupper', 'TD1IMOR3F41RMUSJCCG======'],
-      ['base36', 'kfuvrsivvnfrbjwajo'],
-      ['base36upper', 'KFUVRSIVVNFRBJWAJO']
+      ['base64urlpad', 'UAAB5ZXMgbWFuaSAh'],
+      ['base256emoji', '🚀🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
     ]
   }
 ]
@@ -196,7 +184,6 @@ describe('spec test', () => {
         return this.skip()
       }
 
-      console.info('expect', `Non-${base.name} character`)
       assert.throws(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
     })
   }

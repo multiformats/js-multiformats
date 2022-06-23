@@ -84,6 +84,12 @@ class Decoder {
   constructor (name, prefix, baseDecode) {
     this.name = name
     this.prefix = prefix
+    /* c8 ignore next 3 */
+    if (prefix.codePointAt(0) === undefined) {
+      throw new Error('Invalid prefix character')
+    }
+    /** @private */
+    this.prefixCodePoint = /** @type {number} */ (prefix.codePointAt(0))
     this.baseDecode = baseDecode
   }
 
@@ -92,14 +98,10 @@ class Decoder {
    */
   decode (text) {
     if (typeof text === 'string') {
-      switch (text[0]) {
-        case this.prefix: {
-          return this.baseDecode(text.slice(1))
-        }
-        default: {
-          throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`)
-        }
+      if (text.codePointAt(0) !== this.prefixCodePoint) {
+        throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`)
       }
+      return this.baseDecode(text.slice(this.prefix.length))
     } else {
       throw Error('Can only multibase decode strings')
     }
