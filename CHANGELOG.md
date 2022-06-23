@@ -1,3 +1,18 @@
+## [9.7.0](https://github.com/multiformats/js-multiformats/compare/v9.6.5...v9.7.0) (2022-06-23)
+
+
+### Features
+
+* add base256emoji ([#187](https://github.com/multiformats/js-multiformats/issues/187)) ([c6c5c46](https://github.com/multiformats/js-multiformats/commit/c6c5c46b12686c48db741836c5957dbc72f4bbd4))
+
+
+### Trivial Changes
+
+* **no-release:** bump @types/node from 17.0.45 to 18.0.0 ([#188](https://github.com/multiformats/js-multiformats/issues/188)) ([99e94ed](https://github.com/multiformats/js-multiformats/commit/99e94ed8025aabae64e58c2f2d2fff6b24dddfcb))
+* **no-release:** bump actions/setup-node from 3.1.0 to 3.2.0 ([#182](https://github.com/multiformats/js-multiformats/issues/182)) ([86ec43d](https://github.com/multiformats/js-multiformats/commit/86ec43d89d60c6c4be0e001c06d1e28570a3d36a))
+* **no-release:** bump actions/setup-node from 3.2.0 to 3.3.0 ([#186](https://github.com/multiformats/js-multiformats/issues/186)) ([712c1c4](https://github.com/multiformats/js-multiformats/commit/712c1c4fe5066d0a6fdc89b53a7943bb67edf0b8))
+* **no-release:** fix typo implemnetation -> implementation ([#184](https://github.com/multiformats/js-multiformats/issues/184)) ([3d4ae50](https://github.com/multiformats/js-multiformats/commit/3d4ae504928b372886d1021e48a39c06ecbf8fde))
+
 ### [9.6.5](https://github.com/multiformats/js-multiformats/compare/v9.6.4...v9.6.5) (2022-05-06)
 
 
