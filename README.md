@@ -123,7 +123,7 @@ export const { name, code, encode, decode } = {
 This library defines [`MultihashHasher` and `MultihashDigest` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/hashes/interface.ts) and convinient function for implementing them:
 
 ```js
-import * as hasher from 'multiformats/hashes/hasher')
+import * as hasher from 'multiformats/hashes/hasher'
 
 const sha256 = hasher.from({
   // As per multiformats table
