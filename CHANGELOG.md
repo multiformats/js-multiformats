@@ -1,3 +1,16 @@
+## [9.7.1](https://github.com/multiformats/js-multiformats/compare/v9.7.0...v9.7.1) (2022-07-26)
+
+
+### Bug Fixes
+
+* typo ([#192](https://github.com/multiformats/js-multiformats/issues/192)) ([b602f63](https://github.com/multiformats/js-multiformats/commit/b602f6315d35ee5c83d6f0b9995988f065f47ec8))
+
+
+### Trivial Changes
+
+* **no-release:** bump actions/setup-node from 3.3.0 to 3.4.0 ([#189](https://github.com/multiformats/js-multiformats/issues/189)) ([362b167](https://github.com/multiformats/js-multiformats/commit/362b167c939066b1e3217db4442a7652fba38e85))
+* **no-release:** bump actions/setup-node from 3.4.0 to 3.4.1 ([#190](https://github.com/multiformats/js-multiformats/issues/190)) ([67f22c4](https://github.com/multiformats/js-multiformats/commit/67f22c4696777529d3871ee1e2fdbd436ad55fc0))
+
 ## [9.7.0](https://github.com/multiformats/js-multiformats/compare/v9.6.5...v9.7.0) (2022-06-23)
 
 
