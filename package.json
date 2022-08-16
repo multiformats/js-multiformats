@@ -39,67 +39,88 @@
   "license": "(Apache-2.0 AND MIT)",
   "exports": {
     ".": {
+      "types": "./types/src/index.d.ts",
       "import": "./src/index.js"
     },
     "./cid": {
+      "types": "./types/src/cid.d.ts",
       "import": "./src/cid.js"
     },
     "./basics": {
+      "types": "./types/src/basics.d.ts",
       "import": "./src/basics.js"
     },
     "./block": {
+      "types": "./types/src/block.d.ts",
       "import": "./src/block.js"
     },
     "./traversal": {
+      "types": "./types/src/traversal.d.ts",
       "import": "./src/traversal.js"
     },
     "./bases/identity": {
+      "types": "./types/src/bases/identity.d.ts",
       "import": "./src/bases/identity.js"
     },
     "./bases/base2": {
+      "types": "./types/src/bases/base2.d.ts",
       "import": "./src/bases/base2.js"
     },
     "./bases/base8": {
+      "types": "./types/src/bases/base8.d.ts",
       "import": "./src/bases/base8.js"
     },
     "./bases/base10": {
+      "types": "./types/src/bases/base10.d.ts",
       "import": "./src/bases/base10.js"
     },
     "./bases/base16": {
+      "types": "./types/src/bases/base16.d.ts",
       "import": "./src/bases/base16.js"
     },
     "./bases/base32": {
+      "types": "./types/src/bases/base32.d.ts",
       "import": "./src/bases/base32.js"
     },
     "./bases/base36": {
+      "types": "./types/src/bases/base36.d.ts",
       "import": "./src/bases/base36.js"
     },
     "./bases/base58": {
+      "types": "./types/src/bases/base58.d.ts",
       "import": "./src/bases/base58.js"
     },
     "./bases/base64": {
+      "types": "./types/src/bases/base64.d.ts",
       "import": "./src/bases/base64.js"
     },
     "./bases/base256emoji": {
+      "types": "./types/src/bases/base256emoji.d.ts",
       "import": "./src/bases/base256emoji.js"
     },
     "./hashes/hasher": {
+      "types": "./types/src/hashes/hasher.d.ts",
       "import": "./src/hashes/hasher.js"
     },
     "./hashes/digest": {
+      "types": "./types/src/hashes/digest.d.ts",
       "import": "./src/hashes/digest.js"
     },
     "./hashes/sha2": {
+      "types": "./types/src/hashes/sha2.d.ts",
       "browser": "./src/hashes/sha2-browser.js",
       "import": "./src/hashes/sha2.js"
     },
     "./hashes/identity": {
+      "types": "./types/src/hashes/identity.d.ts",
       "import": "./src/hashes/identity.js"
     },
     "./codecs/json": {
+      "types": "./types/src/codecs/json.d.ts",
       "import": "./src/codecs/json.js"
     },
     "./codecs/raw": {
+      "types": "./types/src/codecs/raw.d.ts",
       "import": "./src/codecs/raw.js"
     }
   },
