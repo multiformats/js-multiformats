@@ -1,24 +1,39 @@
-# multiformats
+# multiformats <!-- omit in toc -->
 
-* [Interfaces](#interfaces)
-  * [Creating Blocks](#creating-blocks)
-  * [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
-  * [Multicodec Encoders / Decoders / Codecs](#multicodec-encoders--decoders--codecs)
-  * [Multihash Hashers](#multihash-hashers)
-  * [Traversal](#traversal)
-* [Legacy interface](#legacy-interface)
-* [Implementations](#implementations)
-  * [Multibase codecs](#multibase-codecs)
-  * [Multihash hashers](#multihash-hashers-1)
-  * [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
-* [License](#license)
-  * [Contribution](#contribution)
+[![multiformats.io](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://multiformats.io)
+[![codecov](https://img.shields.io/codecov/c/github/multiformats/js-multiformats.svg?style=flat-square)](https://codecov.io/gh/multiformats/js-multiformats)
+[![CI](https://img.shields.io/github/workflow/status/multiformats/js-multiformats/test%20&%20maybe%20release/esm-migration?style=flat-square)](https://github.com/multiformats/js-multiformats/actions/workflows/js-test-and-release.yml)
+
+> Interface for multihash, multicodec, multibase and CID
+
+## Table of contents <!-- omit in toc -->
+
+- [Install](#install)
+- [Interfaces](#interfaces)
+  - [Creating Blocks](#creating-blocks)
+  - [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
+  - [Multicodec Encoders / Decoders / Codecs](#multicodec-encoders--decoders--codecs)
+  - [Multihash Hashers](#multihash-hashers)
+  - [Traversal](#traversal)
+- [Legacy interface](#legacy-interface)
+- [Implementations](#implementations)
+  - [Multibase codecs](#multibase-codecs)
+  - [Multihash hashers](#multihash-hashers-1)
+  - [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
+- [License](#license)
+- [Contribution](#contribution)
+
+## Install
+
+```console
+$ npm i multiformats
+```
+
+## Interfaces
 
 This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase, and CID). They can be used to implement custom base encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
 This library provides implementations for most basics and many others can be found in linked repositories.
-
-## Interfaces
 
 ```js
 import { CID } from 'multiformats/cid'
@@ -76,7 +91,6 @@ Dual of multibase encoder & decoder is defined as multibase codec and it exposes
 them as `encoder` and `decoder` properties. For added convenience codecs also
 implement `MultibaseEncoder` and `MultibaseDecoder` interfaces so they could be
 used as either or both:
-
 
 ```js
 cid.toString(base64)
@@ -189,43 +203,43 @@ import the ones you need yourself.
 
 ### Multibase codecs
 
-| bases | import | repo |
- --- | --- | --- |
-`base16` | `multiformats/bases/base16` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `multiformats/bases/base32` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base64`, `base64pad`, `base64url`, `base64urlpad` | `multiformats/bases/base64` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
-`base58btc`, `base58flick4` | `multiformats/bases/base58` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+| bases                                                         | import                      | repo                                                                                              |
+| ------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------- |
+| `base16`                                                      | `multiformats/bases/base16` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+| `base32`, `base32pad`, `base32hex`, `base32hexpad`, `base32z` | `multiformats/bases/base32` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+| `base64`, `base64pad`, `base64url`, `base64urlpad`            | `multiformats/bases/base64` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
+| `base58btc`, `base58flick4`                                   | `multiformats/bases/base58` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) |
 
 Other (less useful) bases implemented in [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) include: `base2`, `base8`, `base10`, `base36` and `base256emoji`.
 
 ### Multihash hashers
 
-| hashes | import | repo |
-| --- | --- | --- |
-| `sha2-256`, `sha2-512` | `multiformats/hashes/sha2` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/hashes) |
-| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `@multiformats/sha3` | [multiformats/js-sha3](https://github.com/multiformats/js-sha3) |
-| `identity` | `multiformats/hashes/identity` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/hashes/identity.js) |
-| `murmur3-128`, `murmur3-32` | `@multiformats/murmur3` | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3) |
-| `blake2b-*`, `blake2s-*` | `@multiformats/blake2` | [multiformats/js-blake2](https://github.com/multiformats/js-blake2) |
+| hashes                                                                                                                          | import                         | repo                                                                                                               |
+| ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
+| `sha2-256`, `sha2-512`                                                                                                          | `multiformats/hashes/sha2`     | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/hashes)             |
+| `sha3-224`, `sha3-256`, `sha3-384`,`sha3-512`, `shake-128`, `shake-256`, `keccak-224`, `keccak-256`, `keccak-384`, `keccak-512` | `@multiformats/sha3`           | [multiformats/js-sha3](https://github.com/multiformats/js-sha3)                                                    |
+| `identity`                                                                                                                      | `multiformats/hashes/identity` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/hashes/identity.js) |
+| `murmur3-128`, `murmur3-32`                                                                                                     | `@multiformats/murmur3`        | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3)                                              |
+| `blake2b-*`, `blake2s-*`                                                                                                        | `@multiformats/blake2`         | [multiformats/js-blake2](https://github.com/multiformats/js-blake2)                                                |
 
 ### IPLD codecs (multicodec)
 
-| codec | import | repo |
-| --- | --- | --- |
-| `raw` | `multiformats/codecs/raw` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/codecs) |
-| `json` | `multiformats/codecs/json` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/codecs) |
-| `dag-cbor` | `@ipld/dag-cbor` | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor) |
-| `dag-json` | `@ipld/dag-json` | [ipld/js-dag-json](https://github.com/ipld/js-dag-json) |
-| `dag-pb` | `@ipld/dag-pb` | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb) |
-| `dag-jose` | `dag-jose`| [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose) |
+| codec      | import                     | repo                                                                                                   |
+| ---------- | -------------------------- | ------------------------------------------------------------------------------------------------------ |
+| `raw`      | `multiformats/codecs/raw`  | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/codecs) |
+| `json`     | `multiformats/codecs/json` | [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/src/codecs) |
+| `dag-cbor` | `@ipld/dag-cbor`           | [ipld/js-dag-cbor](https://github.com/ipld/js-dag-cbor)                                                |
+| `dag-json` | `@ipld/dag-json`           | [ipld/js-dag-json](https://github.com/ipld/js-dag-json)                                                |
+| `dag-pb`   | `@ipld/dag-pb`             | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb)                                                    |
+| `dag-jose` | `dag-jose`                 | [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose)                            |
 
 ## License
 
 Licensed under either of
 
- * Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / http://www.apache.org/licenses/LICENSE-2.0)
- * MIT ([LICENSE-MIT](LICENSE-MIT) / http://opensource.org/licenses/MIT)
+- Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
+- MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
 
-### Contribution
+## Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
