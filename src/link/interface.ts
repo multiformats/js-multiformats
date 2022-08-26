@@ -31,12 +31,12 @@ export interface Link<
 
   readonly byteOffset: number
   readonly byteLength: number
-  readonly bytes: Uint8Array
+  readonly bytes: ByteView<Link<Data, Format, Alg, V>>
 
 
   equals(other: unknown): other is Link<Data, Format, Alg, Version>
 
-  toString(base?: MultibaseEncoder<string>): string
+  toString<Prefix extends string>(base?: MultibaseEncoder<Prefix>): ToString<Link<Data, Format, Alg, Version>, Prefix>
   toJSON(): { version: V, code: Format, hash: Uint8Array }
   link(): Link<Data, Format, Alg, V>
 

@@ -9,6 +9,7 @@ import { sha256 } from 'multiformats/hashes/sha2'
 
 chai.use(chaiAsPromised)
 const { assert } = chai
+const utf8 = new TextEncoder()
 
 const h1 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
 // const h2 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1o'
@@ -32,7 +33,41 @@ describe('Link', () => {
     assert.equal(CID.isCID(CID.parse(h1).toV1()), true)
   })
 
-  describe('create', () => {})
+  describe('create', () => {
+    it('create v1', async () => {
+      const hash = await sha256.digest(utf8.encode('abc'))
+      const link = Link.create(0x71, hash)
+      /** @type {0x71} */
+      const code = link.code
+      assert.deepStrictEqual(code, 0x71)
+
+      /** @type {1} */
+      const version = link.version
+      assert.deepEqual(version, 1)
+
+      /** @type {Link.MultihashDigest<typeof sha256.code>}> */
+      const multihash = link.multihash
+
+      assert.deepStrictEqual(multihash, hash)
+    })
+
+    it('create v0', async () => {
+      const hash = await sha256.digest(utf8.encode('abc'))
+      const link = Link.createLegacy(hash)
+
+      /** @type {0x70} */
+      const code = link.code
+      assert.deepStrictEqual(code, 0x70)
+
+      /** @type {0} */
+      const version = link.version
+      assert.deepEqual(version, 0)
+
+      /** @type {Link.MultihashDigest<typeof sha256.code>}> */
+      const multihash = link.multihash
+      assert.deepStrictEqual(multihash, hash)
+    })
+  })
 
   describe('parse', () => {
     it('can parse any string', () => {
@@ -65,5 +100,26 @@ describe('Link', () => {
         /** @type {Link.Link<unknown, typeof CBOR, typeof SHA256, 0>} */ (link)
       assert.ok(t2)
     })
+  })
+})
+
+describe('decode', () => {
+  it('decode', async () => {
+    const hash = await sha256.digest(utf8.encode('abc'))
+    const { bytes } = Link.create(0x71, hash)
+
+    const link = Link.decode(bytes)
+
+    /** @type {0x71} */
+    const code = link.code
+    assert.deepStrictEqual(code, 0x71)
+
+    /** @type {1} */
+    const version = link.version
+    assert.deepEqual(version, 1)
+
+    /** @type {Link.MultihashDigest<typeof sha256.code>}> */
+    const multihash = link.multihash
+    assert.deepStrictEqual(multihash, hash)
   })
 })
