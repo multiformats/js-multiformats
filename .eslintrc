@@ -1,13 +1,8 @@
 {
-  "extends": [
-    "standard",
-    "plugin:@typescript-eslint/recommended"
-  ],
-  "plugins": [
-    "@typescript-eslint"
-  ],
-  "rules": {
-    "@typescript-eslint/explicit-module-boundary-types": "off",
-    "@typescript-eslint/ban-ts-comment": "off"
+  "extends": "ipfs",
+  "env": {
+    "browser": true,
+    "node": true,
+    "es2020": true
   }
 }

@@ -2,137 +2,9 @@
   "name": "multiformats",
   "version": "0.0.0-dev",
   "description": "Interface for multihash, multicodec, multibase and CID",
-  "main": "./src/index.js",
-  "types": "./types/src/index.d.ts",
-  "type": "module",
-  "scripts": {
-    "build": "npm run build:js && npm run build:types",
-    "build:js": "ipjs build --tests --main && npm run build:copy",
-    "build:copy": "cp -a tsconfig.json src vendor test dist/ && rm -rf dist/test/ts-use",
-    "build:types": "npm run build:copy && cd dist && tsc --build",
-    "build:vendor": "npm run build:vendor:varint && npm run build:vendor:base-x",
-    "build:vendor:varint": "npm_config_yes=true npx brrp -x varint > vendor/varint.js",
-    "build:vendor:base-x": "npm_config_yes=true npx brrp -x @multiformats/base-x > vendor/base-x.js",
-    "lint": "standard",
-    "test:cjs": "npm run build:js && mocha dist/cjs/node-test/test-*.js && npm run test:cjs:browser",
-    "test:esm": "npm run build:js && mocha dist/esm/node-test/test-*.js && npm run test:esm:browser",
-    "test:node": "c8 --check-coverage --branches 100 --functions 100 --lines 100 mocha test/test-*.js",
-    "test:cjs:browser": "polendina --page --worker --serviceworker --cleanup dist/cjs/browser-test/test-*.js",
-    "test:esm:browser": "polendina --page --worker --serviceworker --cleanup dist/esm/browser-test/test-*.js",
-    "test:ts": "npm run build:types && npm run test --prefix test/ts-use",
-    "test": "npm run lint && npm run test:node && npm run test:esm && npm run test:ts",
-    "test:ci": "npm run lint && npm run test:node && npm run test:esm && npm run test:cjs && npm run test:ts",
-    "coverage": "c8 --reporter=html mocha test/test-*.js && npm_config_yes=true npx st -d coverage -p 8080"
-  },
-  "c8": {
-    "exclude": [
-      "test/**",
-      "vendor/**"
-    ]
-  },
-  "keywords": [
-    "ipfs",
-    "ipld",
-    "multiformats"
-  ],
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
-  "license": "(Apache-2.0 AND MIT)",
-  "exports": {
-    ".": {
-      "import": "./src/index.js"
-    },
-    "./cid": {
-      "import": "./src/cid.js"
-    },
-    "./basics": {
-      "import": "./src/basics.js"
-    },
-    "./block": {
-      "import": "./src/block.js"
-    },
-    "./traversal": {
-      "import": "./src/traversal.js"
-    },
-    "./bases/identity": {
-      "import": "./src/bases/identity.js"
-    },
-    "./bases/base2": {
-      "import": "./src/bases/base2.js"
-    },
-    "./bases/base8": {
-      "import": "./src/bases/base8.js"
-    },
-    "./bases/base10": {
-      "import": "./src/bases/base10.js"
-    },
-    "./bases/base16": {
-      "import": "./src/bases/base16.js"
-    },
-    "./bases/base32": {
-      "import": "./src/bases/base32.js"
-    },
-    "./bases/base36": {
-      "import": "./src/bases/base36.js"
-    },
-    "./bases/base58": {
-      "import": "./src/bases/base58.js"
-    },
-    "./bases/base64": {
-      "import": "./src/bases/base64.js"
-    },
-    "./bases/base256emoji": {
-      "import": "./src/bases/base256emoji.js"
-    },
-    "./hashes/hasher": {
-      "import": "./src/hashes/hasher.js"
-    },
-    "./hashes/digest": {
-      "import": "./src/hashes/digest.js"
-    },
-    "./hashes/sha2": {
-      "browser": "./src/hashes/sha2-browser.js",
-      "import": "./src/hashes/sha2.js"
-    },
-    "./hashes/identity": {
-      "import": "./src/hashes/identity.js"
-    },
-    "./codecs/json": {
-      "import": "./src/codecs/json.js"
-    },
-    "./codecs/raw": {
-      "import": "./src/codecs/raw.js"
-    }
-  },
-  "devDependencies": {
-    "@ipld/dag-pb": "^2.1.14",
-    "@stablelib/sha256": "^1.0.1",
-    "@stablelib/sha512": "^1.0.1",
-    "@types/chai": "^4.3.0",
-    "@types/chai-as-promised": "^7.1.4",
-    "@types/mocha": "^9.0.0",
-    "@types/node": "^18.0.0",
-    "@typescript-eslint/eslint-plugin": "^5.6.0",
-    "@typescript-eslint/parser": "^5.6.0",
-    "buffer": "^6.0.3",
-    "c8": "^7.10.0",
-    "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1",
-    "cids": "^1.1.9",
-    "ipjs": "^5.2.0",
-    "mocha": "^10.0.0",
-    "polendina": "^3.0.0",
-    "standard": "^17.0.0",
-    "typescript": "^4.5.4"
-  },
-  "standard": {
-    "ignore": [
-      "dist",
-      "vendor"
-    ]
-  },
-  "directories": {
-    "test": "test"
-  },
+  "license": "Apache-2.0 OR MIT",
+  "homepage": "https://github.com/multiformats/js-multiformats#readme",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/multiformats/js-multiformats.git"
@@ -140,20 +12,135 @@
   "bugs": {
     "url": "https://github.com/multiformats/js-multiformats/issues"
   },
-  "homepage": "https://github.com/multiformats/js-multiformats#readme",
+  "keywords": [
+    "ipfs",
+    "ipld",
+    "multiformats"
+  ],
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "type": "module",
+  "types": "./dist/src/index.d.ts",
   "typesVersions": {
     "*": {
       "*": [
-        "types/src/*"
+        "*",
+        "dist/*",
+        "dist/src/*",
+        "dist/src/*/index"
       ],
-      "types/*": [
-        "types/*"
+      "src/*": [
+        "*",
+        "dist/*",
+        "dist/src/*",
+        "dist/src/*/index"
       ]
+    }
+  },
+  "files": [
+    "src",
+    "dist",
+    "!dist/test",
+    "!**/*.tsbuildinfo"
+  ],
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./src/index.js"
+    },
+    "./bases/base10": {
+      "types": "./src/bases/base10.d.ts",
+      "import": "./src/bases/base10.js"
+    },
+    "./bases/base16": {
+      "types": "./src/bases/base16.d.ts",
+      "import": "./src/bases/base16.js"
+    },
+    "./bases/base2": {
+      "types": "./src/bases/base2.d.ts",
+      "import": "./src/bases/base2.js"
+    },
+    "./bases/base256emoji": {
+      "types": "./src/bases/base256emoji.d.ts",
+      "import": "./src/bases/base256emoji.js"
+    },
+    "./bases/base32": {
+      "types": "./src/bases/base32.d.ts",
+      "import": "./src/bases/base32.js"
+    },
+    "./bases/base36": {
+      "types": "./src/bases/base36.d.ts",
+      "import": "./src/bases/base36.js"
+    },
+    "./bases/base58": {
+      "types": "./src/bases/base58.d.ts",
+      "import": "./src/bases/base58.js"
+    },
+    "./bases/base64": {
+      "types": "./src/bases/base64.d.ts",
+      "import": "./src/bases/base64.js"
+    },
+    "./bases/base8": {
+      "types": "./src/bases/base8.d.ts",
+      "import": "./src/bases/base8.js"
+    },
+    "./bases/identity": {
+      "types": "./src/bases/identity.d.ts",
+      "import": "./src/bases/identity.js"
+    },
+    "./basics": {
+      "types": "./src/basics.d.ts",
+      "import": "./src/basics.js"
+    },
+    "./block": {
+      "types": "./src/block.d.ts",
+      "import": "./src/block.js"
+    },
+    "./cid": {
+      "types": "./src/cid.d.ts",
+      "import": "./src/cid.js"
+    },
+    "./codecs/json": {
+      "types": "./src/codecs/json.d.ts",
+      "import": "./src/codecs/json.js"
+    },
+    "./codecs/raw": {
+      "types": "./src/codecs/raw.d.ts",
+      "import": "./src/codecs/raw.js"
+    },
+    "./hashes/digest": {
+      "types": "./src/hashes/digest.d.ts",
+      "import": "./src/hashes/digest.js"
+    },
+    "./hashes/hasher": {
+      "types": "./src/hashes/hasher.d.ts",
+      "import": "./src/hashes/hasher.js"
+    },
+    "./hashes/identity": {
+      "types": "./src/hashes/identity.d.ts",
+      "import": "./src/hashes/identity.js"
+    },
+    "./hashes/sha2": {
+      "types": "./src/hashes/sha2.d.ts",
+      "browser": "./src/hashes/sha2-browser.js",
+      "import": "./src/hashes/sha2.js"
+    },
+    "./traversal": {
+      "types": "./src/traversal.d.ts",
+      "import": "./src/traversal.js"
+    }
+  },
+  "eslintConfig": {
+    "extends": "ipfs",
+    "parserOptions": {
+      "sourceType": "module"
     }
   },
   "release": {
     "branches": [
-      "master"
+      "esm-migration"
     ],
     "plugins": [
       [
@@ -178,15 +165,15 @@
               "release": "patch"
             },
             {
-              "type": "chore",
-              "release": "patch"
-            },
-            {
               "type": "docs",
               "release": "patch"
             },
             {
               "type": "test",
+              "release": "patch"
+            },
+            {
+              "type": "deps",
               "release": "patch"
             },
             {
@@ -216,7 +203,11 @@
               },
               {
                 "type": "docs",
-                "section": "Trivial Changes"
+                "section": "Documentation"
+              },
+              {
+                "type": "deps",
+                "section": "Dependencies"
               },
               {
                 "type": "test",
@@ -227,14 +218,47 @@
         }
       ],
       "@semantic-release/changelog",
-      [
-        "@semantic-release/npm",
-        {
-          "pkgRoot": "dist"
-        }
-      ],
+      "@semantic-release/npm",
       "@semantic-release/github",
       "@semantic-release/git"
     ]
-  }
+  },
+  "scripts": {
+    "lint": "aegir lint",
+    "release": "aegir release",
+    "build": "aegir build",
+    "test": "aegir test",
+    "test:node": "aegir test --target node",
+    "test:browser": "aegir test --target browser"
+  },
+  "devDependencies": {
+    "@ipld/dag-pb": "^2.1.14",
+    "@stablelib/sha256": "^1.0.1",
+    "@stablelib/sha512": "^1.0.1",
+    "@types/chai": "^4.3.0",
+    "@types/chai-as-promised": "^7.1.4",
+    "@types/mocha": "^9.0.0",
+    "@types/node": "^18.0.0",
+    "aegir": "^37.5.1",
+    "buffer": "^6.0.3",
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "cids": "^1.1.9"
+  },
+  "aegir": {
+    "build": {
+      "bundle": false
+    },
+    "test": {
+      "cov": true,
+      "target": [
+        "node",
+        "browser"
+      ]
+    }
+  },
+  "directories": {
+    "test": "test"
+  },
+  "main": "./src/index.js"
 }
