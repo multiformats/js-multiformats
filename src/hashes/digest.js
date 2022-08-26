@@ -25,7 +25,7 @@ export const create = (code, digest) => {
  * @param {Uint8Array} multihash
  * @returns {MultihashDigest}
  */
-export const decode = (multihash) => {
+export const decode = multihash => {
   const bytes = coerce(multihash)
   const [code, sizeOffset] = varint.decode(bytes)
   const [size, digestOffset] = varint.decode(bytes.subarray(sizeOffset))
@@ -40,14 +40,23 @@ export const decode = (multihash) => {
 
 /**
  * @param {MultihashDigest} a
- * @param {MultihashDigest} b
- * @returns {boolean}
+ * @param {unknown} b
+ * @returns {b is MultihashDigest}
  */
 export const equals = (a, b) => {
   if (a === b) {
     return true
   } else {
-    return a.code === b.code && a.size === b.size && equalBytes(a.bytes, b.bytes)
+    const data = /** @type {{code?:unknown, size?:unknown, bytes?:unknown}} */ (
+      b
+    )
+
+    return (
+      a.code === data.code &&
+      a.size === data.size &&
+      data.bytes instanceof Uint8Array &&
+      equalBytes(a.bytes, data.bytes)
+    )
   }
 }
 
