@@ -97,3 +97,4 @@ export interface UnibaseDecoder<Prefix extends string> extends MultibaseDecoder<
 export interface CombobaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
   readonly decoders: Record<Prefix, UnibaseDecoder<Prefix>>
 }
+

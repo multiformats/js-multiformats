@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable no-use-before-define */
-import { Link, CIDView, CIDVersion } from '../cid/interface.js'
+import { Link, Version } from '../link/interface.js'
+import { CID } from "../cid.js"
 
 /**
  * A byte-encoded representation of some type of `Data`.
@@ -46,7 +47,7 @@ export interface Block<
   T = unknown,
   C extends number = number,
   A extends number = number,
-  V extends CIDVersion = 1
+  V extends Version = 1
 > {
   bytes: ByteView<T>
   cid: Link<T, C, A, V>
@@ -54,18 +55,18 @@ export interface Block<
 
 export type BlockCursorView<T extends unknown = unknown> =
   | { value: T, remaining?: undefined }
-  | { value: CIDView, remaining: string }
+  | { value: CID, remaining: string }
 
 export interface BlockView<
   T = unknown,
   C extends number = number,
   A extends number = number,
-  V extends CIDVersion = 1
+  V extends Version = 1
 > extends Block<T, C, A, V> {
-  cid: CIDView<C, A, V> & Link<T, C, A, V>
+  cid: CID<T, C, A, V>
   value: T
 
-  links(): Iterable<[string, CIDView]>
+  links(): Iterable<[string, CID]>
   tree(): Iterable<string>
   get(path:string): BlockCursorView<unknown>
 }
