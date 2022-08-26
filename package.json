@@ -44,6 +44,9 @@
     "./cid": {
       "import": "./src/cid.js"
     },
+    "./link": {
+      "import": "./src/link.js"
+    },
     "./basics": {
       "import": "./src/basics.js"
     },
