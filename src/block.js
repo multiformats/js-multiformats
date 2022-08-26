@@ -13,7 +13,7 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
- * @returns {Iterable<[string, API.CIDView]>}
+ * @returns {Iterable<[string, CID]>}
  */
 const links = function * (source, base) {
   if (source == null) return
@@ -96,13 +96,13 @@ const get = (source, path) => {
  * @template {unknown} T - Logical type of the data encoded in the block
  * @template {number} C - multicodec code corresponding to codec used to encode the block
  * @template {number} A - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template {API.CIDVersion} V - CID version
+ * @template {API.Version} V - CID version
  * @implements {API.BlockView<T, C, A, V>}
  */
 class Block {
   /**
    * @param {Object} options
-   * @param {API.CIDView<C, A, V>} options.cid
+   * @param {CID<T, C, A, V>} options.cid
    * @param {API.ByteView<T>} options.bytes
    * @param {T} options.value
    */
@@ -156,6 +156,7 @@ const encode = async ({ value, codec, hasher }) => {
 
   const bytes = codec.encode(value)
   const hash = await hasher.digest(bytes)
+  /** @type {CID<T, Code, Alg, 1>} */
   const cid = CID.create(
     1,
     codec.code,
@@ -181,6 +182,7 @@ const decode = async ({ bytes, codec, hasher }) => {
 
   const value = codec.decode(bytes)
   const hash = await hasher.digest(bytes)
+  /** @type {CID<T, Code, Alg, 1>} */
   const cid = CID.create(1, codec.code, hash)
 
   return new Block({ value, bytes, cid })
@@ -188,14 +190,14 @@ const decode = async ({ bytes, codec, hasher }) => {
 
 /**
  * @typedef {Object} RequiredCreateOptions
- * @property {API.CID} options.cid
+ * @property {CID} options.cid
  */
 
 /**
  * @template {unknown} T - Logical type of the data encoded in the block
  * @template {number} Code - multicodec code corresponding to codec used to encode the block
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template {API.CIDVersion} V - CID version
+ * @template {API.Version} V - CID version
  * @param {{ cid: API.Link<T, Code, Alg, V>, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:API.Link<T, Code, Alg, V>, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
  * @returns {API.BlockView<T, Code, Alg, V>}
  */
@@ -208,7 +210,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
 
   return new Block({
     // eslint-disable-next-line object-shorthand
-    cid: /** @type {API.CIDView<Code, Alg, V>} */ (cid),
+    cid: /** @type {CID<T, Code, Alg, V>} */ (cid),
     bytes,
     value
   })
@@ -218,9 +220,9 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @template {unknown} T - Logical type of the data encoded in the block
  * @template {number} Code - multicodec code corresponding to codec used to encode the block
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template {API.CIDVersion} V - CID version
+ * @template {API.Version} V - CID version
  * @param {Object} options
- * @param {API.CID<Code, Alg, V>} options.cid
+ * @param {CID<T, Code, Alg, V>} options.cid
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
