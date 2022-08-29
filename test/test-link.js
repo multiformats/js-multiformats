@@ -5,15 +5,12 @@ import { CID } from 'multiformats'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { sha256 } from 'multiformats/hashes/sha2'
-// import { code as PB } from '@ipld/dag-pb'
 
 chai.use(chaiAsPromised)
 const { assert } = chai
 const utf8 = new TextEncoder()
 
 const h1 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
-// const h2 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1o'
-// const h3 = 'zdj7Wd8AMwqnhJGQCbFxBVodGSBG84TM7Hs1rcJuQMwTyfEDS'
 const h4 = 'bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae'
 const CBOR = 0x71
 // eslint-disable-next-line
@@ -47,7 +44,6 @@ describe('Link', () => {
 
       /** @type {Link.MultihashDigest<typeof sha256.code>}> */
       const multihash = link.multihash
-
       assert.deepStrictEqual(multihash, hash)
     })
 
