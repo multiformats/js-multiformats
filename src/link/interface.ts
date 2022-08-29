@@ -43,8 +43,6 @@ export interface Link<
   toV1(): Link<Data, Format, Alg, 1>
 }
 
-
-
 export interface LegacyLink<T extends unknown = unknown> extends Link<T, DAG_PB, SHA_256, 0> {
 }
 
