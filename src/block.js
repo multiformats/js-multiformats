@@ -221,7 +221,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @template {API.Version} V - CID version
  * @param {Object} options
- * @param {CID<T, Code, Alg, V>} options.cid
+ * @param {API.Link<T, Code, Alg, V>} options.cid
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
