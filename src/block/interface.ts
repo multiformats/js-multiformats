@@ -27,7 +27,7 @@ export interface ByteView<Data> extends Uint8Array, Phantom<Data> {}
  * type information about the structure of the data encoded into the array.
  */
 export interface Phantom<T> {
-  // This field can not be represented because field name is non-existings
+  // This field can not be represented because field name is nonexistent
   // unique symbol. But given that field is optional any object will valid
   // type contstraint.
   [Marker]?: T
