@@ -227,7 +227,7 @@ export class CID {
    */
   static isCID (value) {
     deprecate(/^0\.0/, IS_CID_DEPRECATION)
-    return !!(value && (value[cidSymbol] || value.asCID === value))
+    return Boolean(value && (value[cidSymbol] || value.asCID === value))
   }
 
   get toBaseEncodedString () {
@@ -255,6 +255,15 @@ export class CID {
   }
 
   /**
+   * Takes any input `value` and returns a `CID` instance if it was
+   * a `CID` otherwise returns `null`. If `value` is instanceof `CID`
+   * it will return value back. If `value` is not instance of this CID
+   * class, but is compatible CID it will return new instance of this
+   * `CID` class. Otherwise returs null.
+   *
+   * This allows two different incompatible versions of CID library to
+   * co-exist and interop as long as binary interface is compatible.
+   *
    * @template {unknown} Data
    * @template {number} Format
    * @template {number} Alg
@@ -298,6 +307,7 @@ export class CID {
   }
 
   /**
+   *
    * @template {unknown} Data
    * @template {number} Format
    * @template {number} Alg
@@ -334,6 +344,7 @@ export class CID {
 
   /**
    * Simplified version of `create` for CIDv0.
+   *
    * @template {unknown} [T=unknown]
    * @param {API.MultihashDigest<typeof SHA_256_CODE>} digest - Multihash.
    * @returns {CID<T, typeof DAG_PB_CODE, typeof SHA_256_CODE, 0>}
@@ -344,6 +355,7 @@ export class CID {
 
   /**
    * Simplified version of `create` for CIDv1.
+   *
    * @template {unknown} Data
    * @template {number} Code
    * @template {number} Alg
@@ -361,6 +373,7 @@ export class CID {
    *
    * An error will be thrown if the bytes provided do not contain a valid
    * binary representation of a CID.
+   *
    * @template {unknown} Data
    * @template {number} Code
    * @template {number} Alg
@@ -603,6 +616,7 @@ const version = '0.0.0-dev'
  * @param {string} message
  */
 const deprecate = (range, message) => {
+  /* eslint-disable no-console */
   if (range.test(version)) {
     console.warn(message)
     /* c8 ignore next 3 */

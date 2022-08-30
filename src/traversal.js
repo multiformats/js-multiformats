@@ -16,7 +16,8 @@ import { base58btc } from './bases/base58.js'
  */
 
 /**
- * @param {Object} options
+ * @template T
+ * @param {object} options
  * @param {CID} options.cid
  * @param {(cid: CID) => Promise<BlockView|null>} options.load
  * @param {Set<string>} [options.seen]

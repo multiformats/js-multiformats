@@ -3,7 +3,7 @@ import * as Digest from './digest.js'
 /**
  * @template {string} Name
  * @template {number} Code
- * @param {Object} options
+ * @param {object} options
  * @param {Name} options.name
  * @param {Code} options.code
  * @param {(input: Uint8Array) => Await<Uint8Array>} options.encode
