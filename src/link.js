@@ -11,6 +11,7 @@ const SHA_256_CODE = 0x12
 
 /**
  * Simplified version of `create` for CIDv0.
+ *
  * @param {API.MultihashDigest<typeof SHA_256_CODE>} digest - Multihash.
  * @returns {API.LegacyLink}
  */
@@ -18,6 +19,7 @@ export const createLegacy = digest => CID.create(0, DAG_PB_CODE, digest)
 
 /**
  * Simplified version of `create` for CIDv1.
+ *
  * @template {unknown} Data
  * @template {number} Code
  * @template {number} Alg

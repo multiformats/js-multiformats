@@ -71,6 +71,7 @@ const tree = function * (source, base) {
 }
 
 /**
+ *
  * @template T
  * @param {T} source
  * @param {string[]} path
@@ -100,7 +101,7 @@ const get = (source, path) => {
  */
 class Block {
   /**
-   * @param {Object} options
+   * @param {object} options
    * @param {CID<T, C, A, V>} options.cid
    * @param {API.ByteView<T>} options.bytes
    * @param {T} options.value
@@ -131,6 +132,7 @@ class Block {
   }
 
   /**
+   *
    * @param {string} [path]
    * @return {API.BlockCursorView<unknown>}
    */
@@ -143,7 +145,7 @@ class Block {
  * @template {unknown} T - Logical type of the data encoded in the block
  * @template {number} Code - multicodec code corresponding to codec used to encode the block
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @param {Object} options
+ * @param {object} options
  * @param {T} options.value
  * @param {API.BlockEncoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
@@ -169,7 +171,7 @@ const encode = async ({ value, codec, hasher }) => {
  * @template {unknown} T - Logical type of the data encoded in the block
  * @template {number} Code - multicodec code corresponding to codec used to encode the block
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @param {Object} options
+ * @param {object} options
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
@@ -188,7 +190,7 @@ const decode = async ({ bytes, codec, hasher }) => {
 }
 
 /**
- * @typedef {Object} RequiredCreateOptions
+ * @typedef {object} RequiredCreateOptions
  * @property {CID} options.cid
  */
 
@@ -220,7 +222,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @template {number} Code - multicodec code corresponding to codec used to encode the block
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @template {API.Version} V - CID version
- * @param {Object} options
+ * @param {object} options
  * @param {API.Link<T, Code, Alg, V>} options.cid
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec

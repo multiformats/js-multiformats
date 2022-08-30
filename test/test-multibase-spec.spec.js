@@ -1,5 +1,4 @@
 /* eslint-env mocha */
-'use strict'
 
 import { bases } from 'multiformats/basics'
 import { fromString } from 'multiformats/bytes'
