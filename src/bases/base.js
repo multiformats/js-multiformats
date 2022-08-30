@@ -8,6 +8,7 @@ import * as API from './interface.js'
  * Class represents both BaseEncoder and MultibaseEncoder meaning it
  * can be used to encode to multibase or base encode without multibase
  * prefix.
+ *
  * @class
  * @template {string} Base
  * @template {string} Prefix
@@ -46,6 +47,8 @@ class Encoder {
  * Class represents both BaseDecoder and MultibaseDecoder so it could be used
  * to decode multibases (with matching prefix) or just base decode strings
  * with corresponding base encoding.
+ *
+ * @class
  * @template {string} Base
  * @template {string} Prefix
  * @implements {API.MultibaseDecoder<Prefix>}
@@ -193,7 +196,7 @@ export class Codec {
 /**
  * @template {string} Base
  * @template {string} Prefix
- * @param {Object} options
+ * @param {object} options
  * @param {Base} options.name
  * @param {Prefix} options.prefix
  * @param {(bytes:Uint8Array) => string} options.encode
@@ -206,7 +209,7 @@ export const from = ({ name, prefix, encode, decode }) =>
 /**
  * @template {string} Base
  * @template {string} Prefix
- * @param {Object} options
+ * @param {object} options
  * @param {Base} options.name
  * @param {Prefix} options.prefix
  * @param {string} options.alphabet
@@ -324,7 +327,7 @@ const encode = (data, alphabet, bitsPerChar) => {
  *
  * @template {string} Base
  * @template {string} Prefix
- * @param {Object} options
+ * @param {object} options
  * @param {Base} options.name
  * @param {Prefix} options.prefix
  * @param {string} options.alphabet
