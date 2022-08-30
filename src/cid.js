@@ -156,7 +156,7 @@ export class CID {
    */
   static isCID (value) {
     deprecate(/^0\.0/, IS_CID_DEPRECATION)
-    return !!(value && (value[cidSymbol] || value.asCID === value))
+    return Boolean(value && (value[cidSymbol] || value.asCID === value))
   }
 
   get toBaseEncodedString () {
@@ -188,6 +188,7 @@ export class CID {
    *
    * This allows two different incompatible versions of CID library to
    * co-exist and interop as long as binary interface is compatible.
+   *
    * @param {any} value
    * @returns {CID|null}
    */
@@ -218,12 +219,12 @@ export class CID {
   }
 
   /**
- *
- * @param {CIDVersion} version - Version of the CID
- * @param {number} code - Code of the codec content is encoded in.
- * @param {MultihashDigest} digest - (Multi)hash of the of the content.
- * @returns {CID}
- */
+   *
+   * @param {CIDVersion} version - Version of the CID
+   * @param {number} code - Code of the codec content is encoded in.
+   * @param {MultihashDigest} digest - (Multi)hash of the of the content.
+   * @returns {CID}
+   */
   static create (version, code, digest) {
     if (typeof code !== 'number') {
       throw new Error('String codecs are no longer supported')
@@ -249,6 +250,7 @@ export class CID {
 
   /**
    * Simplified version of `create` for CIDv0.
+   *
    * @param {MultihashDigest} digest - Multihash.
    */
   static createV0 (digest) {
@@ -256,12 +258,13 @@ export class CID {
   }
 
   /**
- * Simplified version of `create` for CIDv1.
- * @template {number} Code
- * @param {Code} code - Content encoding format code.
- * @param {MultihashDigest} digest - Miltihash of the content.
- * @returns {CID}
- */
+   * Simplified version of `create` for CIDv1.
+   *
+   * @template {number} Code
+   * @param {Code} code - Content encoding format code.
+   * @param {MultihashDigest} digest - Miltihash of the content.
+   * @returns {CID}
+   */
   static createV1 (code, digest) {
     return CID.create(1, code, digest)
   }
@@ -476,6 +479,7 @@ const version = '0.0.0-dev'
  * @param {string} message
  */
 const deprecate = (range, message) => {
+  /* eslint-disable no-console */
   if (range.test(version)) {
     console.warn(message)
   /* c8 ignore next 3 */

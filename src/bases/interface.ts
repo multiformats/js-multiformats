@@ -8,9 +8,10 @@ export interface BaseEncoder {
   /**
    * Base encodes to a **plain** (and not a multibase) string. Unlike
    * `encode` no multibase prefix is added.
+   *
    * @param bytes
    */
-  baseEncode(bytes: Uint8Array): string
+  baseEncode: (bytes: Uint8Array) => string
 }
 
 /**
@@ -20,9 +21,10 @@ export interface BaseDecoder {
   /**
    * Decodes **plain** (and not a multibase) string. Unlike
    * decode
+   *
    * @param text
    */
-  baseDecode(text: string): Uint8Array
+  baseDecode: (text: string) => Uint8Array
 }
 
 /**
@@ -58,7 +60,7 @@ export interface MultibaseEncoder<Prefix extends string> {
    * Encodes binary data into **multibase** string (which will have a
    * prefix added).
    */
-  encode(bytes: Uint8Array): Multibase<Prefix>
+  encode: (bytes: Uint8Array) => Multibase<Prefix>
 }
 
 /**
@@ -71,9 +73,10 @@ export interface MultibaseDecoder<Prefix extends string> {
   /**
    * Decodes **multibase** string (which must have a multibase prefix added).
    * If prefix does not match
+   *
    * @param multibase
    */
-  decode(multibase: Multibase<Prefix>): Uint8Array
+  decode: (multibase: Multibase<Prefix>) => Uint8Array
 }
 
 /**
@@ -85,7 +88,6 @@ export interface MultibaseCodec<Prefix extends string> {
   encoder: MultibaseEncoder<Prefix>
   decoder: MultibaseDecoder<Prefix>
 }
-
 
 export interface UnibaseDecoder<Prefix extends string> extends MultibaseDecoder<Prefix> {
   // Reserve this property so it can be used to derive type.

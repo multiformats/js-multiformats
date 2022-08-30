@@ -11,7 +11,7 @@ import { base58btc } from './bases/base58.js'
 
 /**
  * @template T
- * @param {Object} options
+ * @param {object} options
  * @param {CID} options.cid
  * @param {(cid: CID) => Promise<Block<T>|null>} options.load
  * @param {Set<string>} [options.seen]

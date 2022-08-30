@@ -93,7 +93,7 @@ const get = (source, path) => {
  */
 class Block {
   /**
-   * @param {Object} options
+   * @param {object} options
    * @param {CID} options.cid
    * @param {ByteView<T>} options.bytes
    * @param {T} options.value
@@ -124,8 +124,8 @@ class Block {
   }
 
   /**
- * @param {string} [path]
- */
+   * @param {string} [path]
+   */
   get (path = '/') {
     return get(this.value, path.split('/').filter(Boolean))
   }
@@ -135,7 +135,7 @@ class Block {
  * @template T
  * @template {number} Code
  * @template {number} Algorithm
- * @param {Object} options
+ * @param {object} options
  * @param {T} options.value
  * @param {BlockEncoder<Code, T>} options.codec
  * @param {Hasher<Algorithm>} options.hasher
@@ -156,7 +156,7 @@ const encode = async ({ value, codec, hasher }) => {
  * @template T
  * @template {number} Code
  * @template {number} Algorithm
- * @param {Object} options
+ * @param {object} options
  * @param {ByteView<T>} options.bytes
  * @param {BlockDecoder<Code, T>} options.codec
  * @param {Hasher<Algorithm>} options.hasher
@@ -174,7 +174,7 @@ const decode = async ({ bytes, codec, hasher }) => {
 }
 
 /**
- * @typedef {Object} RequiredCreateOptions
+ * @typedef {object} RequiredCreateOptions
  * @property {CID} options.cid
  */
 
@@ -198,7 +198,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @template T
  * @template {number} Code
  * @template {number} Algorithm
- * @param {Object} options
+ * @param {object} options
  * @param {CID} options.cid
  * @param {ByteView<T>} options.bytes
  * @param {BlockDecoder<Code, T>} options.codec
