@@ -29,25 +29,11 @@
 $ npm i multiformats
 ```
 
-- [Interfaces](#interfaces)
-  - [Creating Blocks](#creating-blocks)
-  - [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
-  - [Multicodec Encoders / Decoders / Codecs](#multicodec-encoders--decoders--codecs)
-  - [Multihash Hashers](#multihash-hashers)
-  - [Traversal](#traversal)
-- [Legacy interface](#legacy-interface)
-- [Implementations](#implementations)
-  - [Multibase codecs](#multibase-codecs)
-  - [Multihash hashers](#multihash-hashers-1)
-  - [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
-- [License](#license)
-  - [Contribution](#contribution)
+## Interfaces
 
 This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase, and CID). They can be used to implement custom base encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
 This library provides implementations for most basics and many others can be found in linked repositories.
-
-## Interfaces
 
 ```js
 import { CID } from 'multiformats/cid'
