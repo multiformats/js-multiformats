@@ -35,7 +35,7 @@ export const format = (link, base) => {
   }
 }
 
-/**  @type {WeakMap<API.UnknownLink, Map<string, string>>} */
+/** @type {WeakMap<API.UnknownLink, Map<string, string>>} */
 const cache = new WeakMap()
 
 /**
@@ -174,7 +174,7 @@ export class CID {
    * @template {API.Version} Version
    * @param {API.Link<Data, Format, Alg, Version>} self
    * @param {unknown} other
-   * @returns {other is cid}
+   * @returns {other is CID}
    */
   static equals (self, other) {
     const unknown =
