@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable no-use-before-define */
 import { Link, Version } from '../link/interface.js'
-import { CID } from "../cid.js"
+import { CID } from '../cid.js'
 
 /**
  * A byte-encoded representation of some type of `Data`.
@@ -13,6 +13,8 @@ import { CID } from "../cid.js"
  * binary representation of a `{hello: "world"}.
  */
 export interface ByteView<Data> extends Uint8Array, Phantom<Data> {}
+
+declare const Marker: unique symbol
 
 /**
  * A utility type to retain an unused type parameter `T`.
@@ -32,7 +34,6 @@ export interface Phantom<T> {
   // type contstraint.
   [Marker]?: T
 }
-declare const Marker: unique symbol
 
 /**
  * Represents an IPLD block (including its CID) that can be decoded to data of
@@ -66,7 +67,7 @@ export interface BlockView<
   cid: CID<T, C, A, V>
   value: T
 
-  links(): Iterable<[string, CID]>
-  tree(): Iterable<string>
-  get(path:string): BlockCursorView<unknown>
+  links: () => Iterable<[string, CID]>
+  tree: () => Iterable<string>
+  get: (path: string) => BlockCursorView<unknown>
 }

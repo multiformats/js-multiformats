@@ -39,8 +39,7 @@
       ],
       "multiformats/*": [
         "./src/*.js"
-      ],
-      
+      ]
     }
   },
   "include": [
