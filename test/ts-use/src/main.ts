@@ -9,6 +9,7 @@ const main = async () => {
     codec: json
   })
 
+  /* eslint-disable no-console */
   console.log(block)
 }
 
