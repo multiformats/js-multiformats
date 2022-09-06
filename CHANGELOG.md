@@ -1,3 +1,15 @@
+## [9.8.0](https://github.com/multiformats/js-multiformats/compare/v9.7.1...v9.8.0) (2022-09-06)
+
+
+### Features
+
+* use aegir for build/testing/release ([10d4604](https://github.com/multiformats/js-multiformats/commit/10d4604d5e2ed8d643836f79cb0936a3f52c3488))
+
+
+### Bug Fixes
+
+* address JS & TS linting complaints ([e494e3c](https://github.com/multiformats/js-multiformats/commit/e494e3c6347547f79ba638952b2ced2c844a3c91))
+
 ## [9.7.1](https://github.com/multiformats/js-multiformats/compare/v9.7.0...v9.7.1) (2022-07-26)
 
 
