@@ -3,41 +3,33 @@ import { bytes as binary, CID } from './index.js'
 // eslint-disable-next-line
 import * as API from './interface.js'
 
-const readonly = ({ enumerable = true, configurable = false } = {}) => ({
-  enumerable,
-  configurable,
-  writable: false
-})
+function readonly ({ enumerable = true, configurable = false } = {}) {
+  return { enumerable, configurable, writable: false }
+}
 
 /**
- * @template T
- * @param {T} source
- * @param {Array<string|number>} base
+ * @param {[string|number, string]} path
+ * @param {any} value
  * @returns {Iterable<[string, CID]>}
  */
-const links = function * (source, base) {
-  if (source == null) return
-  if (source instanceof Uint8Array) return
-  for (const [key, value] of Object.entries(source)) {
-    const path = [...base, key]
-    if (value != null && typeof value === 'object') {
-      if (Array.isArray(value)) {
-        for (const [index, element] of value.entries()) {
-          const elementPath = [...path, index]
-          const cid = CID.asCID(element)
-          if (cid) {
-            yield [elementPath.join('/'), cid]
-          } else if (typeof element === 'object') {
-            yield * links(element, elementPath)
-          }
-        }
-      } else {
-        const cid = CID.asCID(value)
+function * linksWithin (path, value) {
+  if (value != null && typeof value === 'object') {
+    if (Array.isArray(value)) {
+      for (const [index, element] of value.entries()) {
+        const elementPath = [...path, index]
+        const cid = CID.asCID(element)
         if (cid) {
-          yield [path.join('/'), cid]
-        } else {
-          yield * links(value, path)
+          yield [elementPath.join('/'), cid]
+        } else if (typeof element === 'object') {
+          yield * links(element, elementPath)
         }
+      }
+    } else {
+      const cid = CID.asCID(value)
+      if (cid) {
+        yield [path.join('/'), cid]
+      } else {
+        yield * links(value, path)
       }
     }
   }
@@ -47,25 +39,52 @@ const links = function * (source, base) {
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
+ * @returns {Iterable<[string, CID]>}
+ */
+function * links (source, base) {
+  if (source == null || source instanceof Uint8Array) {
+    return
+  }
+  for (const [key, value] of Object.entries(source)) {
+    const path = /** @type {[string|number, string]} */ ([...base, key])
+    yield * linksWithin(path, value)
+  }
+}
+
+/**
+ * @param {[string|number, string]} path
+ * @param {any} value
  * @returns {Iterable<string>}
  */
-const tree = function * (source, base) {
-  if (source == null) return
+function * treeWithin (path, value) {
+  if (Array.isArray(value)) {
+    for (const [index, element] of value.entries()) {
+      const elementPath = [...path, index]
+      yield elementPath.join('/')
+      if (typeof element === 'object' && !CID.asCID(element)) {
+        yield * tree(element, elementPath)
+      }
+    }
+  } else {
+    yield * tree(value, path)
+  }
+}
+
+/**
+ * @template T
+ * @param {T} source
+ * @param {Array<string|number>} base
+ * @returns {Iterable<string>}
+ */
+function * tree (source, base) {
+  if (source == null || typeof source !== 'object') {
+    return
+  }
   for (const [key, value] of Object.entries(source)) {
-    const path = [...base, key]
+    const path = /** @type {[string|number, string]} */ ([...base, key])
     yield path.join('/')
     if (value != null && !(value instanceof Uint8Array) && typeof value === 'object' && !CID.asCID(value)) {
-      if (Array.isArray(value)) {
-        for (const [index, element] of value.entries()) {
-          const elementPath = [...path, index]
-          yield elementPath.join('/')
-          if (typeof element === 'object' && !CID.asCID(element)) {
-            yield * tree(element, elementPath)
-          }
-        }
-      } else {
-        yield * tree(value, path)
-      }
+      yield * treeWithin(path, value)
     }
   }
 }
@@ -77,7 +96,7 @@ const tree = function * (source, base) {
  * @param {string[]} path
  * @return {API.BlockCursorView<unknown>}
  */
-const get = (source, path) => {
+function get (source, path) {
   let node = /** @type {Record<string, any>} */(source)
   for (const [index, key] of path.entries()) {
     node = node[key]
@@ -151,7 +170,7 @@ class Block {
  * @param {API.MultihashHasher<Alg>} options.hasher
  * @returns {Promise<API.BlockView<T, Code, Alg>>}
  */
-const encode = async ({ value, codec, hasher }) => {
+async function encode ({ value, codec, hasher }) {
   if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
@@ -177,7 +196,7 @@ const encode = async ({ value, codec, hasher }) => {
  * @param {API.MultihashHasher<Alg>} options.hasher
  * @returns {Promise<API.BlockView<T, Code, Alg>>}
  */
-const decode = async ({ bytes, codec, hasher }) => {
+async function decode ({ bytes, codec, hasher }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
@@ -202,7 +221,7 @@ const decode = async ({ bytes, codec, hasher }) => {
  * @param {{ cid: API.Link<T, Code, Alg, V>, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:API.Link<T, Code, Alg, V>, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
  * @returns {API.BlockView<T, Code, Alg, V>}
  */
-const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
+function createUnsafe ({ bytes, cid, value: maybeValue, codec }) {
   const value = maybeValue !== undefined
     ? maybeValue
     : (codec && codec.decode(bytes))
@@ -229,7 +248,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @param {API.MultihashHasher<Alg>} options.hasher
  * @returns {Promise<API.BlockView<T, Code, Alg, V>>}
  */
-const create = async ({ bytes, cid, hasher, codec }) => {
+async function create ({ bytes, cid, hasher, codec }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!hasher) throw new Error('Missing required argument "hasher"')
   const value = codec.decode(bytes)
