@@ -6,5 +6,14 @@
   },
   "scripts": {
     "test": "npm install && npm_config_yes=true npx -p typescript tsc --noEmit"
+  },
+  "eslintConfig": {
+    "extends": "ipfs",
+    "parserOptions": {
+      "sourceType": "module",
+      "project": [
+        "./test/ts-use/tsconfig.json"
+      ]
+    }
   }
 }

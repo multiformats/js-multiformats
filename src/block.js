@@ -1,10 +1,36 @@
 import { bytes as binary, CID } from './index.js'
 
-const readonly = ({ enumerable = true, configurable = false } = {}) => ({
-  enumerable,
-  configurable,
-  writable: false
-})
+function readonly ({ enumerable = true, configurable = false } = {}) {
+  return { enumerable, configurable, writable: false }
+}
+
+/**
+ * @param {[string|number, string]} path
+ * @param {any} value
+ * @returns {Iterable<[string, CID]>}
+ */
+function * linksWithin (path, value) {
+  if (value != null && typeof value === 'object') {
+    if (Array.isArray(value)) {
+      for (const [index, element] of value.entries()) {
+        const elementPath = [...path, index]
+        const cid = CID.asCID(element)
+        if (cid) {
+          yield [elementPath.join('/'), cid]
+        } else if (typeof element === 'object') {
+          yield * links(element, elementPath)
+        }
+      }
+    } else {
+      const cid = CID.asCID(value)
+      if (cid) {
+        yield [path.join('/'), cid]
+      } else {
+        yield * links(value, path)
+      }
+    }
+  }
+}
 
 /**
  * @template T
@@ -12,31 +38,32 @@ const readonly = ({ enumerable = true, configurable = false } = {}) => ({
  * @param {Array<string|number>} base
  * @returns {Iterable<[string, CID]>}
  */
-const links = function * (source, base) {
-  if (source == null) return
-  if (source instanceof Uint8Array) return
+function * links (source, base) {
+  if (source == null || source instanceof Uint8Array) {
+    return
+  }
   for (const [key, value] of Object.entries(source)) {
-    const path = [...base, key]
-    if (value != null && typeof value === 'object') {
-      if (Array.isArray(value)) {
-        for (const [index, element] of value.entries()) {
-          const elementPath = [...path, index]
-          const cid = CID.asCID(element)
-          if (cid) {
-            yield [elementPath.join('/'), cid]
-          } else if (typeof element === 'object') {
-            yield * links(element, elementPath)
-          }
-        }
-      } else {
-        const cid = CID.asCID(value)
-        if (cid) {
-          yield [path.join('/'), cid]
-        } else {
-          yield * links(value, path)
-        }
+    const path = /** @type {[string|number, string]} */ ([...base, key])
+    yield * linksWithin(path, value)
+  }
+}
+
+/**
+ * @param {[string|number, string]} path
+ * @param {any} value
+ * @returns {Iterable<string>}
+ */
+function * treeWithin (path, value) {
+  if (Array.isArray(value)) {
+    for (const [index, element] of value.entries()) {
+      const elementPath = [...path, index]
+      yield elementPath.join('/')
+      if (typeof element === 'object' && !CID.asCID(element)) {
+        yield * tree(element, elementPath)
       }
     }
+  } else {
+    yield * tree(value, path)
   }
 }
 
@@ -46,23 +73,15 @@ const links = function * (source, base) {
  * @param {Array<string|number>} base
  * @returns {Iterable<string>}
  */
-const tree = function * (source, base) {
-  if (source == null) return
+function * tree (source, base) {
+  if (source == null || typeof source !== 'object') {
+    return
+  }
   for (const [key, value] of Object.entries(source)) {
-    const path = [...base, key]
+    const path = /** @type {[string|number, string]} */ ([...base, key])
     yield path.join('/')
     if (value != null && !(value instanceof Uint8Array) && typeof value === 'object' && !CID.asCID(value)) {
-      if (Array.isArray(value)) {
-        for (const [index, element] of value.entries()) {
-          const elementPath = [...path, index]
-          yield elementPath.join('/')
-          if (typeof element === 'object' && !CID.asCID(element)) {
-            yield * tree(element, elementPath)
-          }
-        }
-      } else {
-        yield * tree(value, path)
-      }
+      yield * treeWithin(path, value)
     }
   }
 }
@@ -72,9 +91,8 @@ const tree = function * (source, base) {
  * @param {T} source
  * @param {string[]} path
  */
-const get = (source, path) => {
-  /** @type {Record<string, any>} */
-  let node = source
+function get (source, path) {
+  let node = /** @type {Record<string, any>} */ (source)
   for (const [index, key] of path.entries()) {
     node = node[key]
     if (node == null) {
@@ -141,7 +159,7 @@ class Block {
  * @param {Hasher<Algorithm>} options.hasher
  * @returns {Promise<Block<T>>}
  */
-const encode = async ({ value, codec, hasher }) => {
+async function encode ({ value, codec, hasher }) {
   if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
@@ -162,7 +180,7 @@ const encode = async ({ value, codec, hasher }) => {
  * @param {Hasher<Algorithm>} options.hasher
  * @returns {Promise<Block<T>>}
  */
-const decode = async ({ bytes, codec, hasher }) => {
+async function decode ({ bytes, codec, hasher }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
@@ -184,7 +202,7 @@ const decode = async ({ bytes, codec, hasher }) => {
  * @param {{ cid: CID, value:T, codec?: BlockDecoder<Code, T>, bytes: ByteView<T> }|{cid:CID, bytes:ByteView<T>, value?:void, codec:BlockDecoder<Code, T>}} options
  * @returns {Block<T>}
  */
-const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
+function createUnsafe ({ bytes, cid, value: maybeValue, codec }) {
   const value = maybeValue !== undefined
     ? maybeValue
     : (codec && codec.decode(bytes))
@@ -205,7 +223,7 @@ const createUnsafe = ({ bytes, cid, value: maybeValue, codec }) => {
  * @param {Hasher<Algorithm>} options.hasher
  * @returns {Promise<Block<T>>}
  */
-const create = async ({ bytes, cid, hasher, codec }) => {
+async function create ({ bytes, cid, hasher, codec }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!hasher) throw new Error('Missing required argument "hasher"')
   const value = codec.decode(bytes)

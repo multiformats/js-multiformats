@@ -165,23 +165,6 @@ describe('CID', () => {
       assert.deepStrictEqual({ ...cid1.multihash, ...clear }, { ...cid2.multihash, ...clear })
     })
 
-    /* TODO: after i have a keccak hash for the new interface
-    it('handles multibyte varint encoded codec codes', () => {
-      const ethBlockHash = textEncoder.encode('8a8e84c797605fbe75d5b5af107d4220a2db0ad35fd66d9be3d38d87c472b26d', 'hex')
-      const hash = keccak256.digest(ethBlockHash)
-      const cid1 = CID.create(1, 0x90, hash)
-      const cid2 = CID.parse(cid1.toString())
-
-      assert.deepStrictEqual(cid1.code, 0x90)
-      assert.deepStrictEqual(cid1.version, 1)
-      assert.deepStrictEqual(cid1.multihash, hash)
-
-      assert.deepStrictEqual(cid2.code, 0x90)
-      assert.deepStrictEqual(cid2.version, 1)
-      assert.deepStrictEqual(cid2.multihash, hash)
-    })
-    */
-
     it('.bytes', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const code = 0x71
