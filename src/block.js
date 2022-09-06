@@ -73,8 +73,7 @@ const tree = function * (source, base) {
  * @param {string[]} path
  */
 const get = (source, path) => {
-  /** @type {Record<string, any>} */
-  let node = source
+  let node = /** @type {Record<string, any>} */ (source)
   for (const [index, key] of path.entries()) {
     node = node[key]
     if (node == null) {
