@@ -94,7 +94,7 @@ function * tree (source, base) {
  * @template T
  * @param {T} source
  * @param {string[]} path
- * @return {API.BlockCursorView<unknown>}
+ * @returns {API.BlockCursorView<unknown>}
  */
 function get (source, path) {
   let node = /** @type {Record<string, any>} */(source)
@@ -153,7 +153,7 @@ class Block {
   /**
    *
    * @param {string} [path]
-   * @return {API.BlockCursorView<unknown>}
+   * @returns {API.BlockCursorView<unknown>}
    */
   get (path = '/') {
     return get(this.value, path.split('/').filter(Boolean))
