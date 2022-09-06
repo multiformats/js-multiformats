@@ -62,9 +62,9 @@ const baseCache = cid => {
 
 export class CID {
   /**
-   * @param {Version} version
-   * @param {Format} code
-   * @param {API.MultihashDigest<Alg>} multihash
+   * @param {Version} version - Version of the CID
+   * @param {Format} code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
+   * @param {API.MultihashDigest<Alg>} multihash - (Multi)hash of the of the content.
    * @param {Uint8Array} bytes
    *
    */
@@ -303,7 +303,7 @@ export class CID {
    * @template {number} Alg
    * @template {API.Version} Version
    * @param {Version} version - Version of the CID
-   * @param {Format} code - Code of the codec content is encoded in.
+   * @param {Format} code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
    * @param {API.MultihashDigest<Alg>} digest - (Multi)hash of the of the content.
    * @returns {CID<Data, Format, Alg, Version>}
    */
