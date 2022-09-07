@@ -2,7 +2,7 @@
   "name": "ts-use",
   "private": true,
   "dependencies": {
-    "multiformats": "file:../../dist/"
+    "multiformats": "file:../../"
   },
   "scripts": {
     "test": "npm install && npm_config_yes=true npx -p typescript tsc --noEmit"
