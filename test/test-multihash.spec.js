@@ -1,12 +1,12 @@
 /* globals describe, it */
-import { fromHex, fromString } from 'multiformats/bytes'
-import { hash as slSha256 } from '@stablelib/sha256'
-import { hash as slSha512 } from '@stablelib/sha512'
+import { fromHex, fromString } from '../src/bytes.js'
+import { sha256, sha512 } from '../src/hashes/sha2.js'
+import { identity } from '../src/hashes/identity.js'
+import { decode as decodeDigest, create as createDigest } from '../src/hashes/digest.js'
 import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
-import { sha256, sha512 } from 'multiformats/hashes/sha2'
-import { identity } from 'multiformats/hashes/identity'
-import { decode as decodeDigest, create as createDigest } from 'multiformats/hashes/digest'
+import { hash as slSha256 } from '@stablelib/sha256'
+import { hash as slSha512 } from '@stablelib/sha512'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 

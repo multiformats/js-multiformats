@@ -1,8 +1,8 @@
 /* globals describe, it */
-import * as codec from 'multiformats/codecs/json'
-import { sha256 as hasher } from 'multiformats/hashes/sha2'
-import * as main from 'multiformats/block'
-import { CID, bytes } from 'multiformats'
+import * as codec from '../src/codecs/json.js'
+import { sha256 as hasher } from '../src/hashes/sha2.js'
+import * as main from '../src/block.js'
+import { CID, bytes } from '../src/index.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
