@@ -240,12 +240,18 @@
     ]
   },
   "scripts": {
+    "clean": "aegir clean",
     "lint": "aegir lint",
-    "release": "aegir release",
     "build": "aegir build",
-    "test": "aegir test",
-    "test:node": "aegir test --target node",
-    "test:browser": "aegir test --target browser"
+    "release": "aegir release",
+    "test": "npm run lint && npm run test:node && npm run test:chrome && npm run test:ts",
+    "test:ts": "npm run test --prefix test/ts-use",
+    "test:node": "aegir test -t node --cov",
+    "test:chrome": "aegir test -t browser --cov",
+    "test:chrome-webworker": "aegir test -t webworker",
+    "test:firefox": "aegir test -t browser -- --browser firefox",
+    "test:firefox-webworker": "aegir test -t webworker -- --browser firefox",
+    "test:electron-main": "aegir test -t electron-main"
   },
   "devDependencies": {
     "@stablelib/sha256": "^1.0.1",
