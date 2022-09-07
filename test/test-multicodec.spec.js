@@ -1,7 +1,7 @@
 /* globals describe, it */
-import * as bytes from 'multiformats/bytes'
-import * as raw from 'multiformats/codecs/raw'
-import * as json from 'multiformats/codecs/json'
+import * as bytes from '../src/bytes.js'
+import * as raw from '../src/codecs/raw.js'
+import * as json from '../src/codecs/json.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 

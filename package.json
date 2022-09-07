@@ -144,6 +144,10 @@
       "import": "./src/traversal.js"
     }
   },
+  "browser": {
+    "./hashes/sha2": "./src/hashes/sha2-browser.js",
+    "./src/hashes/sha2.js": "./src/hashes/sha2-browser.js"
+  },
   "eslintConfig": {
     "extends": "ipfs",
     "parserOptions": {
@@ -244,7 +248,6 @@
     "test:browser": "aegir test --target browser"
   },
   "devDependencies": {
-    "@ipld/dag-pb": "^2.1.14",
     "@stablelib/sha256": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
     "@types/chai": "^4.3.0",
