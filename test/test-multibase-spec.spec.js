@@ -1,7 +1,7 @@
 /* eslint-env mocha */
 
-import { bases } from 'multiformats/basics'
-import { fromString } from 'multiformats/bytes'
+import { bases } from '../src/basics.js'
+import { fromString } from '../src/bytes.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 

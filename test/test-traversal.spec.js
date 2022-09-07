@@ -1,13 +1,32 @@
 /* globals describe, it */
-import * as codec from 'multiformats/codecs/json'
-import * as dagPB from '@ipld/dag-pb'
-import { sha256 as hasher } from 'multiformats/hashes/sha2'
-import * as main from 'multiformats/block'
-import { walk } from 'multiformats/traversal'
+import * as codec from '../src/codecs/json.js'
+import { sha256 as hasher } from '../src/hashes/sha2.js'
+import * as main from '../src/block.js'
+import { walk } from '../src/traversal.js'
+import { fromString } from '../src/bytes.js'
 import { assert } from 'chai'
-import { fromString } from 'multiformats/bytes'
 
-const { createLink, createNode } = dagPB
+/** @typedef {import('../src/cid.js').CID} CID */
+
+// from dag-pb, simplified
+/**
+ * @param {Uint8Array} data
+ * @param {{Hash:CID, Name:string, Tsize:number}[]} links
+ * @returns {{Data:Uint8Array, Links:{Hash:CID, Name:string, Tsize:number}[]}}
+ */
+function createNode (data, links) {
+  return { Data: data, Links: links }
+}
+
+/**
+ * @param {string} name
+ * @param {number} size
+ * @param {CID} cid
+ * @returns {{Hash:CID, Name:string, Tsize:number}}
+ */
+function createLink (name, size, cid) {
+  return { Hash: cid, Name: name, Tsize: size }
+}
 
 describe('traversal', () => {
   describe('walk', async () => {
@@ -43,7 +62,7 @@ describe('traversal', () => {
     const cidA = blockA.cid
 
     /**
-     * @param {import('multiformats').CID} cid
+     * @param {CID} cid
      */
     const load = async (cid) => {
       if (cid.equals(cidE)) {
@@ -70,7 +89,7 @@ describe('traversal', () => {
      */
     const loadWrapper = (load, arr = []) =>
       /**
-       * @param {import('multiformats').CID} cid
+       * @param {CID} cid
        */
       (cid) => {
         arr.push(cid.toString())

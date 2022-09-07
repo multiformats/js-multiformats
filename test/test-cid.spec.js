@@ -1,13 +1,13 @@
 /* globals describe, it */
 
-import OLDCID from 'cids'
-import { fromHex, toHex, equals } from 'multiformats/bytes'
-import { varint, CID } from 'multiformats'
-import { base58btc } from 'multiformats/bases/base58'
-import { base32 } from 'multiformats/bases/base32'
-import { base64 } from 'multiformats/bases/base64'
-import { sha256, sha512 } from 'multiformats/hashes/sha2'
+import { fromHex, toHex, equals } from '../src/bytes.js'
+import { varint, CID } from '../src/index.js'
+import { base58btc } from '../src/bases/base58.js'
+import { base32 } from '../src/bases/base32.js'
+import { base64 } from '../src/bases/base64.js'
+import { sha256, sha512 } from '../src/hashes/sha2.js'
 import invalidMultihash from './fixtures/invalid-multihash.js'
+import OLDCID from 'cids'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 // Linter can see that API is used in types.
