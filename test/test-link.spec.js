@@ -1,10 +1,10 @@
 /* globals describe, it */
 
-import * as Link from 'multiformats/link'
-import { CID } from 'multiformats'
+import * as Link from '../src/link.js'
+import { CID } from '../src/cid.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
-import { sha256 } from 'multiformats/hashes/sha2'
+import { sha256 } from '../src/hashes/sha2.js'
 
 chai.use(chaiAsPromised)
 const { assert } = chai
