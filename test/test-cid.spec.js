@@ -82,14 +82,6 @@ describe('CID', () => {
       assert.throws(() => CID.create(0, 113, hash), msg)
     })
 
-    // This was failing for quite some time, test just missed await so it went
-    // unnoticed. Not sure we still care about checking fourth argument.
-    // it('throws on trying to pass specific base encoding [deprecated]', async () => {
-    //   const hash = await sha256.digest(textEncoder.encode('abc'))
-    //   const msg = 'No longer supported, cannot specify base encoding in instantiation'
-    //   assert.throws(() => CID.create(0, 112, hash, 'base32'), msg)
-    // })
-
     it('throws on trying to base encode CIDv0 in other base than base58btc', async () => {
       const mhStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const cid = CID.parse(mhStr)
@@ -284,18 +276,6 @@ describe('CID', () => {
         cid1.equals(CID.create(cid1.version, cid1.code, cid1.multihash)),
         true
       )
-    })
-
-    it('.isCid', () => {
-      assert.ok(CID.isCID(CID.parse(h1)))
-
-      assert.ok(!CID.isCID(false))
-
-      assert.ok(!CID.isCID(textEncoder.encode('hello world')))
-
-      assert.ok(CID.isCID(CID.parse(h1).toV0()))
-
-      assert.ok(CID.isCID(CID.parse(h1).toV1()))
     })
 
     it('works with deepEquals', () => {
@@ -515,12 +495,6 @@ describe('CID', () => {
     assert.ok(equals(json.hash, hash.bytes))
   })
 
-  it('isCID', async () => {
-    const hash = await sha256.digest(textEncoder.encode('abc'))
-    const cid = CID.create(1, 112, hash)
-    assert.strictEqual(OLDCID.isCID(cid), false)
-  })
-
   it('asCID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     class IncompatibleCID {
@@ -545,7 +519,6 @@ describe('CID', () => {
     const code = 112
 
     const incompatibleCID = new IncompatibleCID(version, code, hash)
-    assert.ok(CID.isCID(incompatibleCID))
     assert.strictEqual(incompatibleCID.toString(), '[object Object]')
     // @ts-expect-error - no such method
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
@@ -719,59 +692,8 @@ describe('CID', () => {
     )
   })
 
-  describe('deprecations', async () => {
-    it('codec', async () => {
-      const hash = await sha256.digest(textEncoder.encode('abc'))
-      const cid = CID.create(1, 112, hash)
-
-      assert.throws(
-        () => cid.codec,
-        '"codec" property is deprecated, use integer "code" property instead'
-      )
-      assert.throws(
-        // @ts-expect-error - 'string' is not assignable to parameter of type 'number'
-        () => CID.create(1, 'dag-pb', hash),
-        'String codecs are no longer supported'
-      )
-    })
-
-    it('multibaseName', async () => {
-      const hash = await sha256.digest(textEncoder.encode('abc'))
-      const cid = CID.create(1, 112, hash)
-      assert.throws(
-        () => cid.multibaseName,
-        '"multibaseName" property is deprecated'
-      )
-    })
-
-    it('prefix', async () => {
-      const hash = await sha256.digest(textEncoder.encode('abc'))
-      const cid = CID.create(1, 112, hash)
-      assert.throws(() => cid.prefix, '"prefix" property is deprecated')
-    })
-
-    it('toBaseEncodedString()', async () => {
-      const hash = await sha256.digest(textEncoder.encode('abc'))
-      const cid = CID.create(1, 112, hash)
-      assert.throws(
-        // @ts-expect-error - deprecated
-        () => cid.toBaseEncodedString(),
-        'Deprecated, use .toString()'
-      )
-    })
-  })
-
   it('invalid CID version', async () => {
     const encoded = varint.encodeTo(2, new Uint8Array(32))
     assert.throws(() => CID.decode(encoded), 'Invalid CID version 2')
-  })
-
-  it('buffer', async () => {
-    const hash = await sha256.digest(textEncoder.encode('abc'))
-    const cid = CID.create(1, 112, hash)
-    assert.throws(
-      () => cid.buffer,
-      'Deprecated .buffer property, use .bytes to get Uint8Array instead'
-    )
   })
 })

@@ -219,41 +219,6 @@ export class CID {
     return `CID(${this.toString()})`
   }
 
-  // Deprecated
-
-  /**
-   * @param {any} value
-   * @returns {value is CID}
-   */
-  static isCID (value) {
-    deprecate(/^0\.0/, IS_CID_DEPRECATION)
-    return Boolean(value && (value[cidSymbol] || value.asCID === value))
-  }
-
-  get toBaseEncodedString () {
-    throw new Error('Deprecated, use .toString()')
-  }
-
-  get codec () {
-    throw new Error(
-      '"codec" property is deprecated, use integer "code" property instead'
-    )
-  }
-
-  get buffer () {
-    throw new Error(
-      'Deprecated .buffer property, use .bytes to get Uint8Array instead'
-    )
-  }
-
-  get multibaseName () {
-    throw new Error('"multibaseName" property is deprecated')
-  }
-
-  get prefix () {
-    throw new Error('"prefix" property is deprecated')
-  }
-
   /**
    * Takes any input `value` and returns a `CID` instance if it was
    * a `CID` otherwise returns `null`. If `value` is instanceof `CID`
@@ -605,38 +570,3 @@ const encodeCID = (version, code, multihash) => {
 const cidSymbol = Symbol.for('@ipld/js-cid/CID')
 const readonly = { writable: false, configurable: false, enumerable: true }
 const hidden = { writable: false, enumerable: false, configurable: false }
-
-// ESM does not support importing package.json where this version info
-// should come from. To workaround it version is copied here.
-const version = '0.0.0-dev'
-// Start throwing exceptions on major version bump
-/**
- *
- * @param {RegExp} range
- * @param {string} message
- */
-const deprecate = (range, message) => {
-  /* eslint-disable no-console */
-  if (range.test(version)) {
-    console.warn(message)
-    /* c8 ignore next 3 */
-  } else {
-    throw new Error(message)
-  }
-}
-
-const IS_CID_DEPRECATION = `CID.isCID(v) is deprecated and will be removed in the next major release.
-Following code pattern:
-
-if (CID.isCID(value)) {
-  doSomethingWithCID(value)
-}
-
-Is replaced with:
-
-const cid = CID.asCID(value)
-if (cid) {
-  // Make sure to use cid instead of value
-  doSomethingWithCID(cid)
-}
-`

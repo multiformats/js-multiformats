@@ -1,7 +1,6 @@
 /* globals describe, it */
 
 import * as Link from '../src/link.js'
-import { CID } from '../src/cid.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 import { sha256 } from '../src/hashes/sha2.js'
@@ -24,10 +23,6 @@ describe('Link', () => {
   it('isLink', () => {
     assert.equal(Link.isLink(0), false)
     assert.equal(Link.isLink(false), false)
-    assert.equal(CID.isCID(CID.parse(h1)), true)
-    assert.equal(CID.isCID(CID.parse(h1).toV0()), true)
-
-    assert.equal(CID.isCID(CID.parse(h1).toV1()), true)
   })
 
   describe('create', () => {
