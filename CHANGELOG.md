@@ -1,3 +1,10 @@
+## [9.9.0](https://github.com/multiformats/js-multiformats/compare/v9.8.1...v9.9.0) (2022-09-20)
+
+
+### Features
+
+* add optional offset param to varint.decode ([#201](https://github.com/multiformats/js-multiformats/issues/201)) ([1e1b583](https://github.com/multiformats/js-multiformats/commit/1e1b583893bc0c984dcbeaf321c17f6637629b4e))
+
 ## [9.7.1](https://github.com/multiformats/js-multiformats/compare/v9.7.0...v9.7.1) (2022-07-26)
 
 
