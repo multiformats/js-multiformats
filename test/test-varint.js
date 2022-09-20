@@ -1,6 +1,6 @@
 /* globals describe, it */
 
-import { varint } from 'multiformats'
+import { varint } from '../src/index.js'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 
