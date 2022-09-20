@@ -2,10 +2,11 @@ import varint from '../vendor/varint.js'
 
 /**
  * @param {Uint8Array} data
+ * @param {number} [offset=0]
  * @returns {[number, number]}
  */
-export const decode = (data) => {
-  const code = varint.decode(data)
+export const decode = (data, offset = 0) => {
+  const code = varint.decode(data, offset)
   return [code, varint.decode.bytes]
 }
 
