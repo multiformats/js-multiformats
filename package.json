@@ -254,9 +254,9 @@
     "test:ts": "npm run test --prefix test/ts-use",
     "test:node": "aegir test -t node --cov",
     "test:chrome": "aegir test -t browser --cov",
-    "test:chrome-webworker": "aegir test -t webworker --no-cov",
-    "test:firefox": "aegir test -t browser -- --browser firefox --no-cov",
-    "test:firefox-webworker": "aegir test -t webworker -- --browser firefox --no-cov",
+    "test:chrome-webworker": "aegir test -t webworker",
+    "test:firefox": "aegir test -t browser -- --browser firefox",
+    "test:firefox-webworker": "aegir test -t webworker -- --browser firefox",
     "test:electron-main": "aegir test -t electron-main"
   },
   "devDependencies": {
@@ -277,7 +277,6 @@
       "bundle": false
     },
     "test": {
-      "cov": true,
       "target": [
         "node",
         "browser"
