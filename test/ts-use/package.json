@@ -5,7 +5,7 @@
     "multiformats": "file:../../"
   },
   "scripts": {
-    "test": "npm install && npm_config_yes=true npx -p typescript tsc --noEmit"
+    "test": "npm install && ../../node_modules/.bin/tsc --noEmit"
   },
   "eslintConfig": {
     "extends": "ipfs",
