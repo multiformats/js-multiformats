@@ -52,7 +52,7 @@ export class Hasher {
 
 /**
  * @template {number} Alg
- * @typedef {import('./interface').MultihashHasher} MultihashHasher
+ * @typedef {import('./interface.js').MultihashHasher} MultihashHasher
  */
 
 /**
