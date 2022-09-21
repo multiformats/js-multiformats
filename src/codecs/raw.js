@@ -4,7 +4,7 @@ import { coerce } from '../bytes.js'
 
 /**
  * @template T
- * @typedef {import('./interface').ByteView<T>} ByteView
+ * @typedef {import('./interface.js').ByteView<T>} ByteView
  */
 
 export const name = 'raw'
