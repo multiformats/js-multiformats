@@ -2,7 +2,7 @@
 
 /**
  * @template T
- * @typedef {import('./interface').ByteView<T>} ByteView
+ * @typedef {import('./interface.js').ByteView<T>} ByteView
  */
 
 const textEncoder = new TextEncoder()

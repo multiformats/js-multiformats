@@ -1,4 +1,4 @@
-import type { ByteView } from '../block/interface'
+import type { ByteView } from '../block/interface.js'
 
 /**
  * IPLD encoder part of the codec.

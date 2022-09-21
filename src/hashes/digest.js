@@ -61,7 +61,7 @@ export const equals = (a, b) => {
 }
 
 /**
- * @typedef {import('./interface').MultihashDigest} MultihashDigest
+ * @typedef {import('./interface.js').MultihashDigest} MultihashDigest
  */
 
 /**
