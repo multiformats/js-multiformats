@@ -157,7 +157,8 @@
   "eslintConfig": {
     "extends": "ipfs",
     "parserOptions": {
-      "sourceType": "module"
+      "sourceType": "module",
+      "ecmaVersion": 13
     }
   },
   "release": {

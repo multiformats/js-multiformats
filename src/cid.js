@@ -61,6 +61,9 @@ const baseCache = cid => {
  */
 
 export class CID {
+  /** @type {CID} */
+  #asCID
+
   /**
    * @param {Version} version - Version of the CID
    * @param {Format} code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
@@ -86,20 +89,11 @@ export class CID {
 
     // Circular reference
     /** @readonly */
-    this.asCID = this
+    this.#asCID = this
+  }
 
-    // Configure private properties
-    Object.defineProperties(this, {
-      byteOffset: hidden,
-      byteLength: hidden,
-
-      code: readonly,
-      version: readonly,
-      multihash: readonly,
-      bytes: readonly,
-
-      asCID: hidden
-    })
+  get asCID () {
+    return this.#asCID
   }
 
   /**
@@ -568,5 +562,3 @@ const encodeCID = (version, code, multihash) => {
 }
 
 const cidSymbol = Symbol.for('@ipld/js-cid/CID')
-const readonly = { writable: false, configurable: false, enumerable: true }
-const hidden = { writable: false, enumerable: false, configurable: false }
