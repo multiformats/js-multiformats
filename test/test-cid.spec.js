@@ -710,7 +710,7 @@ describe('CID', () => {
     const { port1: sender, port2: receiver } = new MessageChannel()
     sender.postMessage(cid)
     const cid2 = await new Promise((resolve) => {
-      receiver.onmessage = event => resolve(event.data)
+      receiver.onmessage = (event) => { resolve(event.data) }
     })
     assert.equal(cid2.asCID, cid2)
   })
