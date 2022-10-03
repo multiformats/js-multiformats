@@ -7,6 +7,7 @@ import { base32 } from '../src/bases/base32.js'
 import { base64 } from '../src/bases/base64.js'
 import { sha256, sha512 } from '../src/hashes/sha2.js'
 import invalidMultihash from './fixtures/invalid-multihash.js'
+import { MessageChannel } from './ 
 import OLDCID from 'cids'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
@@ -703,5 +704,13 @@ describe('CID', () => {
     assert.isFalse(Object.prototype.propertyIsEnumerable.call(cid, 'asCID'))
     assert.isFalse(Object.keys(cid).includes('asCID'))
     assert.equal(cid.asCID, cid)
+  })
+  
+  it('CID can be moved across JS realms', async () => {
+    const cid = CID.parse('bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu')
+    const { port1: sender, port2: receiver } = new MessageChannel()
+    sender.postMessage(cid)
+    const cid2 = await new Promise(resolve => receiver.onmessage = event => resolve(event.data))
+    assert.equal(cid2.asCID, cid2)
   })
 })
