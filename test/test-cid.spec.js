@@ -7,7 +7,6 @@ import { base32 } from '../src/bases/base32.js'
 import { base64 } from '../src/bases/base64.js'
 import { sha256, sha512 } from '../src/hashes/sha2.js'
 import invalidMultihash from './fixtures/invalid-multihash.js'
-import { MessageChannel } from './ 
 import OLDCID from 'cids'
 import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
