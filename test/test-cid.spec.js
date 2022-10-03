@@ -709,7 +709,9 @@ describe('CID', () => {
     const cid = CID.parse('bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu')
     const { port1: sender, port2: receiver } = new MessageChannel()
     sender.postMessage(cid)
-    const cid2 = await new Promise(resolve => receiver.onmessage = event => resolve(event.data))
+    const cid2 = await new Promise((resolve) => {
+      receiver.onmessage = event => resolve(event.data)
+    })
     assert.equal(cid2.asCID, cid2)
   })
 })
