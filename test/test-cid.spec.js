@@ -697,14 +697,6 @@ describe('CID', () => {
     assert.throws(() => CID.decode(encoded), 'Invalid CID version 2')
   })
 
-  it('asCID is non-enumerable', () => {
-    const cid = CID.parse('bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu')
-
-    assert.isFalse(Object.prototype.propertyIsEnumerable.call(cid, 'asCID'))
-    assert.isFalse(Object.keys(cid).includes('asCID'))
-    assert.equal(cid.asCID, cid)
-  })
-
   it('CID can be moved across JS realms', async () => {
     const cid = CID.parse('bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu')
     const { port1: sender, port2: receiver } = new MessageChannel()
@@ -712,6 +704,8 @@ describe('CID', () => {
     const cid2 = await new Promise((resolve) => {
       receiver.onmessage = (event) => { resolve(event.data) }
     })
-    assert.equal(cid2.asCID, cid2)
+    assert.strictEqual(cid2.asCID, cid2)
+    sender.close()
+    receiver.close()
   })
 })

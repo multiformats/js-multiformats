@@ -61,9 +61,6 @@ const baseCache = cid => {
  */
 
 export class CID {
-  /** @type {CID} */
-  #asCID
-
   /**
    * @param {Version} version - Version of the CID
    * @param {Format} code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
@@ -89,11 +86,7 @@ export class CID {
 
     // Circular reference
     /** @readonly */
-    this.#asCID = this
-  }
-
-  get asCID () {
-    return this.#asCID
+    this.asCID = this
   }
 
   /**
