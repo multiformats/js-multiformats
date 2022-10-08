@@ -282,6 +282,5 @@
         "browser"
       ]
     }
-  },
-  "main": "./src/index.js"
+  }
 }
