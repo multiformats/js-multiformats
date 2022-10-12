@@ -162,7 +162,7 @@
   },
   "release": {
     "branches": [
-      "esm-migration"
+      "master"
     ],
     "plugins": [
       [
