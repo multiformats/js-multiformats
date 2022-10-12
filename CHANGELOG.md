@@ -1,3 +1,51 @@
+## [10.0.0](https://github.com/multiformats/js-multiformats/compare/v9.9.0...v10.0.0) (2022-10-12)
+
+
+### ⚠ BREAKING CHANGES
+
+* remove use of Object.defineProperties in CID class
+* use aegir for ESM-only build/testing/release
+
+### Features
+
+* add complete set of aegir-based scripts ([1190bc6](https://github.com/multiformats/js-multiformats/commit/1190bc6fcc2d11a317979538692940d6b8085874))
+* define Link interface for CID ([88e29ea](https://github.com/multiformats/js-multiformats/commit/88e29ea7a8c1a1a284c654311cfb1d67cbfd8e6c))
+* remove deprecated CID properties & methods ([ffc4e6f](https://github.com/multiformats/js-multiformats/commit/ffc4e6fac0b9f755a141f5e7fea61950d195b4fa))
+* use aegir for ESM-only build/testing/release ([163d463](https://github.com/multiformats/js-multiformats/commit/163d4632708b874b60c5a8de0f77811034557f74))
+
+
+### Bug Fixes
+
+* --no-cov for all but chrome main ([b92f25f](https://github.com/multiformats/js-multiformats/commit/b92f25fe6f3ca9ed9c9468a209bf1101a3005a3d))
+* add "browser" field, remove named local imports ([d60ea06](https://github.com/multiformats/js-multiformats/commit/d60ea06f0c1d3145200138548e71677d0007f9ef))
+* additional lint items from Link interface work ([91f677b](https://github.com/multiformats/js-multiformats/commit/91f677be1bc6304b066d4c6aaeea2b1af94876b7))
+* address JS & TS linting complaints ([c12db2a](https://github.com/multiformats/js-multiformats/commit/c12db2a53a11f701fbfbd04f5f977580c37af54b))
+* changes for new lint rules ([e6c9957](https://github.com/multiformats/js-multiformats/commit/e6c9957383d6023291fafaa1f6718bd903539e43))
+* distribute types in dist/types/ ([c6defdb](https://github.com/multiformats/js-multiformats/commit/c6defdb039520e4e7dd0e279b212b72683ceac85))
+* ensure "master" as release branch ([16f8d9e](https://github.com/multiformats/js-multiformats/commit/16f8d9e1215caaa00cc7d708058f01dc6d10b824))
+* make CID#asCID a regular property ([a74f1c7](https://github.com/multiformats/js-multiformats/commit/a74f1c75b73c6d019614ecbf8f06ab97a232a48b))
+* only release on master ([d15f26f](https://github.com/multiformats/js-multiformats/commit/d15f26fbcf51bd9d382e27ca9099af71c217bb25))
+* properly export types, build more complete pack ([8172ea8](https://github.com/multiformats/js-multiformats/commit/8172ea8977296ece7a1b9d165caa99c284b604fd))
+* remove "main" ([ad3306c](https://github.com/multiformats/js-multiformats/commit/ad3306c459e0e4f22184963c151bf3cc737ec9b0))
+* remove use of Object.defineProperties in CID class ([6149fae](https://github.com/multiformats/js-multiformats/commit/6149fae84b74b7a6b0ca8f9e21e731ac9fabcf3a)), closes [#200](https://github.com/multiformats/js-multiformats/issues/200)
+* run coverage only where it's supposed to ([872d121](https://github.com/multiformats/js-multiformats/commit/872d12126132a38677f623b87699b6fbff968cfd))
+* test on all branches and pull requests ([f2ae077](https://github.com/multiformats/js-multiformats/commit/f2ae07760739c2f16e2eb5c83a2fad15a877243f))
+* ts-use import path ([53651c1](https://github.com/multiformats/js-multiformats/commit/53651c1fae60b0bf9424c5f8f688d42959835480))
+* use extensions for relative ts imports ([451998a](https://github.com/multiformats/js-multiformats/commit/451998a43516d7d5c468a18fe074ea1b53ac883e)), closes [/github.com/multiformats/js-multiformats/pull/199#issuecomment-1252793515](https://github.com/multiformats//github.com/multiformats/js-multiformats/pull/199/issues/issuecomment-1252793515)
+* use parent `tsc` in ts-use ([85a9296](https://github.com/multiformats/js-multiformats/commit/85a9296f54118ff676bf1deb107d65c4c892186d))
+
+
+### Tests
+
+* check for non-enumerability of asCID property ([b4ba07d](https://github.com/multiformats/js-multiformats/commit/b4ba07db92e4610a55101f7dd17505f21a341a85))
+
+
+### Trivial Changes
+
+* add test for structural copying ([#206](https://github.com/multiformats/js-multiformats/issues/206)) ([e8def36](https://github.com/multiformats/js-multiformats/commit/e8def3663cd328023fbf7e4e88c9e47e71846d06))
+* **no-release:** bump @types/mocha from 9.1.1 to 10.0.0 ([#205](https://github.com/multiformats/js-multiformats/issues/205)) ([a9a9347](https://github.com/multiformats/js-multiformats/commit/a9a9347789ee720d1de9508598d8879abf443baf))
+* **no-release:** bump actions/setup-node from 3.4.1 to 3.5.0 ([#204](https://github.com/multiformats/js-multiformats/issues/204)) ([604ca1f](https://github.com/multiformats/js-multiformats/commit/604ca1fe498864a32851294317d76f0aaa13d280))
+
 ## [9.9.0](https://github.com/multiformats/js-multiformats/compare/v9.8.1...v9.9.0) (2022-09-20)
 
 
