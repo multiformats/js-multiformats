@@ -27,9 +27,6 @@ export interface Link<
   readonly version: V
   readonly code: Format
   readonly multihash: MultihashDigest<Alg>
-
-  readonly byteOffset: number
-  readonly byteLength: number
   readonly bytes: ByteView<Link<Data, Format, Alg, V>>
 
   equals: (other: unknown) => other is Link<Data, Format, Alg, Version>
