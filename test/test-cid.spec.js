@@ -12,7 +12,7 @@ import chai from 'chai'
 import chaiAsPromised from 'chai-as-promised'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
-import * as API from 'multiformats'
+import * as CIDAPI from '../src/cid/interface.js'
 
 chai.use(chaiAsPromised)
 const { assert } = chai
@@ -82,13 +82,6 @@ describe('CID', () => {
       assert.throws(() => CID.create(0, 113, hash), msg)
     })
 
-    it('throws on trying to base encode CIDv0 in other base than base58btc', async () => {
-      const mhStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
-      const cid = CID.parse(mhStr)
-      const msg = 'Cannot string encode V0 in base32 encoding'
-      assert.throws(() => cid.toString(base32), msg)
-    })
-
     it('.bytes', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const codec = 112
@@ -105,7 +98,7 @@ describe('CID', () => {
     it('should construct from an old CID', () => {
       const cidStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const oldCid = CID.parse(cidStr)
-      const newCid = /** @type {CID} */ (CID.asCID(oldCid))
+      const newCid = /** @type {CIDAPI.CID} */ (CID.asCID(oldCid))
       assert.deepStrictEqual(newCid.toString(), cidStr)
     })
 
@@ -226,13 +219,8 @@ describe('CID', () => {
       const cidStr =
         'bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u'
       const oldCid = CID.parse(cidStr)
-      const newCid = /** @type {CID} */ (CID.asCID(oldCid))
+      const newCid = /** @type {CIDAPI.CID} */ (CID.asCID(oldCid))
       assert.deepStrictEqual(newCid.toString(), cidStr)
-    })
-
-    it('.link() should return this CID', () => {
-      const cid = CID.parse('bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u')
-      assert.equal(cid, cid.link())
     })
   })
 
@@ -260,7 +248,7 @@ describe('CID', () => {
     it('.equals v0 to v1 and vice versa', () => {
       const cidV1 = CID.parse(h3)
 
-      const cidV0 = cidV1.toV0()
+      const cidV0 = CID.toV0(cidV1)
 
       assert.deepStrictEqual(cidV0.equals(cidV1), false)
       assert.deepStrictEqual(cidV1.equals(cidV0), false)
@@ -344,13 +332,13 @@ describe('CID', () => {
   describe('conversion v0 <-> v1', () => {
     it('should convert v0 to v1', async () => {
       const hash = await sha256.digest(textEncoder.encode(`TEST${Date.now()}`))
-      const cid = CID.create(0, 112, hash).toV1()
+      const cid = CID.toV1(CID.create(0, 112, hash))
       assert.deepStrictEqual(cid.version, 1)
     })
 
     it('should convert v1 to v0', async () => {
       const hash = await sha256.digest(textEncoder.encode(`TEST${Date.now()}`))
-      const cid = CID.create(1, 112, hash).toV0()
+      const cid = CID.toV0(CID.create(1, 112, hash))
       assert.deepStrictEqual(cid.version, 0)
     })
 
@@ -358,7 +346,7 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode(`TEST${Date.now()}`))
       const cid = CID.create(1, 0x71, hash)
       assert.throws(
-        () => cid.toV0(),
+        () => CID.toV0(cid),
         'Cannot convert a non dag-pb CID to CIDv0'
       )
     })
@@ -367,7 +355,7 @@ describe('CID', () => {
       const hash = await sha512.digest(textEncoder.encode(`TEST${Date.now()}`))
       const cid = CID.create(1, 112, hash)
       assert.throws(
-        () => cid.toV0(),
+        () => CID.toV0(cid),
         'Cannot convert non sha2-256 multihash CID to CIDv0'
       )
     })
@@ -376,13 +364,13 @@ describe('CID', () => {
       const hash = await sha512.digest(textEncoder.encode(`TEST${Date.now()}`))
       const cid = CID.create(1, 112, hash)
 
-      assert.deepStrictEqual(cid.toV1() === cid, true)
+      assert.deepStrictEqual(CID.toV1(cid) === cid, true)
     })
 
     it('should return assert.deepStrictEqual instance when converting v0 to v0', async () => {
       const hash = await sha256.digest(textEncoder.encode(`TEST${Date.now()}`))
       const cid = CID.create(0, 112, hash)
-      assert.deepStrictEqual(cid.toV0() === cid, true)
+      assert.deepStrictEqual(CID.toV0(cid) === cid, true)
     })
 
     it('should fail to convert unknown version', async () => {
@@ -396,16 +384,16 @@ describe('CID', () => {
         version: 3
       })
 
-      assert.deepStrictEqual(cid1.toV0().version, 0)
-      assert.deepStrictEqual(cid1.toV1().version, 1)
+      assert.deepStrictEqual(CID.toV0(cid1).version, 0)
+      assert.deepStrictEqual(CID.toV1(cid1).version, 1)
       assert.equal(cid2.version, 3)
 
       assert.throws(
-        () => cid2.toV1(),
+        () => CID.toV1(cid2),
         /Can not convert CID version 3 to version 1/
       )
       assert.throws(
-        () => cid2.toV0(),
+        () => CID.toV0(cid2),
         /Can not convert CID version 3 to version 0/
       )
     })
@@ -419,80 +407,44 @@ describe('CID', () => {
       assert.deepStrictEqual(cid.bytes, cid.bytes)
     })
 
-    it('should cache string representation when it matches the multibaseName it was constructed with', async () => {
+    it('should cache string representations', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
+      let callCount = 0
 
-      const b32 = {
-        ...base32,
-        callCount: 0,
-        /**
-         * @param {Uint8Array} bytes
-         */
-        encode (bytes) {
-          this.callCount += 1
-          return base32.encode(bytes) + '!'
-        }
+      const encode = base32.encode
+
+      base32.encode = (bytes) => {
+        callCount++
+        return encode.call(base32, bytes)
       }
 
-      const b64 = {
-        ...base64,
-        callCount: 0,
-        /**
-         * @param {Uint8Array} bytes
-         */
-        encode (bytes) {
-          this.callCount += 1
-          return base64.encode(bytes)
-        }
-      }
+      assert.equal(callCount, 0)
+      const base32String = 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
+      assert.equal(cid.toString(), base32String)
+      assert.equal(callCount, 1)
+      assert.equal(cid.toString(), base32String)
+      assert.equal(callCount, 1)
 
-      const base32String =
-        'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
-      assert.deepEqual(cid.toString(b32), `${base32String}!`)
-      assert.deepEqual(b32.callCount, 1)
-      assert.deepEqual(cid.toString(), `${base32String}!`)
-      assert.deepEqual(b32.callCount, 1)
-
-      assert.deepStrictEqual(
-        cid.toString(b64),
-        'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt'
-      )
-      assert.equal(b64.callCount, 1)
-      assert.deepStrictEqual(
-        cid.toString(b64),
-        'mAXASILp4Fr+PAc/qQUFA3l2uIiOwA2Gjlhd6nLQQ/2HyABWt'
-      )
-      assert.equal(b64.callCount, 1)
+      base32.encode = encode
     })
 
     it('should cache string representation when constructed with one', () => {
-      const base32String =
-        'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
+      let callCount = 0
+      const encode = base32.encode
+
+      base32.encode = (bytes) => {
+        callCount++
+        return encode.call(base32, bytes)
+      }
+
+      const base32String = 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
       const cid = CID.parse(base32String)
+      assert.equal(cid.toString(), base32String)
+      assert.equal(callCount, 0)
 
-      assert.deepStrictEqual(
-        cid.toString({
-          ...base32,
-          encode () {
-            throw Error('Should not call decode')
-          }
-        }),
-        base32String
-      )
+      base32.encode = encode
     })
-  })
-
-  it('toJSON()', async () => {
-    const hash = await sha256.digest(textEncoder.encode('abc'))
-    const cid = CID.create(1, 112, hash)
-    const json = cid.toJSON()
-
-    assert.deepStrictEqual(
-      { ...json, hash: null },
-      { code: 112, version: 1, hash: null }
-    )
-    assert.ok(equals(json.hash, hash.bytes))
   })
 
   it('asCID', async () => {
@@ -523,8 +475,7 @@ describe('CID', () => {
     // @ts-expect-error - no such method
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
 
-    const cid1 = /** @type {CID} */ (CID.asCID(incompatibleCID))
-    assert.ok(cid1 instanceof CID)
+    const cid1 = /** @type {CIDAPI.CID} */ (CID.asCID(incompatibleCID))
     assert.strictEqual(cid1.code, code)
     assert.strictEqual(cid1.version, version)
     assert.ok(equals(cid1.multihash.bytes, hash.bytes))
@@ -535,8 +486,7 @@ describe('CID', () => {
     const duckCID = { version, code, multihash: hash }
     // @ts-expect-error - no such property
     duckCID.asCID = duckCID
-    const cid3 = /** @type {CID} */ (CID.asCID(duckCID))
-    assert.ok(cid3 instanceof CID)
+    const cid3 = /** @type {CIDAPI.CID} */ (CID.asCID(duckCID))
     assert.strictEqual(cid3.code, code)
     assert.strictEqual(cid3.version, version)
     assert.ok(equals(cid3.multihash.bytes, hash.bytes))
@@ -544,18 +494,17 @@ describe('CID', () => {
     const cid4 = CID.asCID(cid3)
     assert.strictEqual(cid3, cid4)
 
-    const cid5 = /** @type {CID} */ (
+    const cid5 = /** @type {CIDAPI.CID} */ (
       CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes)))
     )
-    assert.ok(cid5 instanceof CID)
     assert.strictEqual(cid5.version, 1)
     assert.ok(equals(cid5.multihash.bytes, hash.bytes))
     assert.strictEqual(cid5.code, 85)
   })
 
   /**
-   * @param {API.CID} x
-   * @param {API.CID} y
+   * @param {CIDAPI.CID} x
+   * @param {CIDAPI.CID} y
    */
   const digestsame = (x, y) => {
     // @ts-ignore - not sure what this supposed to be
@@ -592,7 +541,7 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
 
-      const parsed = CID.parse(cid.toString(base58btc))
+      const parsed = CID.parse(base58btc.encode(cid.bytes))
       digestsame(cid, parsed)
     })
 
@@ -610,14 +559,14 @@ describe('CID', () => {
       const msg =
         'To parse non base32 or base58btc encoded CID multibase decoder must be provided'
 
-      assert.throws(() => CID.parse(cid.toString(base64)), msg)
+      assert.throws(() => CID.parse(base64.encode(cid.bytes)), msg)
     })
 
     it('parses base64 encoded CIDv1 if base64 is provided', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
 
-      const parsed = CID.parse(cid.toString(base64), base64)
+      const parsed = CID.parse(base64.encode(cid.bytes), base64)
       digestsame(cid, parsed)
     })
   })
@@ -668,7 +617,7 @@ describe('CID', () => {
 
   it('new CID from old CID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
-    const cid = /** @type {CID} */ (
+    const cid = /** @type {CIDAPI.CID} */ (
       CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes)))
     )
     assert.deepStrictEqual(cid.version, 1)
@@ -707,5 +656,33 @@ describe('CID', () => {
     assert.strictEqual(cid2.asCID, cid2)
     sender.close()
     receiver.close()
+  })
+
+  describe('decode', () => {
+    const tests = {
+      v0: 'QmTFHZL5CkgNz19MdPnSuyLAi6AVq9fFp81zmPpaL2amED',
+      v1: 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
+    }
+
+    Object.entries(tests).forEach(([version, cidString]) => {
+      it(`decode ${version} from bytes`, () => {
+        const cid1 = CID.parse(cidString)
+        const cid2 = CID.decode(cid1.bytes)
+
+        assert.deepStrictEqual(cid1, cid2)
+      })
+
+      it(`decode ${version} from subarray`, () => {
+        const cid1 = CID.parse(cidString)
+        // a byte array with an extra byte at the start and end
+        const bytes = new Uint8Array(cid1.bytes.length + 2)
+        bytes.set(cid1.bytes, 1)
+        // slice the cid bytes out of the middle to have a subarray with a non-zero .byteOffset
+        const subarray = bytes.subarray(1, cid1.bytes.length + 1)
+        const cid2 = CID.decode(subarray)
+
+        assert.deepStrictEqual(cid1, cid2)
+      })
+    })
   })
 })

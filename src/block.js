@@ -2,6 +2,13 @@ import { bytes as binary, CID } from './index.js'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from './interface.js'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
+import * as CIDAPI from './cid/interface.js'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
+import * as LinkAPI from './link/interface.js'
+import { asLink } from './link.js'
 
 function readonly ({ enumerable = true, configurable = false } = {}) {
   return { enumerable, configurable, writable: false }
@@ -10,7 +17,7 @@ function readonly ({ enumerable = true, configurable = false } = {}) {
 /**
  * @param {[string|number, string]} path
  * @param {any} value
- * @returns {Iterable<[string, CID]>}
+ * @returns {Iterable<[string, CIDAPI.CID]>}
  */
 function * linksWithin (path, value) {
   if (value != null && typeof value === 'object') {
@@ -39,7 +46,7 @@ function * linksWithin (path, value) {
  * @template T
  * @param {T} source
  * @param {Array<string|number>} base
- * @returns {Iterable<[string, CID]>}
+ * @returns {Iterable<[string, CIDAPI.CID]>}
  */
 function * links (source, base) {
   if (source == null || source instanceof Uint8Array) {
@@ -121,7 +128,7 @@ function get (source, path) {
 class Block {
   /**
    * @param {object} options
-   * @param {CID<T, C, A, V>} options.cid
+   * @param {LinkAPI.Link<T, C, A, V>} options.cid
    * @param {API.ByteView<T>} options.bytes
    * @param {T} options.value
    */
@@ -176,14 +183,14 @@ async function encode ({ value, codec, hasher }) {
 
   const bytes = codec.encode(value)
   const hash = await hasher.digest(bytes)
-  /** @type {CID<T, Code, Alg, 1>} */
+  /** @type {CIDAPI.CID<T, Code, Alg, 1>} */
   const cid = CID.create(
     1,
     codec.code,
     hash
   )
 
-  return new Block({ value, bytes, cid })
+  return new Block({ value, bytes, cid: asLink(cid) })
 }
 
 /**
@@ -194,7 +201,7 @@ async function encode ({ value, codec, hasher }) {
  * @param {API.ByteView<T>} options.bytes
  * @param {API.BlockDecoder<Code, T>} options.codec
  * @param {API.MultihashHasher<Alg>} options.hasher
- * @returns {Promise<API.BlockView<T, Code, Alg>>}
+ * @returns {Promise<API.BlockView<T, Code, Alg, 1>>}
  */
 async function decode ({ bytes, codec, hasher }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
@@ -202,10 +209,10 @@ async function decode ({ bytes, codec, hasher }) {
 
   const value = codec.decode(bytes)
   const hash = await hasher.digest(bytes)
-  /** @type {CID<T, Code, Alg, 1>} */
+  /** @type {CIDAPI.CID<T, Code, Alg, 1>} */
   const cid = CID.create(1, codec.code, hash)
 
-  return new Block({ value, bytes, cid })
+  return new Block({ value, bytes, cid: asLink(cid) })
 }
 
 /**
@@ -229,8 +236,7 @@ function createUnsafe ({ bytes, cid, value: maybeValue, codec }) {
   if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
 
   return new Block({
-    // eslint-disable-next-line object-shorthand
-    cid: /** @type {CID<T, Code, Alg, V>} */ (cid),
+    cid,
     bytes,
     value
   })

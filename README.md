@@ -36,7 +36,7 @@ This library defines common interfaces and low level building blocks for various
 This library provides implementations for most basics and many others can be found in linked repositories.
 
 ```js
-import { CID } from 'multiformats/cid'
+import * as CID from 'multiformats/cid'
 import * as json from 'multiformats/codecs/json'
 import { sha256 } from 'multiformats/hashes/sha2'
 

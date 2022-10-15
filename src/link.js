@@ -1,13 +1,59 @@
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from "./link/interface.js"
-import { CID, format } from './cid.js'
+import * as CID from './cid.js'
 // This way TS will also expose all the types from module
 export * from './link/interface.js'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
+import * as CIDAPI from './cid/interface.js'
 
-const DAG_PB_CODE = 0x70
 // eslint-disable-next-line
 const SHA_256_CODE = 0x12
+
+/**
+ * @template {unknown} Data
+ * @template {number} Code
+ * @template {number} Alg
+ * @template {API.Version} Ver
+ * @param {CIDAPI.CID<Data, Code, Alg, Ver>} cid
+ * @returns {API.Link<Data, Code, Alg, Ver>}
+ */
+export function asLink (cid) {
+  /** @type {API.Link<Data, Code, Alg, Ver>} */
+  const link = {
+    ...cid,
+    toJSON () {
+      return {
+        code: cid.code,
+        version: cid.version,
+        hash: cid.multihash.bytes
+      }
+    },
+    link () {
+      return link
+    },
+    toV1 () {
+      return asLink(CID.toV1(cid))
+    },
+    /**
+     * @param {unknown} other
+     * @returns {other is API.Link<Data, Code, Alg, Ver>}
+     */
+    equals (other) {
+      return cid.equals(other)
+    },
+    toString (base) {
+      if (cid.version === 0 && base != null && base.name !== 'base58btc') {
+        throw new Error(`Cannot string encode V0 in ${base.name} encoding`)
+      }
+
+      return CID.format(cid, base).toString()
+    }
+  }
+
+  return link
+}
 
 /**
  * Simplified version of `create` for CIDv0.
@@ -15,7 +61,7 @@ const SHA_256_CODE = 0x12
  * @param {API.MultihashDigest<typeof SHA_256_CODE>} digest - Multihash.
  * @returns {API.LegacyLink}
  */
-export const createLegacy = digest => CID.create(0, DAG_PB_CODE, digest)
+export const createLegacy = digest => asLink(CID.createV0(digest))
 
 /**
  * Simplified version of `create` for CIDv1.
@@ -27,7 +73,7 @@ export const createLegacy = digest => CID.create(0, DAG_PB_CODE, digest)
  * @param {API.MultihashDigest<Alg>} digest - Miltihash of the content.
  * @returns {API.Link<Data, Code, Alg>}
  */
-export const create = (code, digest) => CID.create(1, code, digest)
+export const create = (code, digest) => asLink(CID.createV1(code, digest))
 
 /**
  * Type predicate returns true if value is the link.
@@ -54,9 +100,9 @@ export const isLink = value =>
  * @param {API.MultibaseDecoder<Prefix>} [base]
  * @returns {API.Link<Data, Code, Alg, Ver>}
  */
-export const parse = (source, base) => CID.parse(source, base)
+export const parse = (source, base) => asLink(CID.parse(source, base))
 
-export { format }
+export const format = CID.format
 
 /**
  * Decoded a CID from its binary representation. The byte array must contain
@@ -72,4 +118,4 @@ export { format }
  * @param {API.ByteView<API.Link<Data, Code, Alg, Ver>>} bytes
  * @returns {API.Link<Data, Code, Alg, Ver>}
  */
-export const decode = bytes => CID.decode(bytes)
+export const decode = bytes => asLink(CID.decode(bytes))

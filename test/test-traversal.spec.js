@@ -6,7 +6,7 @@ import { walk } from '../src/traversal.js'
 import { fromString } from '../src/bytes.js'
 import { assert } from 'chai'
 
-/** @typedef {import('../src/cid.js').CID} CID */
+/** @typedef {import('../src/cid/interface.js').CID} CID */
 
 // from dag-pb, simplified
 /**

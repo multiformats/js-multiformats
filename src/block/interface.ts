@@ -1,7 +1,7 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable no-use-before-define */
 import { Link, Version } from '../link/interface.js'
-import { CID } from '../cid.js'
+import { CID } from '../cid/interface.js'
 
 /**
  * A byte-encoded representation of some type of `Data`.
@@ -64,7 +64,7 @@ export interface BlockView<
   A extends number = number,
   V extends Version = 1
 > extends Block<T, C, A, V> {
-  cid: CID<T, C, A, V>
+  cid: Link<T, C, A, V>
   value: T
 
   links: () => Iterable<[string, CID]>

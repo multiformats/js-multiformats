@@ -1,17 +1,20 @@
 import { base58btc } from './bases/base58.js'
+// Linter can see that API is used in types.
+// eslint-disable-next-line
+import * as API from './link/interface.js'
 
 /**
- * @template [C=number] - multicodec code corresponding to codec used to encode the block
- * @template [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template [V=0|1] - CID version
- * @typedef {import('./cid').CID<unknown, C, A, V>} CID
+ * @template {number} [C=number] - multicodec code corresponding to codec used to encode the block
+ * @template {number} [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template {API.Version} [V=API.Version] - CID version
+ * @typedef {import('./cid/interface.js').CID<unknown, C, A, V>} CID
  */
 
 /**
- * @template [T=unknown] - Logical type of the data encoded in the block
- * @template [C=number] - multicodec code corresponding to codec used to encode the block
- * @template [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template [V=0|1] - CID version
+ * @template {unknown} [T=unknown] - Logical type of the data encoded in the block
+ * @template {number} [C=number] - multicodec code corresponding to codec used to encode the block
+ * @template {number} [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
+ * @template {API.Version} [V=API.Version] - CID version
  * @typedef {import('./block/interface.js').BlockView<T, C, A, V>} BlockView
  */
 
@@ -23,7 +26,7 @@ import { base58btc } from './bases/base58.js'
  */
 const walk = async ({ cid, load, seen }) => {
   seen = seen || new Set()
-  const b58Cid = cid.toString(base58btc)
+  const b58Cid = base58btc.encode(cid.bytes)
   if (seen.has(b58Cid)) {
     return
   }
