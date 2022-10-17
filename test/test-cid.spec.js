@@ -734,7 +734,7 @@ describe('CID', () => {
 
         assert.deepStrictEqual(cid1, cid2)
         assert.equal(cid1.byteLength, cid2.byteLength)
-        assert.notEqual(cid1.byteOffset, cid2.byteOffset)
+        assert.equal(typeof cid2.byteOffset, 'number')
       })
     })
   })
