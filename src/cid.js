@@ -78,15 +78,19 @@ export class CID {
     /** @readonly */
     this.bytes = bytes
 
-    // ArrayBufferView
-    /** @readonly */
-    this.byteOffset = bytes.byteOffset
-    /** @readonly */
-    this.byteLength = bytes.byteLength
-
     // Circular reference
     /** @readonly */
     this.asCID = this
+  }
+
+  // ArrayBufferView
+  get byteOffset () {
+    return this.bytes.byteOffset
+  }
+
+  // ArrayBufferView
+  get byteLength () {
+    return this.bytes.byteLength
   }
 
   /**
@@ -272,6 +276,10 @@ export class CID {
   static create (version, code, digest) {
     if (typeof code !== 'number') {
       throw new Error('String codecs are no longer supported')
+    }
+
+    if (digest.bytes == null) {
+      throw new Error('Invalid digest')
     }
 
     switch (version) {
