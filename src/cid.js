@@ -278,7 +278,7 @@ export class CID {
       throw new Error('String codecs are no longer supported')
     }
 
-    if (digest.bytes == null) {
+    if (!(digest.bytes instanceof Uint8Array)) {
       throw new Error('Invalid digest')
     }
 
