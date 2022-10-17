@@ -114,3 +114,17 @@ describe('decode', () => {
     assert.deepStrictEqual(multihash, hash)
   })
 })
+
+describe('equality', () => {
+  it('passes equality check despite diff offsets', () => {
+    const expect = Link.parse('QmRnTwp7crEvYEdyWhW7FGQ3thWMvgTATcbUs1uyHVuSNq')
+    const buffer = new ArrayBuffer(256)
+    const bytes = new Uint8Array(buffer, 12, expect.bytes.byteLength)
+    bytes.set(expect.bytes)
+
+    const actual = Link.decode(bytes)
+    assert.equal(expect.toString(), actual.toString())
+
+    assert.deepEqual(expect, actual)
+  })
+})
