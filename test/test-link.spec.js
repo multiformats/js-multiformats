@@ -124,6 +124,8 @@ describe('equality', () => {
 
     const actual = Link.decode(bytes)
     assert.equal(expect.toString(), actual.toString())
+    assert.equal(expect.byteLength, actual.byteLength)
+    assert.notEqual(expect.byteOffset, actual.byteOffset)
 
     assert.deepEqual(expect, actual)
   })
