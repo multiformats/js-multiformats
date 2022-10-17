@@ -1,3 +1,10 @@
+## [10.0.1](https://github.com/multiformats/js-multiformats/compare/v10.0.0...v10.0.1) (2022-10-17)
+
+
+### Bug Fixes
+
+* convert byteOffset and byteLength to getters ([#215](https://github.com/multiformats/js-multiformats/issues/215)) ([4e09490](https://github.com/multiformats/js-multiformats/commit/4e09490beeba0e0a47432a7bb51112ab5f556e3f)), closes [#208](https://github.com/multiformats/js-multiformats/issues/208) [#210](https://github.com/multiformats/js-multiformats/issues/210)
+
 ## [10.0.0](https://github.com/multiformats/js-multiformats/compare/v9.9.0...v10.0.0) (2022-10-12)
 
 
