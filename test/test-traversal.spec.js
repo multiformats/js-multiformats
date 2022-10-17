@@ -5,6 +5,7 @@ import * as main from '../src/block.js'
 import { walk } from '../src/traversal.js'
 import { fromString } from '../src/bytes.js'
 import { assert } from 'chai'
+import * as CID from '../src/cid.js'
 
 /** @typedef {import('../src/cid/interface.js').CID} CID */
 
@@ -65,19 +66,19 @@ describe('traversal', () => {
      * @param {CID} cid
      */
     const load = async (cid) => {
-      if (cid.equals(cidE)) {
+      if (CID.equals(cid, cidE)) {
         return blockE
       }
-      if (cid.equals(cidD)) {
+      if (CID.equals(cid, cidD)) {
         return blockD
       }
-      if (cid.equals(cidC)) {
+      if (CID.equals(cid, cidC)) {
         return blockC
       }
-      if (cid.equals(cidB)) {
+      if (CID.equals(cid, cidB)) {
         return blockB
       }
-      if (cid.equals(cidA)) {
+      if (CID.equals(cid, cidA)) {
         return blockA
       }
       return null

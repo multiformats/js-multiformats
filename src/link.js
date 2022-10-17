@@ -41,7 +41,7 @@ export function asLink (cid) {
      * @returns {other is API.Link<Data, Code, Alg, Ver>}
      */
     equals (other) {
-      return cid.equals(other)
+      return CID.equals(cid, other)
     },
     toString (base) {
       if (cid.version === 0 && base != null && base.name !== 'base58btc') {

@@ -19,6 +19,4 @@ Ver extends Version = Version
   code: Format
   multihash: MultihashDigest<Alg>
   bytes: ByteView<Link<Data, Format, Alg, Ver>>
-
-  equals: (other: unknown) => other is CID<Data, Format, Alg, Ver>
 }

@@ -231,16 +231,16 @@ describe('CID', () => {
 
     it('.equals v0 to v0', () => {
       const cid1 = CID.parse(h1)
-      assert.deepStrictEqual(cid1.equals(CID.parse(h1)), true)
+      assert.deepStrictEqual(CID.equals(cid1, CID.parse(h1)), true)
       assert.deepStrictEqual(
-        cid1.equals(CID.create(cid1.version, cid1.code, cid1.multihash)),
+        CID.equals(cid1, CID.create(cid1.version, cid1.code, cid1.multihash)),
         true
       )
 
       const cid2 = CID.parse(h2)
-      assert.deepStrictEqual(cid1.equals(CID.parse(h2)), false)
+      assert.deepStrictEqual(CID.equals(cid1, CID.parse(h2)), false)
       assert.deepStrictEqual(
-        cid1.equals(CID.create(cid2.version, cid2.code, cid2.multihash)),
+        CID.equals(cid1, CID.create(cid2.version, cid2.code, cid2.multihash)),
         false
       )
     })
@@ -250,8 +250,8 @@ describe('CID', () => {
 
       const cidV0 = CID.toV0(cidV1)
 
-      assert.deepStrictEqual(cidV0.equals(cidV1), false)
-      assert.deepStrictEqual(cidV1.equals(cidV0), false)
+      assert.deepStrictEqual(CID.equals(cidV0, cidV1), false)
+      assert.deepStrictEqual(CID.equals(cidV1, cidV0), false)
 
       assert.deepStrictEqual(cidV1.multihash, cidV0.multihash)
     })
@@ -259,9 +259,9 @@ describe('CID', () => {
     it('.equals v1 to v1', () => {
       const cid1 = CID.parse(h3)
 
-      assert.deepStrictEqual(cid1.equals(CID.parse(h3)), true)
+      assert.deepStrictEqual(CID.equals(cid1, CID.parse(h3)), true)
       assert.deepStrictEqual(
-        cid1.equals(CID.create(cid1.version, cid1.code, cid1.multihash)),
+        CID.equals(cid1, CID.create(cid1.version, cid1.code, cid1.multihash)),
         true
       )
     })

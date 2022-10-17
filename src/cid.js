@@ -86,14 +86,6 @@ class DefaultCID {
     this.asCID = this
   }
 
-  /**
-   * @param {unknown} other
-   * @returns {other is CID.CID<Data, Format, Alg, Ver>}
-   */
-  equals (other) {
-    return equals(this, other)
-  }
-
   get [Symbol.toStringTag] () {
     return 'CID'
   }
@@ -252,6 +244,16 @@ export function asCID (input) {
     // which case we return `null`.
     return null
   }
+}
+
+/**
+ * Type predicate returns true if value is a CID
+ *
+ * @param {any} value
+ * @returns {value is CID}
+ */
+export function isCID (value) {
+  return asCID(value) != null
 }
 
 /**
