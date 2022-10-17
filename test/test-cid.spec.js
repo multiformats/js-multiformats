@@ -708,4 +708,34 @@ describe('CID', () => {
     sender.close()
     receiver.close()
   })
+
+  describe('decode', () => {
+    const tests = {
+      v0: 'QmTFHZL5CkgNz19MdPnSuyLAi6AVq9fFp81zmPpaL2amED',
+      v1: 'bafybeif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu'
+    }
+
+    Object.entries(tests).forEach(([version, cidString]) => {
+      it(`decode ${version} from bytes`, () => {
+        const cid1 = CID.parse(cidString)
+        const cid2 = CID.decode(cid1.bytes)
+
+        assert.deepStrictEqual(cid1, cid2)
+      })
+
+      it(`decode ${version} from subarray`, () => {
+        const cid1 = CID.parse(cidString)
+        // a byte array with an extra byte at the start and end
+        const bytes = new Uint8Array(cid1.bytes.length + 2)
+        bytes.set(cid1.bytes, 1)
+        // slice the cid bytes out of the middle to have a subarray with a non-zero .byteOffset
+        const subarray = bytes.subarray(1, cid1.bytes.length + 1)
+        const cid2 = CID.decode(subarray)
+
+        assert.deepStrictEqual(cid1, cid2)
+        assert.equal(cid1.byteLength, cid2.byteLength)
+        assert.equal(typeof cid2.byteOffset, 'number')
+      })
+    })
+  })
 })
