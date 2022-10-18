@@ -8,14 +8,10 @@ import { base64 } from '../src/bases/base64.js'
 import { sha256, sha512 } from '../src/hashes/sha2.js'
 import invalidMultihash from './fixtures/invalid-multihash.js'
 import OLDCID from 'cids'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
+import { assert } from 'aegir/chai'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from 'multiformats'
-
-chai.use(chaiAsPromised)
-const { assert } = chai
 
 const textEncoder = new TextEncoder()
 

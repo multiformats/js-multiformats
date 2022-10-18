@@ -2,11 +2,7 @@
 import * as bytes from '../src/bytes.js'
 import * as raw from '../src/codecs/raw.js'
 import * as json from '../src/codecs/json.js'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-
-chai.use(chaiAsPromised)
-const { assert } = chai
+import { assert } from 'aegir/chai'
 
 describe('multicodec', () => {
   it('encode/decode raw', () => {

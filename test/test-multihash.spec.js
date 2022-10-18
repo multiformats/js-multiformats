@@ -7,11 +7,7 @@ import valid from './fixtures/valid-multihash.js'
 import invalid from './fixtures/invalid-multihash.js'
 import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-
-chai.use(chaiAsPromised)
-const { assert } = chai
+import { assert } from 'aegir/chai'
 
 /**
  * @param {number|string} code

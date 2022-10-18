@@ -1,12 +1,9 @@
 /* globals describe, it */
 
 import * as Link from '../src/link.js'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
+import { assert } from 'aegir/chai'
 import { sha256 } from '../src/hashes/sha2.js'
 
-chai.use(chaiAsPromised)
-const { assert } = chai
 const utf8 = new TextEncoder()
 
 const h1 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'

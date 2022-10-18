@@ -262,14 +262,9 @@
   "devDependencies": {
     "@stablelib/sha256": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
-    "@types/chai": "^4.3.0",
-    "@types/chai-as-promised": "^7.1.4",
-    "@types/mocha": "^10.0.0",
     "@types/node": "^18.0.0",
     "aegir": "^37.5.1",
     "buffer": "^6.0.3",
-    "chai": "^4.3.4",
-    "chai-as-promised": "^7.1.1",
     "cids": "^1.1.9"
   },
   "aegir": {
