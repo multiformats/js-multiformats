@@ -704,7 +704,7 @@ describe('CID', () => {
     const cid2 = await new Promise((resolve) => {
       receiver.onmessage = (event) => { resolve(event.data) }
     })
-    assert.strictEqual(cid2.asCID, cid2)
+    assert.strictEqual(cid2['/'], cid2.bytes)
     sender.close()
     receiver.close()
   })
