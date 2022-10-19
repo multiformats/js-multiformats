@@ -4,7 +4,7 @@ import { sha256 as hasher } from '../src/hashes/sha2.js'
 import * as main from '../src/block.js'
 import { walk } from '../src/traversal.js'
 import { fromString } from '../src/bytes.js'
-import { assert } from 'chai'
+import { assert } from 'aegir/chai'
 
 /** @typedef {import('../src/cid.js').CID} CID */
 

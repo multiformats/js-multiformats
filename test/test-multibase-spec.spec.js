@@ -2,11 +2,7 @@
 
 import { bases } from '../src/basics.js'
 import { fromString } from '../src/bytes.js'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-
-chai.use(chaiAsPromised)
-const { assert } = chai
+import { assert } from 'aegir/chai'
 
 const encoded = [
   {

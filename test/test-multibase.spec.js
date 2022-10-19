@@ -8,11 +8,7 @@ import * as b32 from '../src/bases/base32.js'
 import * as b36 from '../src/bases/base36.js'
 import * as b58 from '../src/bases/base58.js'
 import * as b64 from '../src/bases/base64.js'
-import chai from 'chai'
-import chaiAsPromised from 'chai-as-promised'
-
-chai.use(chaiAsPromised)
-const { assert } = chai
+import { assert } from 'aegir/chai'
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
 
