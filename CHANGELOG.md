@@ -1,3 +1,16 @@
+## [10.0.2](https://github.com/multiformats/js-multiformats/compare/v10.0.1...v10.0.2) (2022-10-19)
+
+
+### Bug Fixes
+
+* use slash as flag that an object is a CID ([#217](https://github.com/multiformats/js-multiformats/issues/217)) ([1cec619](https://github.com/multiformats/js-multiformats/commit/1cec619e2818d893292323539f397324ace82280)), closes [#212](https://github.com/multiformats/js-multiformats/issues/212) [#213](https://github.com/multiformats/js-multiformats/issues/213)
+
+
+### Trivial Changes
+
+* **no-release:** rename varint test file so it is run ([#209](https://github.com/multiformats/js-multiformats/issues/209)) ([e32fe47](https://github.com/multiformats/js-multiformats/commit/e32fe4703ee0c48100af89f9c9c7181f65935176))
+* remove unnecessary dev deps ([#218](https://github.com/multiformats/js-multiformats/issues/218)) ([a43ffff](https://github.com/multiformats/js-multiformats/commit/a43ffff672495ba86486be47084697df4e1ecacc))
+
 ## [10.0.1](https://github.com/multiformats/js-multiformats/compare/v10.0.0...v10.0.1) (2022-10-17)
 
 
