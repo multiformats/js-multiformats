@@ -84,6 +84,16 @@ export class CID {
     this['/'] = bytes
   }
 
+  /**
+   * Signalling `cid.asCID === cid` has been replaced with `cid['/'] === cid.bytes`
+   * please either use `CID.asCID(cid)` or switch to new signalling mechanism
+   *
+   * @deprecated
+   */
+  get asCID () {
+    return this
+  }
+
   // ArrayBufferView
   get byteOffset () {
     return this.bytes.byteOffset
@@ -249,7 +259,7 @@ export class CID {
         version,
         code,
         /** @type {API.MultihashDigest<Alg>} */ (multihash),
-        value['/'] ?? bytes ?? encodeCID(version, code, multihash.bytes)
+        bytes || encodeCID(version, code, multihash.bytes)
       )
     } else if (value[cidSymbol] === true) {
       // If value is a CID from older implementation that used to be tagged via
