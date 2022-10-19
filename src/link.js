@@ -36,8 +36,25 @@ export const create = (code, digest) => CID.create(1, code, digest)
  * @param {unknown|L} value
  * @returns {value is L & CID}
  */
-export const isLink = value =>
-  value != null && /** @type {{asCID: unknown}} */ (value).asCID === value
+export const isLink = value => {
+  if (value == null) {
+    return false
+  }
+
+  const withSlash = /** @type {{'/'?: Uint8Array, bytes: Uint8Array}} */ (value)
+
+  if (withSlash['/'] != null && withSlash['/'] === withSlash.bytes) {
+    return true
+  }
+
+  const withAsCID = /** @type {{'asCID'?: unknown}} */ (value)
+
+  if (withAsCID.asCID === value) {
+    return true
+  }
+
+  return false
+}
 
 /**
  * Takes cid in a string representation and creates an instance. If `base`

@@ -78,9 +78,20 @@ export class CID {
     /** @readonly */
     this.bytes = bytes
 
-    // Circular reference
+    // flag to serializers that this is a CID and
+    // should be treated specially
     /** @readonly */
-    this.asCID = this
+    this['/'] = bytes
+  }
+
+  /**
+   * Signalling `cid.asCID === cid` has been replaced with `cid['/'] === cid.bytes`
+   * please either use `CID.asCID(cid)` or switch to new signalling mechanism
+   *
+   * @deprecated
+   */
+  get asCID () {
+    return this
   }
 
   // ArrayBufferView
@@ -229,16 +240,20 @@ export class CID {
    * @returns {CID<Data, Format, Alg, Version>|null}
    */
   static asCID (input) {
+    if (input == null) {
+      return null
+    }
+
     const value = /** @type {any} */ (input)
     if (value instanceof CID) {
       // If value is instance of CID then we're all set.
       return value
-    } else if (value != null && value.asCID === value) {
-      // If value isn't instance of this CID class but `this.asCID === this` is
-      // true it is CID instance coming from a different implementation (diff
-      // version or duplicate). In that case we rebase it to this `CID`
-      // implementation so caller is guaranteed to get instance with expected
-      // API.
+    } else if ((value['/'] != null && value['/'] === value.bytes) || value.asCID === value) {
+      // If value isn't instance of this CID class but `this.asCID === this` or
+      // `value['/'] === value.bytes` is true it is CID instance coming from a
+      // different implementation (diff version or duplicate). In that case we
+      // rebase it to this `CID` implementation so caller is guaranteed to get
+      // instance with expected API.
       const { version, code, multihash, bytes } = value
       return new CID(
         version,
@@ -246,7 +261,7 @@ export class CID {
         /** @type {API.MultihashDigest<Alg>} */ (multihash),
         bytes || encodeCID(version, code, multihash.bytes)
       )
-    } else if (value != null && value[cidSymbol] === true) {
+    } else if (value[cidSymbol] === true) {
       // If value is a CID from older implementation that used to be tagged via
       // symbol we still rebase it to the this `CID` implementation by
       // delegating that to a constructor.
