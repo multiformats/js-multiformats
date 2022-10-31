@@ -265,7 +265,8 @@
     "@types/node": "^18.0.0",
     "aegir": "^37.5.1",
     "buffer": "^6.0.3",
-    "cids": "^1.1.9"
+    "cids": "^1.1.9",
+    "web3-utils": "^1.8.0"
   },
   "aegir": {
     "build": {
