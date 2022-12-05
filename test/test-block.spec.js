@@ -83,6 +83,17 @@ describe('block', () => {
     })
   })
 
+  it('links of a block that is a CID', async () => {
+    const block = await main.encode({ value: link, codec, hasher })
+    const links = []
+    for (const link of block.links()) {
+      links.push(link)
+    }
+    assert.equal(links.length, 1)
+    assert.equal(links[0][0], '')
+    assert.equal(links[0][1].toString(), link.toString())
+  })
+
   it('kitchen sink', () => {
     const sink = { one: { two: { arr: [true, false, null], three: 3, buff, link } } }
     const block = main.createUnsafe({

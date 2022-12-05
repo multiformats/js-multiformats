@@ -45,6 +45,10 @@ function * links (source, base) {
   if (source == null || source instanceof Uint8Array) {
     return
   }
+  const cid = CID.asCID(source)
+  if (cid) {
+    yield [base.join('/'), cid]
+  }
   for (const [key, value] of Object.entries(source)) {
     const path = /** @type {[string|number, string]} */ ([...base, key])
     yield * linksWithin(path, value)
