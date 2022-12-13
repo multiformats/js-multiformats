@@ -1,7 +1,7 @@
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from "./link/interface.js"
-import { CID, format } from './cid.js'
+import { CID, format, toJSON, fromJSON } from './cid.js'
 // This way TS will also expose all the types from module
 export * from './link/interface.js'
 
@@ -73,7 +73,7 @@ export const isLink = value => {
  */
 export const parse = (source, base) => CID.parse(source, base)
 
-export { format }
+export { format, toJSON, fromJSON }
 
 /**
  * Decoded a CID from its binary representation. The byte array must contain

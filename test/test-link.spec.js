@@ -89,6 +89,42 @@ describe('Link', () => {
       assert.ok(t2)
     })
   })
+
+  describe('toJSON', () => {
+    assert.deepStrictEqual(Link.toJSON(Link.parse(h1)), {
+      '/': h1
+    })
+
+    assert.deepStrictEqual(Link.toJSON(Link.parse(h4)), {
+      '/': h4
+    })
+  })
+
+  describe('fromJSON', () => {
+    assert.deepStrictEqual(Link.parse(h1), Link.fromJSON({
+      '/': h1
+    }))
+
+    assert.deepStrictEqual(Link.parse(h1), Link.fromJSON({
+      '/': h1,
+      // @ts-expect-error
+      foo: 1
+    }))
+
+    assert.deepStrictEqual(Link.parse(h4), Link.fromJSON({
+      '/': h4
+    }))
+  })
+
+  describe('JSON.stringify', () => {
+    assert.equal(JSON.stringify(Link.parse(h1)), JSON.stringify({
+      '/': h1
+    }))
+
+    assert.equal(JSON.stringify(Link.parse(h4)), JSON.stringify({
+      '/': h4
+    }))
+  })
 })
 
 describe('decode', () => {

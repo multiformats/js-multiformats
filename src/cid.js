@@ -35,6 +35,22 @@ export const format = (link, base) => {
   }
 }
 
+/**
+ * @template {API.UnknownLink} Link
+ * @param {Link} link
+ * @returns {API.LinkJSON<Link>}
+ */
+export const toJSON = (link) => ({
+  '/': format(link)
+})
+
+/**
+ * @template {API.UnknownLink} Link
+ * @param {API.LinkJSON<Link>} json
+ */
+export const fromJSON = (json) =>
+  CID.parse(json['/'])
+
 /** @type {WeakMap<API.UnknownLink, Map<string, string>>} */
 const cache = new WeakMap()
 
@@ -200,11 +216,7 @@ export class CID {
   }
 
   toJSON () {
-    return {
-      code: this.code,
-      version: this.version,
-      hash: this.multihash.bytes
-    }
+    return { '/': format(this) }
   }
 
   link () {
