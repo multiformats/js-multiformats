@@ -35,10 +35,13 @@ export interface Link<
   equals: (other: unknown) => other is Link<Data, Format, Alg, Version>
 
   toString: <Prefix extends string>(base?: MultibaseEncoder<Prefix>) => ToString<Link<Data, Format, Alg, Version>, Prefix>
-  toJSON: () => { version: V, code: Format, hash: Uint8Array }
   link: () => Link<Data, Format, Alg, V>
 
   toV1: () => Link<Data, Format, Alg, 1>
+}
+
+export interface LinkJSON<T extends UnknownLink = UnknownLink> {
+  '/': ToString<T>
 }
 
 export interface LegacyLink<T extends unknown = unknown> extends Link<T, DAG_PB, SHA_256, 0> {

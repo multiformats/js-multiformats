@@ -482,13 +482,10 @@ describe('CID', () => {
   it('toJSON()', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     const cid = CID.create(1, 112, hash)
-    const json = cid.toJSON()
 
-    assert.deepStrictEqual(
-      { ...json, hash: null },
-      { code: 112, version: 1, hash: null }
-    )
-    assert.ok(equals(json.hash, hash.bytes))
+    assert.deepStrictEqual(cid.toJSON(), {
+      '/': cid.toString()
+    })
   })
 
   it('asCID', async () => {
