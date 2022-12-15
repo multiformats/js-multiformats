@@ -2,13 +2,14 @@
 
 [![multiformats.io](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://multiformats.io)
 [![codecov](https://img.shields.io/codecov/c/github/multiformats/js-multiformats.svg?style=flat-square)](https://codecov.io/gh/multiformats/js-multiformats)
-[![CI](https://img.shields.io/github/workflow/status/multiformats/js-multiformats/test%20&%20maybe%20release/esm-migration?style=flat-square)](https://github.com/multiformats/js-multiformats/actions/workflows/js-test-and-release.yml)
+[![CI](https://img.shields.io/github/workflow/status/multiformats/js-multiformats/test%20&%20maybe%20release/master?style=flat-square)](https://github.com/multiformats/js-multiformats/actions/workflows/js-test-and-release.yml)
 
 > Interface for multihash, multicodec, multibase and CID
 
 ## Table of contents <!-- omit in toc -->
 
 - [Install](#install)
+  - [Browser `<script>` tag](#browser-script-tag)
 - [Interfaces](#interfaces)
   - [Creating Blocks](#creating-blocks)
   - [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
@@ -20,6 +21,7 @@
   - [Multibase codecs](#multibase-codecs)
   - [Multihash hashers](#multihash-hashers-1)
   - [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
+- [API Docs](#api-docs)
 - [License](#license)
 - [Contribution](#contribution)
 
@@ -27,6 +29,14 @@
 
 ```console
 $ npm i multiformats
+```
+
+### Browser `<script>` tag
+
+Loading this module through a script tag will make it's exports available as `Multiformats` in the global namespace.
+
+```html
+<script src="https://unpkg.com/multiformats/dist/index.min.js"></script>
 ```
 
 ## Interfaces
@@ -232,6 +242,10 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 | `dag-json` | `@ipld/dag-json`           | [ipld/js-dag-json](https://github.com/ipld/js-dag-json)                                                |
 | `dag-pb`   | `@ipld/dag-pb`             | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb)                                                    |
 | `dag-jose` | `dag-jose`                 | [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose)                            |
+
+## API Docs
+
+- <https://multiformats.github.io/js-multiformats>
 
 ## License
 

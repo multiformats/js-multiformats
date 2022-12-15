@@ -46,7 +46,7 @@
     "src",
     "test",
     "tsconfig.json",
-    "dist/types",
+    "dist",
     "vendor",
     "!**/*.tsbuildinfo",
     "!test/ts-use/node_modules"
@@ -250,6 +250,7 @@
     "lint": "aegir lint",
     "build": "aegir build",
     "release": "aegir release",
+    "docs": "aegir docs",
     "test": "npm run lint && npm run test:node && npm run test:chrome && npm run test:ts",
     "test:ts": "npm run test --prefix test/ts-use",
     "test:node": "aegir test -t node --cov",
@@ -263,7 +264,7 @@
     "@stablelib/sha256": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
     "@types/node": "^18.0.0",
-    "aegir": "^37.5.1",
+    "aegir": "^37.7.5",
     "buffer": "^6.0.3",
     "cids": "^1.1.9"
   },
