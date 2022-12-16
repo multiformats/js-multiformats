@@ -1,3 +1,10 @@
+## [10.0.3](https://github.com/multiformats/js-multiformats/compare/v10.0.2...v10.0.3) (2022-12-16)
+
+
+### Documentation
+
+* publish typedocs in gh-pages branch ([#233](https://github.com/multiformats/js-multiformats/issues/233)) ([3a6d3ed](https://github.com/multiformats/js-multiformats/commit/3a6d3ed1f653d62e30d72d7bd00dc5815a17ffe3))
+
 ## [10.0.2](https://github.com/multiformats/js-multiformats/compare/v10.0.1...v10.0.2) (2022-10-19)
 
 
