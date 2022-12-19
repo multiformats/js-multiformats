@@ -269,9 +269,6 @@
     "cids": "^1.1.9"
   },
   "aegir": {
-    "build": {
-      "bundle": false
-    },
     "test": {
       "target": [
         "node",
