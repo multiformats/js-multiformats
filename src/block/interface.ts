@@ -10,7 +10,7 @@ import { CID } from '../cid.js'
  * a `Data` type parameter indicating the type of encoded data.
  *
  * For example, a `ByteView<{ hello: "world" }>` is a `Uint8Array` containing a
- * binary representation of a `{hello: "world"}.
+ * binary representation of a `{hello: "world"}`.
  */
 export interface ByteView<Data> extends Uint8Array, Phantom<Data> {}
 
@@ -22,16 +22,16 @@ declare const Marker: unique symbol
  *
  * Capturing unused type parameters allows us to define "nominal types," which
  * TypeScript does not natively support. Nominal types in turn allow us to capture
- * semantics not represented in the actual type structure, without requring us to define
+ * semantics not represented in the actual type structure, without requiring us to define
  * new classes or pay additional runtime costs.
  *
  * For a concrete example, see {@link ByteView}, which extends the `Uint8Array` type to capture
  * type information about the structure of the data encoded into the array.
  */
 export interface Phantom<T> {
-  // This field can not be represented because field name is nonexistent
+  // This field can not be represented because field name is non-existent
   // unique symbol. But given that field is optional any object will valid
-  // type contstraint.
+  // type constraint.
   [Marker]?: T
 }
 

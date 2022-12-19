@@ -66,7 +66,7 @@ export const equals = (a, b) => {
 
 /**
  * Represents a multihash digest which carries information about the
- * hashing alogrithm and an actual hash digest.
+ * hashing algorithm and an actual hash digest.
  *
  * @template {number} Code
  * @template {number} Size
