@@ -1,3 +1,25 @@
+## [11.0.0](https://github.com/multiformats/js-multiformats/compare/v10.0.3...v11.0.0) (2023-01-02)
+
+
+### ⚠ BREAKING CHANGES
+
+* Make link.toJSON return a DAG-JSON link
+
+### Features
+
+* Make link.toJSON return a DAG-JSON link ([9e087d6](https://github.com/multiformats/js-multiformats/commit/9e087d64ee3c90d8b019dd48989936b17b1cb2f3))
+
+
+### Bug Fixes
+
+* build browser bundle ([2ee6012](https://github.com/multiformats/js-multiformats/commit/2ee6012dbb702cff2425668c16fe101fdf79517d)), closes [#234](https://github.com/multiformats/js-multiformats/issues/234)
+* list links of a block that _is a_ CID ([#226](https://github.com/multiformats/js-multiformats/issues/226)) ([c17673d](https://github.com/multiformats/js-multiformats/commit/c17673d9e15bd5a4df074c9f73267a257e0dcfad))
+
+
+### Documentation
+
+* fix typos in jsdoc comments ([a246054](https://github.com/multiformats/js-multiformats/commit/a246054653cf588e92d76f8161b0a6cd6035533b))
+
 ## [10.0.3](https://github.com/multiformats/js-multiformats/compare/v10.0.2...v10.0.3) (2022-12-16)
 
 
