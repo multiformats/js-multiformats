@@ -85,6 +85,12 @@ describe('CID', () => {
       assert.throws(() => cid.toString(base32), msg)
     })
 
+    it('throws on CIDv0 string with explicit multibase prefix', async () => {
+      const str = 'zQmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
+      const msg = 'Version 0 CID string must not include multibase prefix'
+      assert.throws(() => CID.parse(str), msg)
+    })
+
     it('.bytes', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const codec = 112

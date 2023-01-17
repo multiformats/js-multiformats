@@ -484,6 +484,10 @@ export class CID {
 
     const cid = CID.decode(bytes)
 
+    if (cid.version === 0 && source[0] !== 'Q') {
+      throw Error('Version 0 CID string must not include multibase prefix')
+    }
+
     // Cache string representation to avoid computing it on `this.toString()`
     baseCache(cid).set(prefix, source)
 
