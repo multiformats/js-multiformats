@@ -1,3 +1,10 @@
+## [11.0.1](https://github.com/multiformats/js-multiformats/compare/v11.0.0...v11.0.1) (2023-01-18)
+
+
+### Bug Fixes
+
+* throw on CID.parse v0 string with multibase prefix ([258a0be](https://github.com/multiformats/js-multiformats/commit/258a0be344ddd5d08e08e55b3e088212df0c409a))
+
 ## [11.0.0](https://github.com/multiformats/js-multiformats/compare/v10.0.3...v11.0.0) (2023-01-02)
 
 
