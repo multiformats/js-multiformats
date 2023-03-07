@@ -96,6 +96,10 @@
       "types": "./dist/types/src/bases/identity.d.ts",
       "import": "./src/bases/identity.js"
     },
+    "./bases/interface": {
+      "types": "./dist/types/src/bases/interface.d.ts",
+      "import": "./src/bases/interface.js"
+    },
     "./basics": {
       "types": "./dist/types/src/basics.d.ts",
       "import": "./src/basics.js"
@@ -104,6 +108,10 @@
       "types": "./dist/types/src/block.d.ts",
       "import": "./src/block.js"
     },
+    "./block/interface": {
+      "types": "./dist/types/src/block/interface.d.ts",
+      "import": "./src/block/interface.js"
+    },
     "./bytes": {
       "types": "./dist/types/src/bytes.d.ts",
       "import": "./src/bytes.js"
@@ -111,6 +119,10 @@
     "./cid": {
       "types": "./dist/types/src/cid.d.ts",
       "import": "./src/cid.js"
+    },
+    "./codecs/interface": {
+      "types": "./dist/types/src/codecs/interface.d.ts",
+      "import": "./src/codecs/interface.js"
     },
     "./codecs/json": {
       "types": "./dist/types/src/codecs/json.d.ts",
@@ -132,6 +144,10 @@
       "types": "./dist/types/src/hashes/identity.d.ts",
       "import": "./src/hashes/identity.js"
     },
+    "./hashes/interface": {
+      "types": "./dist/types/src/hashes/interface.d.ts",
+      "import": "./src/hashes/interface.js"
+    },
     "./hashes/sha2": {
       "types": "./dist/types/src/hashes/sha2.d.ts",
       "browser": "./src/hashes/sha2-browser.js",
@@ -144,6 +160,10 @@
     "./link": {
       "types": "./dist/types/src/link.d.ts",
       "import": "./src/link.js"
+    },
+    "./link/interface": {
+      "types": "./dist/types/src/interface.d.ts",
+      "import": "./src/interface.js"
     },
     "./traversal": {
       "types": "./dist/types/src/traversal.d.ts",
