@@ -1,3 +1,10 @@
+## [11.0.2](https://github.com/multiformats/js-multiformats/compare/v11.0.1...v11.0.2) (2023-03-09)
+
+
+### Bug Fixes
+
+* add interface files to the exports map ([#246](https://github.com/multiformats/js-multiformats/issues/246)) ([a58a398](https://github.com/multiformats/js-multiformats/commit/a58a39896d7264ba0bcbaf737cce7f3a65c644ba)), closes [/github.com/ipld/js-dag-cbor/blob/master/src/index.js#L9](https://github.com/multiformats//github.com/ipld/js-dag-cbor/blob/master/src/index.js/issues/L9)
+
 ## [11.0.1](https://github.com/multiformats/js-multiformats/compare/v11.0.0...v11.0.1) (2023-01-18)
 
 
