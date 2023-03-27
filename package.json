@@ -54,120 +54,149 @@
   "exports": {
     ".": {
       "types": "./dist/types/src/index.d.ts",
-      "import": "./src/index.js"
+      "import": "./src/index.js",
+      "require": "./dist/cjs/index.js"
     },
     "./bases/base10": {
       "types": "./dist/types/src/bases/base10.d.ts",
-      "import": "./src/bases/base10.js"
+      "import": "./src/bases/base10.js",
+      "require": "./dist/cjs/bases/base10.js"
     },
     "./bases/base16": {
       "types": "./dist/types/src/bases/base16.d.ts",
-      "import": "./src/bases/base16.js"
+      "import": "./src/bases/base16.js",
+      "require": "./dist/cjs/bases/base16.js"
     },
     "./bases/base2": {
       "types": "./dist/types/src/bases/base2.d.ts",
-      "import": "./src/bases/base2.js"
+      "import": "./src/bases/base2.js",
+      "require": "./dist/cjs/bases/base2.js"
     },
     "./bases/base256emoji": {
       "types": "./dist/types/src/bases/base256emoji.d.ts",
-      "import": "./src/bases/base256emoji.js"
+      "import": "./src/bases/base256emoji.js",
+      "require": "./dist/cjs/bases/base256emoji.js"
     },
     "./bases/base32": {
       "types": "./dist/types/src/bases/base32.d.ts",
-      "import": "./src/bases/base32.js"
+      "import": "./src/bases/base32.js",
+      "require": "./dist/cjs/bases/base32.js"
     },
     "./bases/base36": {
       "types": "./dist/types/src/bases/base36.d.ts",
-      "import": "./src/bases/base36.js"
+      "import": "./src/bases/base36.js",
+      "require": "./dist/cjs/bases/base36.js"
     },
     "./bases/base58": {
       "types": "./dist/types/src/bases/base58.d.ts",
-      "import": "./src/bases/base58.js"
+      "import": "./src/bases/base58.js",
+      "require": "./dist/cjs/bases/base58.js"
     },
     "./bases/base64": {
       "types": "./dist/types/src/bases/base64.d.ts",
-      "import": "./src/bases/base64.js"
+      "import": "./src/bases/base64.js",
+      "require": "./dist/cjs/bases/base64.js"
     },
     "./bases/base8": {
       "types": "./dist/types/src/bases/base8.d.ts",
-      "import": "./src/bases/base8.js"
+      "import": "./src/bases/base8.js",
+      "require": "./dist/cjs/bases/base8.js"
     },
     "./bases/identity": {
       "types": "./dist/types/src/bases/identity.d.ts",
-      "import": "./src/bases/identity.js"
+      "import": "./src/bases/identity.js",
+      "require": "./dist/cjs/bases/identity.js"
     },
     "./bases/interface": {
       "types": "./dist/types/src/bases/interface.d.ts",
-      "import": "./src/bases/interface.js"
+      "import": "./src/bases/interface.js",
+      "require": "./dist/cjs/bases/interface.js"
     },
     "./basics": {
       "types": "./dist/types/src/basics.d.ts",
-      "import": "./src/basics.js"
+      "import": "./src/basics.js",
+      "require": "./dist/cjs/basics.js"
     },
     "./block": {
       "types": "./dist/types/src/block.d.ts",
-      "import": "./src/block.js"
+      "import": "./src/block.js",
+      "require": "./dist/cjs/block.js"
     },
     "./block/interface": {
       "types": "./dist/types/src/block/interface.d.ts",
-      "import": "./src/block/interface.js"
+      "import": "./src/block/interface.js",
+      "require": "./dist/cjs/block/interface.js"
     },
     "./bytes": {
       "types": "./dist/types/src/bytes.d.ts",
-      "import": "./src/bytes.js"
+      "import": "./src/bytes.js",
+      "require": "./dist/cjs/bytes.js"
     },
     "./cid": {
       "types": "./dist/types/src/cid.d.ts",
-      "import": "./src/cid.js"
+      "import": "./src/cid.js",
+      "require": "./dist/cjs/cid.js"
     },
     "./codecs/interface": {
       "types": "./dist/types/src/codecs/interface.d.ts",
-      "import": "./src/codecs/interface.js"
+      "import": "./src/codecs/interface.js",
+      "require": "./dist/cjs/codecs/interface.js"
     },
     "./codecs/json": {
       "types": "./dist/types/src/codecs/json.d.ts",
-      "import": "./src/codecs/json.js"
+      "import": "./src/codecs/json.js",
+      "require": "./dist/cjs/codecs/json.js"
     },
     "./codecs/raw": {
       "types": "./dist/types/src/codecs/raw.d.ts",
-      "import": "./src/codecs/raw.js"
+      "import": "./src/codecs/raw.js",
+      "require": "./dist/cjs/codecs/raw.js"
     },
     "./hashes/digest": {
       "types": "./dist/types/src/hashes/digest.d.ts",
-      "import": "./src/hashes/digest.js"
+      "import": "./src/hashes/digest.js",
+      "require": "./dist/cjs/hashes/digest.js"
     },
     "./hashes/hasher": {
       "types": "./dist/types/src/hashes/hasher.d.ts",
-      "import": "./src/hashes/hasher.js"
+      "import": "./src/hashes/hasher.js",
+      "require": "./dist/cjs/hashes/hasher.js"
     },
     "./hashes/identity": {
       "types": "./dist/types/src/hashes/identity.d.ts",
-      "import": "./src/hashes/identity.js"
+      "import": "./src/hashes/identity.js",
+      "require": "./dist/cjs/hashes/identity.js"
     },
     "./hashes/interface": {
       "types": "./dist/types/src/hashes/interface.d.ts",
-      "import": "./src/hashes/interface.js"
+      "import": "./src/hashes/interface.js",
+      "require": "./dist/cjs/hashes/interface.js"
     },
     "./hashes/sha2": {
       "types": "./dist/types/src/hashes/sha2.d.ts",
       "browser": "./src/hashes/sha2-browser.js",
-      "import": "./src/hashes/sha2.js"
+      "import": "./src/hashes/sha2.js",
+      "require": "./dist/cjs/hashes/sha2.js"
     },
     "./interface": {
       "types": "./dist/types/src/interface.d.ts",
-      "import": "./src/interface.js"
+      "import": "./src/interface.js",
+      "require": "./dist/cjs/interface.js"
     },
     "./link": {
       "types": "./dist/types/src/link.d.ts",
-      "import": "./src/link.js"
+      "import": "./src/link.js",
+      "require": "./dist/cjs/link.js"
     },
     "./link/interface": {
       "types": "./dist/types/src/interface.d.ts",
-      "import": "./src/interface.js"
+      "import": "./src/interface.js",
+      "require": "./dist/cjs/interface.js"
     },
     "./traversal": {
       "types": "./dist/types/src/traversal.d.ts",
-      "import": "./src/traversal.js"
+      "import": "./src/traversal.js",
+      "require": "./dist/cjs/traversal.js"
     }
   },
   "browser": {
@@ -268,7 +297,8 @@
   "scripts": {
     "clean": "aegir clean",
     "lint": "aegir lint",
-    "build": "aegir build",
+    "build:cjs": "node ./build-cjs.js && echo {\"type\": \"commonjs\"} > ./dist/cjs/package.json",
+    "build": "aegir build && npm run build:cjs",
     "release": "aegir release",
     "docs": "aegir docs",
     "test": "npm run lint && npm run test:node && npm run test:chrome && npm run test:ts",
@@ -285,6 +315,7 @@
     "@stablelib/sha512": "^1.0.1",
     "@types/node": "^18.0.0",
     "aegir": "^37.7.5",
+    "esbuild": "0.17.14",
     "buffer": "^6.0.3",
     "cids": "^1.1.9"
   },
