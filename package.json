@@ -148,6 +148,11 @@
       "types": "./dist/types/src/hashes/interface.d.ts",
       "import": "./src/hashes/interface.js"
     },
+    "./hashes/sha1": {
+      "types": "./dist/types/src/hashes/sha1.d.ts",
+      "browser": "./src/hashes/sha1-browser.js",
+      "import": "./src/hashes/sha1.js"
+    },
     "./hashes/sha2": {
       "types": "./dist/types/src/hashes/sha2.d.ts",
       "browser": "./src/hashes/sha2-browser.js",
@@ -171,6 +176,8 @@
     }
   },
   "browser": {
+    "./hashes/sha1": "./src/hashes/sha1-browser.js",
+    "./src/hashes/sha1.js": "./src/hashes/sha1-browser.js",
     "./hashes/sha2": "./src/hashes/sha2-browser.js",
     "./src/hashes/sha2.js": "./src/hashes/sha2-browser.js"
   },
@@ -286,7 +293,8 @@
     "@types/node": "^20.3.1",
     "aegir": "^40.0.11",
     "buffer": "^6.0.3",
-    "cids": "^1.1.9"
+    "cids": "^1.1.9",
+    "crypto-hash": "^2.0.1"
   },
   "aegir": {
     "test": {
