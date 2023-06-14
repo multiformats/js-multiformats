@@ -1,3 +1,14 @@
+## [12.0.0](https://github.com/multiformats/js-multiformats/compare/v11.0.2...v12.0.0) (2023-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* use aegir for ESM-only build/testing/release
+
+### Features
+
+* use aegir for ESM-only build/testing/release ([f82e61b](https://github.com/multiformats/js-multiformats/commit/f82e61bf1c6bfb67a709089e79ec57767fb1bcb7))
+
 ## [11.0.2](https://github.com/multiformats/js-multiformats/compare/v11.0.1...v11.0.2) (2023-03-09)
 
 
