@@ -1,3 +1,15 @@
+## [12.0.1](https://github.com/multiformats/js-multiformats/compare/v12.0.0...v12.0.1) (2023-06-15)
+
+
+### Trivial Changes
+
+* **deps:** bump codecov/codecov-action from 3.1.1 to 3.1.4 ([#256](https://github.com/multiformats/js-multiformats/issues/256)) ([910eeeb](https://github.com/multiformats/js-multiformats/commit/910eeeb36c9fe4bd087ee83e6cec03e03c2e1899))
+
+
+### Dependencies
+
+* **dev:** bump @types/node from 18.16.18 to 20.3.1 ([7a6d036](https://github.com/multiformats/js-multiformats/commit/7a6d036adc1c18d8311a978d339e323ebd724da8))
+
 ## [12.0.0](https://github.com/multiformats/js-multiformats/compare/v11.0.2...v12.0.0) (2023-06-14)
 
 
