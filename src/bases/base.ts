@@ -48,7 +48,7 @@ class Decoder<Base extends string, Prefix extends string> implements MultibaseDe
     if (prefix.codePointAt(0) === undefined) {
       throw new Error('Invalid prefix character')
     }
-    this.prefixCodePoint = (prefix.codePointAt(0)) as number
+    this.prefixCodePoint = prefix.codePointAt(0) as number
     this.baseDecode = baseDecode
   }
 
@@ -82,7 +82,7 @@ class ComposedDecoder<Prefix extends string> implements MultibaseDecoder<Prefix>
   }
 
   decode (input: string): Uint8Array {
-    const prefix = (input[0]) as Prefix
+    const prefix = input[0] as Prefix
     const decoder = this.decoders[prefix]
     if (decoder != null) {
       return decoder.decode(input)
@@ -94,10 +94,10 @@ class ComposedDecoder<Prefix extends string> implements MultibaseDecoder<Prefix>
 
 export function or <L extends string, R extends string> (left: UnibaseDecoder<L> | CombobaseDecoder<L>, right: UnibaseDecoder<R> | CombobaseDecoder<R>): ComposedDecoder<L | R> {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  return new ComposedDecoder(({
+  return new ComposedDecoder({
     ...(left.decoders ?? { [(left as UnibaseDecoder<L>).prefix]: left }),
     ...(right.decoders ?? { [(right as UnibaseDecoder<R>).prefix]: right })
-  } as Decoders<L | R>))
+  } as Decoders<L | R>)
 }
 
 export class Codec<Base extends string, Prefix extends string> implements MultibaseCodec<Prefix>, MultibaseEncoder<Prefix>, MultibaseDecoder<Prefix>, BaseCodec, BaseEncoder, BaseDecoder {

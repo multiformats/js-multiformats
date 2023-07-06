@@ -15,7 +15,7 @@ export function format <T extends API.Link<unknown, number, number, API.Version>
       return toStringV0(
         bytes,
         baseCache(link),
-        (base as API.MultibaseEncoder<'z'>) ?? base58btc.encoder
+        base as API.MultibaseEncoder<'z'> ?? base58btc.encoder
       )
     default:
       return toStringV1(
@@ -94,7 +94,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
   toV0 (): CID<Data, API.DAG_PB, API.SHA_256, 0> {
     switch (this.version) {
       case 0: {
-        return (this as CID<Data, API.DAG_PB, API.SHA_256, 0>)
+        return this as CID<Data, API.DAG_PB, API.SHA_256, 0>
       }
       case 1: {
         const { code, multihash } = this
@@ -110,7 +110,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
 
         return (
           CID.createV0(
-            (multihash as API.MultihashDigest<API.SHA_256>)
+            multihash as API.MultihashDigest<API.SHA_256>
           )
         )
       }
@@ -132,7 +132,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
         )
       }
       case 1: {
-        return (this as CID<Data, Format, Alg, 1>)
+        return this as CID<Data, Format, Alg, 1>
       }
       default: {
         throw Error(
@@ -147,10 +147,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
   }
 
   static equals <Data, Format extends number, Alg extends number, Version extends API.Version>(self: API.Link<Data, Format, Alg, Version>, other: unknown): other is CID {
-    const unknown =
-      (
-        other as { code?: unknown, version?: unknown, multihash?: unknown }
-      )
+    const unknown = other as { code?: unknown, version?: unknown, multihash?: unknown }
     return (
       unknown != null &&
       self.code === unknown.code &&
@@ -196,7 +193,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
       return null
     }
 
-    const value = (input as any)
+    const value = input as any
     if (value instanceof CID) {
       // If value is instance of CID then we're all set.
       return value
@@ -210,7 +207,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
       return new CID(
         version,
         code,
-        (multihash as API.MultihashDigest<Alg>),
+        multihash as API.MultihashDigest<Alg>,
         bytes ?? encodeCID(version, code, multihash.bytes)
       )
     } else if (value[cidSymbol] === true) {
@@ -218,8 +215,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
       // symbol we still rebase it to the this `CID` implementation by
       // delegating that to a constructor.
       const { version, multihash, code } = value
-      const digest =
-        (Digest.decode(multihash) as API.MultihashDigest<Alg>)
+      const digest = Digest.decode(multihash) as API.MultihashDigest<Alg>
       return CID.create(version, code, digest)
     } else {
       // Otherwise value is not a CID (or an incompatible version of it) in
@@ -323,9 +319,9 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
     )
     const cid =
       specs.version === 0
-        ? CID.createV0((digest as API.MultihashDigest<API.SHA_256>))
+        ? CID.createV0(digest as API.MultihashDigest<API.SHA_256>)
         : CID.createV1(specs.codec, digest)
-    return [(cid as CID<T, C, A, V>), bytes.subarray(specs.size)]
+    return [cid as CID<T, C, A, V>, bytes.subarray(specs.size)]
   }
 
   /**
@@ -345,14 +341,14 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
       return i
     }
 
-    let version = (next() as V)
-    let codec = (DAG_PB_CODE as C)
-    if ((version as number) === 18) {
+    let version = next() as V
+    let codec = DAG_PB_CODE as C
+    if (version as number === 18) {
       // CIDv0
-      version = (0 as V)
+      version = 0 as V
       offset = 0
     } else {
-      codec = (next() as C)
+      codec = next() as C
     }
 
     if (version !== 0 && version !== 1) {
@@ -360,7 +356,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
     }
 
     const prefixSize = offset
-    const multihashCode = (next() as A) // multihash code
+    const multihashCode = next() as A // multihash code
     const digestSize = next() // multihash length
     const size = offset + digestSize
     const multihashSize = size - prefixSize
@@ -396,17 +392,17 @@ function parseCIDtoBytes <Prefix extends string, Data, Code extends number, Alg 
     case 'Q': {
       const decoder = base ?? base58btc
       return [
-        (base58btc.prefix as Prefix),
+        base58btc.prefix as Prefix,
         decoder.decode(`${base58btc.prefix}${source}`)
       ]
     }
     case base58btc.prefix: {
       const decoder = base ?? base58btc
-      return [(base58btc.prefix as Prefix), decoder.decode(source)]
+      return [base58btc.prefix as Prefix, decoder.decode(source)]
     }
     case base32.prefix: {
       const decoder = base ?? base32
-      return [(base32.prefix as Prefix), decoder.decode(source)]
+      return [base32.prefix as Prefix, decoder.decode(source)]
     }
     default: {
       if (base == null) {
@@ -414,7 +410,7 @@ function parseCIDtoBytes <Prefix extends string, Data, Code extends number, Alg 
           'To parse non base32 or base58btc encoded CID multibase decoder must be provided'
         )
       }
-      return [(source[0] as Prefix), base.decode(source)]
+      return [source[0] as Prefix, base.decode(source)]
     }
   }
 }

@@ -37,7 +37,7 @@ function * links <T> (source: T, base: Array<string | number>): Iterable<[string
     yield [base.join('/'), cid]
   }
   for (const [key, value] of Object.entries(source)) {
-    const path = ([...base, key]) as [string | number, string]
+    const path = [...base, key] as [string | number, string]
     yield * linksWithin(path, value)
   }
 }
@@ -61,7 +61,7 @@ function * tree <T> (source: T, base: Array<string | number>): Iterable<string> 
     return
   }
   for (const [key, value] of Object.entries(source)) {
-    const path = ([...base, key] as [string | number, string])
+    const path = [...base, key] as [string | number, string]
     yield path.join('/')
     if (value != null && !(value instanceof Uint8Array) && typeof value === 'object' && (CID.asCID(value) == null)) {
       yield * treeWithin(path, value)
@@ -70,7 +70,7 @@ function * tree <T> (source: T, base: Array<string | number>): Iterable<string> 
 }
 
 function get <T> (source: T, path: string[]): API.BlockCursorView<unknown> {
-  let node = (source as Record<string, any>)
+  let node = source as Record<string, any>
   for (const [index, key] of path.entries()) {
     node = node[key]
     if (node == null) {
@@ -178,8 +178,7 @@ function createUnsafe <T, Code extends number, Alg extends number, V extends API
   if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
 
   return new Block({
-    // eslint-disable-next-line object-shorthand
-    cid: (cid as CID<T, Code, Alg, V>),
+    cid: cid as CID<T, Code, Alg, V>,
     bytes,
     value
   })

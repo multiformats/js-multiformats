@@ -38,7 +38,7 @@ export function equals (a: MultihashDigest, b: unknown): b is MultihashDigest {
   if (a === b) {
     return true
   } else {
-    const data = (b as { code?: unknown, size?: unknown, bytes?: unknown })
+    const data = b as { code?: unknown, size?: unknown, bytes?: unknown }
 
     return (
       a.code === data.code &&
