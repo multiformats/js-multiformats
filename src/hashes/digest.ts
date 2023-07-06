@@ -5,7 +5,7 @@ import type { MultihashDigest } from './interface.js'
 /**
  * Creates a multihash digest.
  */
-export const create = <Code extends number>(code: Code, digest: Uint8Array): Digest<Code, number> => {
+export function create <Code extends number> (code: Code, digest: Uint8Array): Digest<Code, number> {
   const size = digest.byteLength
   const sizeOffset = varint.encodingLength(code)
   const digestOffset = sizeOffset + varint.encodingLength(size)
@@ -21,7 +21,7 @@ export const create = <Code extends number>(code: Code, digest: Uint8Array): Dig
 /**
  * Turns bytes representation of multihash digest into an instance.
  */
-export const decode = (multihash: Uint8Array): MultihashDigest => {
+export function decode (multihash: Uint8Array): MultihashDigest {
   const bytes = coerce(multihash)
   const [code, sizeOffset] = varint.decode(bytes)
   const [size, digestOffset] = varint.decode(bytes.subarray(sizeOffset))
@@ -34,7 +34,7 @@ export const decode = (multihash: Uint8Array): MultihashDigest => {
   return new Digest(code, size, digest, bytes)
 }
 
-export const equals = (a: MultihashDigest, b: unknown): b is MultihashDigest => {
+export function equals (a: MultihashDigest, b: unknown): b is MultihashDigest {
   if (a === b) {
     return true
   } else {

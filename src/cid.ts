@@ -8,7 +8,7 @@ import type * as API from './link/interface.js'
 // This way TS will also expose all the types from module
 export * from './link/interface.js'
 
-export const format = <T extends API.Link<unknown, number, number, API.Version>, Prefix extends string>(link: T, base?: API.MultibaseEncoder<Prefix>): API.ToString<T, Prefix> => {
+export function format <T extends API.Link<unknown, number, number, API.Version>, Prefix extends string> (link: T, base?: API.MultibaseEncoder<Prefix>): API.ToString<T, Prefix> {
   const { bytes, version } = link
   switch (version) {
     case 0:
@@ -26,16 +26,19 @@ export const format = <T extends API.Link<unknown, number, number, API.Version>,
   }
 }
 
-export const toJSON = <Link extends API.UnknownLink>(link: Link): API.LinkJSON<Link> => ({
-  '/': format(link)
-})
+export function toJSON <Link extends API.UnknownLink> (link: Link): API.LinkJSON<Link> {
+  return {
+    '/': format(link)
+  }
+}
 
-export const fromJSON = <Link extends API.UnknownLink>(json: API.LinkJSON<Link>): CID<unknown, number, number, API.Version> =>
-  CID.parse(json['/'])
+export function fromJSON <Link extends API.UnknownLink> (json: API.LinkJSON<Link>): CID<unknown, number, number, API.Version> {
+  return CID.parse(json['/'])
+}
 
 const cache: WeakMap<API.UnknownLink, Map<string, string>> = new WeakMap()
 
-const baseCache = (cid: API.UnknownLink): Map<string, string> => {
+function baseCache (cid: API.UnknownLink): Map<string, string> {
   const baseCache = cache.get(cid)
   if (baseCache == null) {
     const baseCache = new Map()
@@ -387,7 +390,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
   }
 }
 
-const parseCIDtoBytes = <Prefix extends string, Data, Code extends number, Alg extends number, Version extends API.Version>(source: API.ToString<API.Link<Data, Code, Alg, Version>, Prefix>, base?: API.MultibaseDecoder<Prefix>): [Prefix, API.ByteView<API.Link<Data, Code, Alg, Version>>] => {
+function parseCIDtoBytes <Prefix extends string, Data, Code extends number, Alg extends number, Version extends API.Version> (source: API.ToString<API.Link<Data, Code, Alg, Version>, Prefix>, base?: API.MultibaseDecoder<Prefix>): [Prefix, API.ByteView<API.Link<Data, Code, Alg, Version>>] {
   switch (source[0]) {
     // CIDv0 is parsed differently
     case 'Q': {
@@ -416,7 +419,7 @@ const parseCIDtoBytes = <Prefix extends string, Data, Code extends number, Alg e
   }
 }
 
-const toStringV0 = (bytes: Uint8Array, cache: Map<string, string>, base: API.MultibaseEncoder<'z'>): string => {
+function toStringV0 (bytes: Uint8Array, cache: Map<string, string>, base: API.MultibaseEncoder<'z'>): string {
   const { prefix } = base
   if (prefix !== base58btc.prefix) {
     throw Error(`Cannot string encode V0 in ${base.name} encoding`)
@@ -432,7 +435,7 @@ const toStringV0 = (bytes: Uint8Array, cache: Map<string, string>, base: API.Mul
   }
 }
 
-const toStringV1 = <Prefix extends string>(bytes: Uint8Array, cache: Map<string, string>, base: API.MultibaseEncoder<Prefix>): string => {
+function toStringV1 <Prefix extends string> (bytes: Uint8Array, cache: Map<string, string>, base: API.MultibaseEncoder<Prefix>): string {
   const { prefix } = base
   const cid = cache.get(prefix)
   if (cid == null) {
@@ -447,7 +450,7 @@ const toStringV1 = <Prefix extends string>(bytes: Uint8Array, cache: Map<string,
 const DAG_PB_CODE = 0x70
 const SHA_256_CODE = 0x12
 
-const encodeCID = (version: API.Version, code: number, multihash: Uint8Array): Uint8Array => {
+function encodeCID (version: API.Version, code: number, multihash: Uint8Array): Uint8Array {
   const codeOffset = varint.encodingLength(version)
   const hashOffset = codeOffset + varint.encodingLength(code)
   const bytes = new Uint8Array(hashOffset + multihash.byteLength)

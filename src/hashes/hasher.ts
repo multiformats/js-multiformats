@@ -3,7 +3,9 @@ import type { MultihashHasher } from './interface.js'
 
 type Await<T> = Promise<T> | T
 
-export const from = <Name extends string, Code extends number>({ name, code, encode }: { name: Name, code: Code, encode: (input: Uint8Array) => Await<Uint8Array> }): Hasher<Name, Code> => new Hasher(name, code, encode)
+export function from <Name extends string, Code extends number> ({ name, code, encode }: { name: Name, code: Code, encode: (input: Uint8Array) => Await<Uint8Array> }): Hasher<Name, Code> {
+  return new Hasher(name, code, encode)
+}
 
 /**
  * Hasher represents a hashing algorithm implementation that produces as

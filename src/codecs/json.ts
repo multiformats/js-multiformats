@@ -6,6 +6,10 @@ const textDecoder = new TextDecoder()
 export const name = 'json'
 export const code = 0x0200
 
-export const encode = <T>(node: T): ByteView<T> => textEncoder.encode(JSON.stringify(node))
+export function encode <T> (node: T): ByteView<T> {
+  return textEncoder.encode(JSON.stringify(node))
+}
 
-export const decode = <T>(data: ByteView<T>): T => JSON.parse(textDecoder.decode(data))
+export function decode <T> (data: ByteView<T>): T {
+  return JSON.parse(textDecoder.decode(data))
+}

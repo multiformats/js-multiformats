@@ -92,11 +92,13 @@ class ComposedDecoder<Prefix extends string> implements MultibaseDecoder<Prefix>
   }
 }
 
-// eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-export const or = <L extends string, R extends string>(left: UnibaseDecoder<L> | CombobaseDecoder<L>, right: UnibaseDecoder<R> | CombobaseDecoder<R>): ComposedDecoder<L | R> => new ComposedDecoder(({
-  ...(left.decoders ?? { [(left as UnibaseDecoder<L>).prefix]: left }),
-  ...(right.decoders ?? { [(right as UnibaseDecoder<R>).prefix]: right })
-} as Decoders<L | R>))
+export function or <L extends string, R extends string> (left: UnibaseDecoder<L> | CombobaseDecoder<L>, right: UnibaseDecoder<R> | CombobaseDecoder<R>): ComposedDecoder<L | R> {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
+  return new ComposedDecoder(({
+    ...(left.decoders ?? { [(left as UnibaseDecoder<L>).prefix]: left }),
+    ...(right.decoders ?? { [(right as UnibaseDecoder<R>).prefix]: right })
+  } as Decoders<L | R>))
+}
 
 export class Codec<Base extends string, Prefix extends string> implements MultibaseCodec<Prefix>, MultibaseEncoder<Prefix>, MultibaseDecoder<Prefix>, BaseCodec, BaseEncoder, BaseDecoder {
   readonly name: Base
@@ -124,10 +126,11 @@ export class Codec<Base extends string, Prefix extends string> implements Multib
   }
 }
 
-export const from = <Base extends string, Prefix extends string>({ name, prefix, encode, decode }: { name: Base, prefix: Prefix, encode: EncodeFn, decode: DecodeFn }): Codec<Base, Prefix> =>
-  new Codec(name, prefix, encode, decode)
+export function from <Base extends string, Prefix extends string> ({ name, prefix, encode, decode }: { name: Base, prefix: Prefix, encode: EncodeFn, decode: DecodeFn }): Codec<Base, Prefix> {
+  return new Codec(name, prefix, encode, decode)
+}
 
-export const baseX = <Base extends string, Prefix extends string>({ name, prefix, alphabet }: { name: Base, prefix: Prefix, alphabet: string }): Codec<Base, Prefix> => {
+export function baseX <Base extends string, Prefix extends string> ({ name, prefix, alphabet }: { name: Base, prefix: Prefix, alphabet: string }): Codec<Base, Prefix> {
   const { encode, decode } = basex(alphabet, name)
   return from({
     prefix,
@@ -137,7 +140,7 @@ export const baseX = <Base extends string, Prefix extends string>({ name, prefix
   })
 }
 
-const decode = (string: string, alphabet: string, bitsPerChar: number, name: string): Uint8Array => {
+function decode (string: string, alphabet: string, bitsPerChar: number, name: string): Uint8Array {
   // Build the character lookup table:
   const codes: Record<string, number> = {}
   for (let i = 0; i < alphabet.length; ++i) {
@@ -183,7 +186,7 @@ const decode = (string: string, alphabet: string, bitsPerChar: number, name: str
   return out
 }
 
-const encode = (data: Uint8Array, alphabet: string, bitsPerChar: number): string => {
+function encode (data: Uint8Array, alphabet: string, bitsPerChar: number): string {
   const pad = alphabet[alphabet.length - 1] === '='
   const mask = (1 << bitsPerChar) - 1
   let out = ''
@@ -220,7 +223,7 @@ const encode = (data: Uint8Array, alphabet: string, bitsPerChar: number): string
 /**
  * RFC4648 Factory
  */
-export const rfc4648 = <Base extends string, Prefix extends string>({ name, prefix, bitsPerChar, alphabet }: { name: Base, prefix: Prefix, bitsPerChar: number, alphabet: string }): Codec<Base, Prefix> => {
+export function rfc4648 <Base extends string, Prefix extends string> ({ name, prefix, bitsPerChar, alphabet }: { name: Base, prefix: Prefix, bitsPerChar: number, alphabet: string }): Codec<Base, Prefix> {
   return from({
     prefix,
     name,

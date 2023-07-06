@@ -10,7 +10,9 @@ const SHA_256_CODE = 0x12
 /**
  * Simplified version of `create` for CIDv0.
  */
-export const createLegacy = (digest: API.MultihashDigest<typeof SHA_256_CODE>): API.LegacyLink => CID.create(0, DAG_PB_CODE, digest)
+export function createLegacy (digest: API.MultihashDigest<typeof SHA_256_CODE>): API.LegacyLink {
+  return CID.create(0, DAG_PB_CODE, digest)
+}
 
 /**
  * Simplified version of `create` for CIDv1.
@@ -18,12 +20,14 @@ export const createLegacy = (digest: API.MultihashDigest<typeof SHA_256_CODE>): 
  * @param code - Content encoding format code.
  * @param digest - Miltihash of the content.
  */
-export const create = <Data, Code extends number, Alg extends number>(code: Code, digest: API.MultihashDigest<Alg>): API.Link<Data, Code, Alg> => CID.create(1, code, digest)
+export function create <Data, Code extends number, Alg extends number> (code: Code, digest: API.MultihashDigest<Alg>): API.Link<Data, Code, Alg> {
+  return CID.create(1, code, digest)
+}
 
 /**
  * Type predicate returns true if value is the link.
  */
-export const isLink = <L extends API.Link<unknown, number, number, 0 | 1>>(value: unknown | L): value is L & CID => {
+export function isLink <L extends API.Link<unknown, number, number, 0 | 1>> (value: unknown | L): value is L & CID {
   if (value == null) {
     return false
   }
@@ -49,7 +53,9 @@ export const isLink = <L extends API.Link<unknown, number, number, 0 | 1>>(value
  * throw an error if encoding of the CID is not compatible with supplied (or
  * a default decoder).
  */
-export const parse = <Prefix extends string, Data, Code extends number, Alg extends number, Ver extends API.Version>(source: API.ToString<API.Link<Data, Code, Alg, Ver>, Prefix>, base?: API.MultibaseDecoder<Prefix>): API.Link<Data, Code, Alg, Ver> => CID.parse(source, base)
+export function parse <Prefix extends string, Data, Code extends number, Alg extends number, Ver extends API.Version> (source: API.ToString<API.Link<Data, Code, Alg, Ver>, Prefix>, base?: API.MultibaseDecoder<Prefix>): API.Link<Data, Code, Alg, Ver> {
+  return CID.parse(source, base)
+}
 
 export { format, toJSON, fromJSON }
 
@@ -60,4 +66,6 @@ export { format, toJSON, fromJSON }
  * An error will be thrown if the bytes provided do not contain a valid
  * binary representation of a CID.
  */
-export const decode = <Data, Code extends number, Alg extends number, Ver extends API.Version>(bytes: API.ByteView<API.Link<Data, Code, Alg, Ver>>): API.Link<Data, Code, Alg, Ver> => CID.decode(bytes)
+export function decode <Data, Code extends number, Alg extends number, Ver extends API.Version> (bytes: API.ByteView<API.Link<Data, Code, Alg, Ver>>): API.Link<Data, Code, Alg, Ver> {
+  return CID.decode(bytes)
+}

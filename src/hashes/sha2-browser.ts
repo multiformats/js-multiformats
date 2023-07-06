@@ -2,8 +2,9 @@
 
 import { from } from './hasher.js'
 
-const sha = (name: AlgorithmIdentifier): (data: Uint8Array) => Promise<Uint8Array> =>
-  async data => new Uint8Array(await crypto.subtle.digest(name, data))
+function sha (name: AlgorithmIdentifier): (data: Uint8Array) => Promise<Uint8Array> {
+  return async data => new Uint8Array(await crypto.subtle.digest(name, data))
+}
 
 export const sha256 = from({
   name: 'sha2-256',
