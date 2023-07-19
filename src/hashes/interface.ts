@@ -1,5 +1,5 @@
 // # Multihash
-import { MulticodecCode } from '../block/interface.js'
+import type { MulticodecCode } from '../block/interface.js'
 
 /**
  * Represents a multihash digest which carries information about the
