@@ -36,6 +36,22 @@ export interface Phantom<T> {
 }
 
 /**
+ * [Multicodec code] usually used to tag [multiformat]. It is simply an Integer that
+ * utilizes `Phantom` type to capture code name which typescript aware tools will
+ * surface providing info about the code withouth having to look it up in the table.
+ *
+ * Type also can be used to convey the fact that value must be a multicodec
+ *
+ * [multiformat]:https://multiformats.io/
+ * [multicodec code]:https://github.com/multiformats/multicodec/blob/master/table.csv
+ */
+export type MulticodecCode<
+  Code extends number = number,
+  Name extends string = string
+> = Code & Phantom<Name>
+
+
+/**
  * Represents an IPLD block (including its CID) that can be decoded to data of
  * type `T`.
  *
