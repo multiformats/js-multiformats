@@ -1,4 +1,5 @@
 // # Multihash
+import { MulticodecCode } from '../block/interface.js'
 
 /**
  * Represents a multihash digest which carries information about the
@@ -9,7 +10,7 @@
 // a bunch of places that parse it to extract (code, digest, size). By creating
 // this first class representation we avoid reparsing and things generally fit
 // really nicely.
-export interface MultihashDigest<Code extends number = number, Size extends number = number> {
+export interface MultihashDigest<Code extends MulticodecCode = MulticodecCode, Size extends number = number> {
   /**
    * Code of the multihash
    */
@@ -35,7 +36,7 @@ export interface MultihashDigest<Code extends number = number, Size extends numb
  * Hasher represents a hashing algorithm implementation that produces as
  * `MultihashDigest`.
  */
-export interface MultihashHasher<Code extends number = number> {
+export interface MultihashHasher<Code extends MulticodecCode = MulticodecCode> {
   /**
    * Takes binary `input` and returns it (multi) hash digest. Return value is
    * either promise of a digest or a digest. This way general use can `await`
@@ -67,7 +68,7 @@ export interface MultihashHasher<Code extends number = number> {
  * `SyncMultihashHasher` is useful in certain APIs where async hashing would be
  * impractical e.g. implementation of Hash Array Mapped Trie (HAMT).
  */
-export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
+export interface SyncMultihashHasher<Code extends MulticodecCode = MulticodecCode> extends MultihashHasher<Code> {
   digest: (input: Uint8Array) => MultihashDigest<Code>
 }
 
