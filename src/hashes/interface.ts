@@ -111,13 +111,22 @@ export interface IncrementalMultihashHasher<
   digest(): Digest
 
   /**
-   * Computes the digest of the given input and writes it into the provided
-   * `output` at given `offset`. The `offset` is optional and if omitted is
-   * implicitly `0`. The optional `asMultihash` whith is implicitly `true`,
-   * can be use to control whether multihash prefix is written, if `false`
-   * only the raw digest writtend omitting the prefix.
+   * Encodes multihash of the bytes written so far (since creation or
+   * reset) into provided `target` at given `offset`. If `offset` not
+   * provided it is implicitly `0`.
+   *
+   * @param [offset=0] - Byte offset in the `target`.
    */
-  digestInto(output: Uint8Array, offset?: number, asMultihash?: boolean): this
+  readDigest(target: Uint8Array, offset?: number): this
+
+  /**
+   * Encodes raw digest (without multihash header) of the bytes written
+   * so far (since creation or reset) into provided `target` at given
+   * `offset`. If `offset` not provided it is implicitly `0`.
+   *
+   * @param [offset=0] - Byte offset in the `target`.
+   */
+  read(target: Uint8Array, offset?: number): this
 
   /**
    * Writes bytes to be digested.
