@@ -1,8 +1,8 @@
 /* eslint-env mocha */
 
+import { assert } from 'aegir/chai'
 import { bases } from '../src/basics.js'
 import { fromString } from '../src/bytes.js'
-import { assert } from 'aegir/chai'
 
 const encoded = [
   {

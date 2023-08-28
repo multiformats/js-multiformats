@@ -1,13 +1,14 @@
 /* globals describe, it */
-import { fromHex, fromString } from '../src/bytes.js'
-import { sha256, sha512 } from '../src/hashes/sha2.js'
-import { identity } from '../src/hashes/identity.js'
-import { decode as decodeDigest, create as createDigest } from '../src/hashes/digest.js'
-import valid from './fixtures/valid-multihash.js'
-import invalid from './fixtures/invalid-multihash.js'
+
 import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
 import { assert } from 'aegir/chai'
+import { fromHex, fromString } from '../src/bytes.js'
+import { decode as decodeDigest, create as createDigest } from '../src/hashes/digest.js'
+import { identity } from '../src/hashes/identity.js'
+import { sha256, sha512 } from '../src/hashes/sha2.js'
+import invalid from './fixtures/invalid-multihash.js'
+import valid from './fixtures/valid-multihash.js'
 
 /**
  * @param {number|string} code

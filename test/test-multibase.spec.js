@@ -1,14 +1,15 @@
 /* globals describe, it */
-import * as bytes from '../src/bytes.js'
-import * as b2 from '../src/bases/base2.js'
-import * as b8 from '../src/bases/base8.js'
+
+import { assert } from 'aegir/chai'
 import * as b10 from '../src/bases/base10.js'
 import * as b16 from '../src/bases/base16.js'
+import * as b2 from '../src/bases/base2.js'
 import * as b32 from '../src/bases/base32.js'
 import * as b36 from '../src/bases/base36.js'
 import * as b58 from '../src/bases/base58.js'
 import * as b64 from '../src/bases/base64.js'
-import { assert } from 'aegir/chai'
+import * as b8 from '../src/bases/base8.js'
+import * as bytes from '../src/bytes.js'
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
 

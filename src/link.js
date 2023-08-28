@@ -1,7 +1,7 @@
+import { CID, format, toJSON, fromJSON } from './cid.js'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from "./link/interface.js"
-import { CID, format, toJSON, fromJSON } from './cid.js'
 // This way TS will also expose all the types from module
 export * from './link/interface.js'
 
