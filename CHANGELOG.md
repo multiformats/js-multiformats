@@ -1,3 +1,10 @@
+## [12.1.0](https://github.com/multiformats/js-multiformats/compare/v12.0.2...v12.1.0) (2023-08-28)
+
+
+### Features
+
+* add sha1 support ([4da0085](https://github.com/multiformats/js-multiformats/commit/4da008580dd3dc3fa2c5f14c5a3bf64fd99221e6))
+
 ## [12.0.2](https://github.com/multiformats/js-multiformats/compare/v12.0.1...v12.0.2) (2023-08-28)
 
 
