@@ -1,11 +1,11 @@
-import * as varint from './varint.js'
-import * as Digest from './hashes/digest.js'
-import { base58btc } from './bases/base58.js'
 import { base32 } from './bases/base32.js'
+import { base58btc } from './bases/base58.js'
 import { coerce } from './bytes.js'
+import * as Digest from './hashes/digest.js'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from "./link/interface.js"
+import * as varint from './varint.js'
 
 // This way TS will also expose all the types from module
 export * from './link/interface.js'
@@ -82,7 +82,6 @@ export class CID {
    * @param {Format} code - Code of the codec content is encoded in, see https://github.com/multiformats/multicodec/blob/master/table.csv
    * @param {API.MultihashDigest<Alg>} multihash - (Multi)hash of the of the content.
    * @param {Uint8Array} bytes
-   *
    */
   constructor (version, code, multihash, bytes) {
     /** @readonly */
@@ -215,6 +214,9 @@ export class CID {
     return format(this, base)
   }
 
+  /**
+   * @returns {API.LinkJSON<this>}
+   */
   toJSON () {
     return { '/': format(this) }
   }

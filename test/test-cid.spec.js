@@ -1,17 +1,17 @@
 /* globals describe, it */
 
-import { fromHex, toHex, equals } from '../src/bytes.js'
-import { varint, CID } from '../src/index.js'
-import { base58btc } from '../src/bases/base58.js'
-import { base32 } from '../src/bases/base32.js'
-import { base64 } from '../src/bases/base64.js'
-import { sha256, sha512 } from '../src/hashes/sha2.js'
-import invalidMultihash from './fixtures/invalid-multihash.js'
-import OLDCID from 'cids'
 import { assert } from 'aegir/chai'
+import OLDCID from 'cids'
 // Linter can see that API is used in types.
 // eslint-disable-next-line
 import * as API from 'multiformats'
+import { base32 } from '../src/bases/base32.js'
+import { base58btc } from '../src/bases/base58.js'
+import { base64 } from '../src/bases/base64.js'
+import { fromHex, toHex, equals } from '../src/bytes.js'
+import { sha256, sha512 } from '../src/hashes/sha2.js'
+import { varint, CID } from '../src/index.js'
+import invalidMultihash from './fixtures/invalid-multihash.js'
 
 const textEncoder = new TextEncoder()
 

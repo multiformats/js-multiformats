@@ -1,8 +1,8 @@
 import * as Block from 'multiformats/block'
-import { sha256 } from 'multiformats/hashes/sha2'
 import * as json from 'multiformats/codecs/json'
+import { sha256 } from 'multiformats/hashes/sha2'
 
-const main = async () => {
+const main = async (): Promise<void> => {
   const block = await Block.encode({
     value: { hello: 'world' },
     hasher: sha256,

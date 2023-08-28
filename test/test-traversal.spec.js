@@ -1,10 +1,11 @@
 /* globals describe, it */
+
+import { assert } from 'aegir/chai'
+import * as main from '../src/block.js'
+import { fromString } from '../src/bytes.js'
 import * as codec from '../src/codecs/json.js'
 import { sha256 as hasher } from '../src/hashes/sha2.js'
-import * as main from '../src/block.js'
 import { walk } from '../src/traversal.js'
-import { fromString } from '../src/bytes.js'
-import { assert } from 'aegir/chai'
 
 /** @typedef {import('../src/cid.js').CID} CID */
 

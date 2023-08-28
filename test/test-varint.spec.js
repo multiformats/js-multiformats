@@ -1,7 +1,7 @@
 /* globals describe, it */
 
-import { varint } from '../src/index.js'
 import { assert } from 'aegir/chai'
+import { varint } from '../src/index.js'
 
 const UTF8 = new TextEncoder()
 

@@ -1,18 +1,11 @@
 import { base58btc } from './bases/base58.js'
 
 /**
- * @template [C=number] - multicodec code corresponding to codec used to encode the block
- * @template [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template [V=0|1] - CID version
- * @typedef {import('./cid').CID<unknown, C, A, V>} CID
+ * @typedef {import('./cid').CID} CID
  */
 
 /**
- * @template [T=unknown] - Logical type of the data encoded in the block
- * @template [C=number] - multicodec code corresponding to codec used to encode the block
- * @template [A=number] - multicodec code corresponding to the hashing algorithm used in CID creation.
- * @template [V=0|1] - CID version
- * @typedef {import('./block/interface.js').BlockView<T, C, A, V>} BlockView
+ * @typedef {import('./block/interface.js').BlockView} BlockView
  */
 
 /**

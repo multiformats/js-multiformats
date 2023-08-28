@@ -1,7 +1,8 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable no-use-before-define */
-import { Link, Version } from '../link/interface.js'
-import { CID } from '../cid.js'
+
+import type { CID } from '../cid.js'
+import type { Link, Version } from '../link/interface.js'
 
 /**
  * A byte-encoded representation of some type of `Data`.
