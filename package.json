@@ -167,8 +167,8 @@
       "import": "./src/link.js"
     },
     "./link/interface": {
-      "types": "./dist/types/src/interface.d.ts",
-      "import": "./src/interface.js"
+      "types": "./dist/types/src/link/interface.d.ts",
+      "import": "./src/link/interface.js"
     },
     "./traversal": {
       "types": "./dist/types/src/traversal.d.ts",
