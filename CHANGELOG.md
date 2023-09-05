@@ -1,3 +1,15 @@
+## [12.1.1](https://github.com/multiformats/js-multiformats/compare/v12.1.0...v12.1.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* update link interface path in exports map ([#270](https://github.com/multiformats/js-multiformats/issues/270)) ([d38e4a8](https://github.com/multiformats/js-multiformats/commit/d38e4a8ba1d2d33c60481265356708df80ed925e))
+
+
+### Trivial Changes
+
+* **deps:** bump actions/checkout from 3 to 4 ([f94559e](https://github.com/multiformats/js-multiformats/commit/f94559e4a0fa7c4ad320261507040df5bc03f63a))
+
 ## [12.1.0](https://github.com/multiformats/js-multiformats/compare/v12.0.2...v12.1.0) (2023-08-28)
 
 
