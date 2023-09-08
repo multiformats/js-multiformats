@@ -1,4 +1,5 @@
 // # Multihash
+import type { MulticodecCode } from '../block/interface.js'
 
 /**
  * Represents a multihash digest which carries information about the
@@ -9,7 +10,7 @@
 // a bunch of places that parse it to extract (code, digest, size). By creating
 // this first class representation we avoid reparsing and things generally fit
 // really nicely.
-export interface MultihashDigest<Code extends number = number> {
+export interface MultihashDigest<Code extends MulticodecCode = MulticodecCode, Size extends number = number> {
   /**
    * Code of the multihash
    */
@@ -23,7 +24,7 @@ export interface MultihashDigest<Code extends number = number> {
   /**
    * byte length of the `this.digest`
    */
-  size: number
+  size: Size
 
   /**
    * Binary representation of this multihash digest.
@@ -35,7 +36,7 @@ export interface MultihashDigest<Code extends number = number> {
  * Hasher represents a hashing algorithm implementation that produces as
  * `MultihashDigest`.
  */
-export interface MultihashHasher<Code extends number = number> {
+export interface MultihashHasher<Code extends MulticodecCode = MulticodecCode> {
   /**
    * Takes binary `input` and returns it (multi) hash digest. Return value is
    * either promise of a digest or a digest. This way general use can `await`
@@ -67,6 +68,76 @@ export interface MultihashHasher<Code extends number = number> {
  * `SyncMultihashHasher` is useful in certain APIs where async hashing would be
  * impractical e.g. implementation of Hash Array Mapped Trie (HAMT).
  */
-export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
+export interface SyncMultihashHasher<Code extends MulticodecCode = MulticodecCode> extends MultihashHasher<Code> {
   digest: (input: Uint8Array) => MultihashDigest<Code>
 }
+
+/**
+ * Incremental variant of the `MultihashHasher` that can be used to compute
+ * digest of the payloads that would be impractical or impossible to load all
+ * into a memory.
+ */
+export interface IncrementalMultihashHasher<
+  Code extends MulticodecCode,
+  Size extends number,
+  Digest = MultihashDigest<Code, Size>
+> {
+  /**
+   * Size of the digest this hasher produces.
+   */
+  size: Size
+
+  /**
+   * Code of the multihash
+   */
+  code: Code
+
+  /**
+   * Name of the multihash
+   */
+  name: string
+
+  /**
+   * Number of bytes that were consumed.
+   */
+  count(): bigint
+
+  /**
+   * Returns multihash digest of the bytes written so far. Should not have
+   * side-effects, meaning you should be able to write some more bytes and
+   * call `digest` again to get the digest for all the bytes written from
+   * creation (or from reset)
+   */
+  digest(): Digest
+
+  /**
+   * Encodes multihash of the bytes written so far (since creation or
+   * reset) into provided `target` at given `offset`. If `offset` not
+   * provided it is implicitly `0`.
+   *
+   * @param [offset=0] - Byte offset in the `target`.
+   */
+  readDigest(target: Uint8Array, offset?: number): this
+
+  /**
+   * Encodes raw digest (without multihash header) of the bytes written
+   * so far (since creation or reset) into provided `target` at given
+   * `offset`. If `offset` not provided it is implicitly `0`.
+   *
+   * @param [offset=0] - Byte offset in the `target`.
+   */
+  read(target: Uint8Array, offset?: number): this
+
+  /**
+   * Writes bytes to be digested.
+   */
+  write(bytes: Uint8Array): this
+
+  /**
+   * Resets this hasher to its initial state. Can be used to recycle this
+   * instance. It resets `count` and and discards all the bytes that were
+   * written prior.
+   */
+  reset(): this
+}
+
