@@ -22,6 +22,7 @@
   - [Multihash hashers](#multihash-hashers-1)
   - [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
 - [API Docs](#api-docs)
+- [Ownership and Maintenance](#ownership-and-maintenance)
 - [License](#license)
 - [Contribution](#contribution)
 
@@ -246,6 +247,13 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 ## API Docs
 
 - <https://multiformats.github.io/js-multiformats>
+
+## Ownership and Maintenance
+Maintainers are in [CODEOWNERS](./CODEOWNERS).
+
+At least as of 202310, issues and PRs are triaged and handled as part of multi-party [js-libp2p triage](https://github.com/libp2p/js-libp2p/blob/master/CONTRIBUTING.md).  
+
+The most recent ownership conversation happened in [#273](https://github.com/multiformats/js-multiformats/issues/273).
 
 ## License
 
