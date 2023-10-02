@@ -291,7 +291,7 @@
     "@stablelib/sha256": "^1.0.1",
     "@stablelib/sha512": "^1.0.1",
     "@types/node": "^20.3.1",
-    "aegir": "^40.0.11",
+    "aegir": "^41.0.0",
     "buffer": "^6.0.3",
     "cids": "^1.1.9",
     "crypto-hash": "^2.0.1"
