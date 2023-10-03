@@ -6,7 +6,7 @@ import type { ByteView } from '../block/interface.js'
 export interface BlockEncoder<Code extends number, T> {
   name: string
   code: Code
-  encode: (data: T) => ByteView<T>
+  encode(data: T): ByteView<T>
 }
 
 /**
@@ -14,7 +14,7 @@ export interface BlockEncoder<Code extends number, T> {
  */
 export interface BlockDecoder<Code extends number, T> {
   code: Code
-  decode: (bytes: ByteView<T>) => T
+  decode(bytes: ByteView<T>): T
 }
 
 /**
