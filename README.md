@@ -253,7 +253,6 @@ Maintainers are in [CODEOWNERS](./CODEOWNERS).
 
 Following [the decision](https://github.com/multiformats/js-multiformats/issues/273) to expand ownership to js-libp2p and helia maintainers, issues and PRs are now triaged and handled as part of the multi-party [js-libp2p Open Maintainers Call](https://lu.ma/js-libp2p)
 
-The most recent ownership conversation happened in [#273](https://github.com/multiformats/js-multiformats/issues/273).
 
 ## License
 
