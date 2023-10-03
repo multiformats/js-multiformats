@@ -68,7 +68,7 @@ export interface BlockView<
   cid: CID<T, C, A, V>
   value: T
 
-  links: () => Iterable<[string, CID]>
-  tree: () => Iterable<string>
-  get: (path: string) => BlockCursorView<unknown>
+  links(): Iterable<[string, CID]>
+  tree(): Iterable<string>
+  get(path: string): BlockCursorView<unknown>
 }

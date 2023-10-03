@@ -11,7 +11,7 @@ export interface BaseEncoder {
    *
    * @param bytes
    */
-  baseEncode: (bytes: Uint8Array) => string
+  baseEncode(bytes: Uint8Array): string
 }
 
 /**
@@ -24,7 +24,7 @@ export interface BaseDecoder {
    *
    * @param text
    */
-  baseDecode: (text: string) => Uint8Array
+  baseDecode(text: string): Uint8Array
 }
 
 /**
@@ -60,7 +60,7 @@ export interface MultibaseEncoder<Prefix extends string> {
    * Encodes binary data into **multibase** string (which will have a
    * prefix added).
    */
-  encode: (bytes: Uint8Array) => Multibase<Prefix>
+  encode(bytes: Uint8Array): Multibase<Prefix>
 }
 
 /**
@@ -76,7 +76,7 @@ export interface MultibaseDecoder<Prefix extends string> {
    *
    * @param multibase
    */
-  decode: (multibase: Multibase<Prefix>) => Uint8Array
+  decode(multibase: Multibase<Prefix>): Uint8Array
 }
 
 /**
