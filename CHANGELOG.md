@@ -1,3 +1,15 @@
+## [12.1.2](https://github.com/multiformats/js-multiformats/compare/v12.1.1...v12.1.2) (2023-10-03)
+
+
+### Bug Fixes
+
+* switch interface method decl style ([a33d24f](https://github.com/multiformats/js-multiformats/commit/a33d24f3ca56e4b40c80a3237e419cda261aa3e6))
+
+
+### Dependencies
+
+* **dev:** bump aegir from 40.0.13 to 41.0.0 ([41f008b](https://github.com/multiformats/js-multiformats/commit/41f008b09378085adef4aede1dd504a4eba5fa80))
+
 ## [12.1.1](https://github.com/multiformats/js-multiformats/compare/v12.1.0...v12.1.1) (2023-09-05)
 
 
