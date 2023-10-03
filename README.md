@@ -251,7 +251,7 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 ## Ownership and Maintenance
 Maintainers are in [CODEOWNERS](./CODEOWNERS).
 
-At least as of 202310, issues and PRs are triaged and handled as part of multi-party [js-libp2p triage](https://github.com/libp2p/js-libp2p/blob/master/CONTRIBUTING.md).  
+Following [the decision](https://github.com/multiformats/js-multiformats/issues/273) to expand ownership to js-libp2p and helia maintainers, issues and PRs are now triaged and handled as part of the multi-party [js-libp2p Open Maintainers Call](https://lu.ma/js-libp2p)
 
 The most recent ownership conversation happened in [#273](https://github.com/multiformats/js-multiformats/issues/273).
 
