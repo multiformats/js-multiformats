@@ -36,7 +36,7 @@ export function fromJSON <Link extends API.UnknownLink> (json: API.LinkJSON<Link
   return CID.parse(json['/'])
 }
 
-const cache: WeakMap<API.UnknownLink, Map<string, string>> = new WeakMap()
+const cache = new WeakMap<API.UnknownLink, Map<string, string>>()
 
 function baseCache (cid: API.UnknownLink): Map<string, string> {
   const baseCache = cache.get(cid)
@@ -160,7 +160,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
     return format(this, base)
   }
 
-  toJSON (): { '/': API.LinkJSON<this> {
+  toJSON (): API.LinkJSON<this> {
     return { '/': format(this) }
   }
 
@@ -168,9 +168,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
     return this
   }
 
-  get [Symbol.toStringTag] (): string {
-    return 'CID'
-  }
+  readonly [Symbol.toStringTag] = 'CID';
 
   // Legacy
 

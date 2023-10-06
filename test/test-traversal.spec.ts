@@ -6,10 +6,8 @@ import { fromString } from '../src/bytes.js'
 import * as codec from '../src/codecs/json.js'
 import { sha256 as hasher } from '../src/hashes/sha2.js'
 import { walk } from '../src/traversal.js'
-import { fromString } from '../src/bytes.js'
-import { assert } from 'aegir/chai'
-import type { CID } from '../src/cid.js'
 import type { BlockView } from '../src/block/interface.js'
+import type { CID } from '../src/cid.js'
 
 // from dag-pb, simplified
 function createNode (data: Uint8Array, links: Array<{ Hash: CID, Name: string, Tsize: number }>): { Data: Uint8Array, Links: Array<{ Hash: CID, Name: string, Tsize: number }> } {
@@ -78,7 +76,7 @@ describe('traversal', () => {
     const loadWrapper = (load: loadFn, arr: string[] = []) =>
       async (cid: CID): Promise<BlockView<unknown, 512, 18, 1> | null> => {
         arr.push(cid.toString())
-        return await load(cid)
+        return load(cid)
       }
 
     it('block with no links', async () => {

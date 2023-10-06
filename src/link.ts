@@ -1,5 +1,5 @@
-import type * as API from './link/interface.js'
 import { CID, format, toJSON, fromJSON } from './cid.js'
+import type * as API from './link/interface.js'
 // This way TS will also expose all the types from module
 export * from './link/interface.js'
 

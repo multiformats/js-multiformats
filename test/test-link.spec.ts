@@ -97,7 +97,7 @@ describe('Link', () => {
 
     assert.deepStrictEqual(Link.parse(h1), Link.fromJSON({
       '/': h1,
-      // @ts-expect-error
+      // @ts-expect-error foo doesn't exist
       foo: 1
     }))
 

@@ -118,28 +118,28 @@ describe('block', () => {
     })
 
     it('encode', async () => {
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       await assert.isRejected(main.encode({}), 'Missing required argument "value"')
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       await assert.isRejected(main.encode({ value: true }), 'Missing required argument: codec or hasher')
     })
 
     it('decode', async () => {
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       await assert.isRejected(main.decode({}), 'Missing required argument "bytes"')
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       await assert.isRejected(main.decode({ bytes: true }), 'Missing required argument: codec or hasher')
     })
 
     it('createUnsafe', async () => {
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       assert.throws(() => main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
     })
 
     it('create', async () => {
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       await assert.isRejected(main.create({}), 'Missing required argument "bytes"')
-      // @ts-expect-error
+      // @ts-expect-error testing invalid usage
       await assert.isRejected(main.create({ bytes: true }), 'Missing required argument "hasher"')
       const block = await main.encode({ value: fixture, codec, hasher })
       const block2 = await main.encode({ value: { ...fixture, test: 'blah' }, codec, hasher })
