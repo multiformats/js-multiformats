@@ -1,8 +1,8 @@
-import * as varint from './varint.js'
-import * as Digest from './hashes/digest.js'
-import { base58btc } from './bases/base58.js'
 import { base32 } from './bases/base32.js'
+import { base58btc } from './bases/base58.js'
 import { coerce } from './bytes.js'
+import * as Digest from './hashes/digest.js'
+import * as varint from './varint.js'
 import type * as API from './link/interface.js'
 
 // This way TS will also expose all the types from module
@@ -160,7 +160,7 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
     return format(this, base)
   }
 
-  toJSON (): { '/': API.ToString<CID<Data, Format, Alg, Version>, string> } {
+  toJSON (): { '/': API.LinkJSON<this> {
     return { '/': format(this) }
   }
 

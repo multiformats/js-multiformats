@@ -1,13 +1,16 @@
 /* globals describe, it */
-import { fromHex, fromString } from '../src/bytes.js'
-import { sha256, sha512 } from '../src/hashes/sha2.js'
-import { identity } from '../src/hashes/identity.js'
-import { decode as decodeDigest, create as createDigest } from '../src/hashes/digest.js'
-import valid from './fixtures/valid-multihash.js'
-import invalid from './fixtures/invalid-multihash.js'
+
 import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
 import { assert } from 'aegir/chai'
+import { sha1 as chSha1 } from 'crypto-hash'
+import { fromHex, fromString } from '../src/bytes.js'
+import { decode as decodeDigest, create as createDigest } from '../src/hashes/digest.js'
+import { identity } from '../src/hashes/identity.js'
+import { sha1 } from '../src/hashes/sha1.js'
+import { sha256, sha512 } from '../src/hashes/sha2.js'
+import invalid from './fixtures/invalid-multihash.js'
+import valid from './fixtures/valid-multihash.js'
 
 const sample = (code: number | string, size: number, hex: string): Uint8Array => {
   const toHex = (i: number | string): string => {
@@ -30,6 +33,32 @@ describe('multihash', () => {
         assert.deepStrictEqual(createDigest(code, (hex !== '') ? fromHex(hex) : empty).bytes, buf)
       }
     })
+
+    it('hash sha1', async () => {
+      const hash = await sha1.digest(fromString('test'))
+      assert.deepStrictEqual(hash.code, sha1.code)
+      assert.deepStrictEqual(hash.digest, fromHex(await chSha1(fromString('test'))))
+
+      const hash2 = decodeDigest(hash.bytes)
+      assert.deepStrictEqual(hash2.code, sha1.code)
+      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    if (typeof navigator === 'undefined') {
+      it('sync sha1', async () => {
+        const hash = sha1.digest(fromString('test'))
+        if (hash instanceof Promise) {
+          assert.fail('expected sync result')
+        } else {
+          assert.deepStrictEqual(hash.code, sha1.code)
+          assert.deepStrictEqual(hash.digest, fromHex(await chSha1(fromString('test'))))
+
+          const hash2 = decodeDigest(hash.bytes)
+          assert.deepStrictEqual(hash2.code, sha1.code)
+          assert.deepStrictEqual(hash2.bytes, hash.bytes)
+        }
+      })
+    }
 
     it('hash sha2-256', async () => {
       const hash = await sha256.digest(fromString('test'))

@@ -1,5 +1,5 @@
-import type { Link, Version } from '../link/interface.js'
 import type { CID } from '../cid.js'
+import type { Link, Version } from '../link/interface.js'
 
 /**
  * A byte-encoded representation of some type of `Data`.
@@ -65,7 +65,7 @@ export interface BlockView<
   cid: CID<T, C, A, V>
   value: T
 
-  links: () => Iterable<[string, CID]>
-  tree: () => Iterable<string>
-  get: (path: string) => BlockCursorView<unknown>
+  links(): Iterable<[string, CID]>
+  tree(): Iterable<string>
+  get(path: string): BlockCursorView<unknown>
 }

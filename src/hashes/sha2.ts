@@ -1,6 +1,6 @@
 import crypto from 'crypto'
-import { from } from './hasher.js'
 import { coerce } from '../bytes.js'
+import { from } from './hasher.js'
 
 export const sha256 = from({
   name: 'sha2-256',

@@ -1,8 +1,9 @@
 /* globals describe, it */
-import * as bytes from '../src/bytes.js'
-import * as raw from '../src/codecs/raw.js'
-import * as json from '../src/codecs/json.js'
+
 import { assert } from 'aegir/chai'
+import * as bytes from '../src/bytes.js'
+import * as json from '../src/codecs/json.js'
+import * as raw from '../src/codecs/raw.js'
 
 describe('multicodec', () => {
   it('encode/decode raw', () => {

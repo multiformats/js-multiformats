@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
 /* eslint-disable no-use-before-define */
-import type { MultihashDigest } from '../hashes/interface.js'
+
 import type { MultibaseEncoder, MultibaseDecoder, Multibase } from '../bases/interface.js'
 import type { Phantom, ByteView } from '../block/interface.js'
+import type { MultihashDigest } from '../hashes/interface.js'
 
 export type { MultihashDigest, MultibaseEncoder, MultibaseDecoder }
 export type Version = 0 | 1
@@ -32,12 +33,12 @@ export interface Link<
   readonly byteLength: number
   readonly bytes: ByteView<Link<Data, Format, Alg, V>>
 
-  equals: (other: unknown) => other is Link<Data, Format, Alg, Version>
+  equals(other: unknown): other is Link<Data, Format, Alg, Version>
 
-  toString: <Prefix extends string>(base?: MultibaseEncoder<Prefix>) => ToString<Link<Data, Format, Alg, Version>, Prefix>
-  link: () => Link<Data, Format, Alg, V>
+  toString<Prefix extends string>(base?: MultibaseEncoder<Prefix>): ToString<Link<Data, Format, Alg, Version>, Prefix>
+  link(): Link<Data, Format, Alg, V>
 
-  toV1: () => Link<Data, Format, Alg, 1>
+  toV1(): Link<Data, Format, Alg, 1>
 }
 
 export interface LinkJSON<T extends UnknownLink = UnknownLink> {

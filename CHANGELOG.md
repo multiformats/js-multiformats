@@ -1,3 +1,80 @@
+## [12.1.2](https://github.com/multiformats/js-multiformats/compare/v12.1.1...v12.1.2) (2023-10-03)
+
+
+### Bug Fixes
+
+* switch interface method decl style ([a33d24f](https://github.com/multiformats/js-multiformats/commit/a33d24f3ca56e4b40c80a3237e419cda261aa3e6))
+
+
+### Dependencies
+
+* **dev:** bump aegir from 40.0.13 to 41.0.0 ([41f008b](https://github.com/multiformats/js-multiformats/commit/41f008b09378085adef4aede1dd504a4eba5fa80))
+
+## [12.1.1](https://github.com/multiformats/js-multiformats/compare/v12.1.0...v12.1.1) (2023-09-05)
+
+
+### Bug Fixes
+
+* update link interface path in exports map ([#270](https://github.com/multiformats/js-multiformats/issues/270)) ([d38e4a8](https://github.com/multiformats/js-multiformats/commit/d38e4a8ba1d2d33c60481265356708df80ed925e))
+
+
+### Trivial Changes
+
+* **deps:** bump actions/checkout from 3 to 4 ([f94559e](https://github.com/multiformats/js-multiformats/commit/f94559e4a0fa7c4ad320261507040df5bc03f63a))
+
+## [12.1.0](https://github.com/multiformats/js-multiformats/compare/v12.0.2...v12.1.0) (2023-08-28)
+
+
+### Features
+
+* add sha1 support ([4da0085](https://github.com/multiformats/js-multiformats/commit/4da008580dd3dc3fa2c5f14c5a3bf64fd99221e6))
+
+## [12.0.2](https://github.com/multiformats/js-multiformats/compare/v12.0.1...v12.0.2) (2023-08-28)
+
+
+### Bug Fixes
+
+* linting ([3d74818](https://github.com/multiformats/js-multiformats/commit/3d74818e975099c7c83112434f7ed23a68b9af0a))
+* remove old ts option ([638dbed](https://github.com/multiformats/js-multiformats/commit/638dbed357cfe65e4d3402899dde5a7620ab5ce7))
+
+
+### Trivial Changes
+
+* add or force update .github/workflows/js-test-and-release.yml ([21b7591](https://github.com/multiformats/js-multiformats/commit/21b75911e0aee1ba7a6be9687db83328cfd961b5))
+* delete templates [skip ci] ([#263](https://github.com/multiformats/js-multiformats/issues/263)) ([d2b614d](https://github.com/multiformats/js-multiformats/commit/d2b614d34631537a97176657b478691ca0ab5522))
+* **deps:** bump actions/setup-node from 3.5.0 to 3.8.0 ([7dcf225](https://github.com/multiformats/js-multiformats/commit/7dcf225914fd6cebfa9f5cf0f5897cc0a0f356ab))
+* **deps:** bump actions/setup-node from 3.8.0 to 3.8.1 ([d7ec85c](https://github.com/multiformats/js-multiformats/commit/d7ec85c29500ff0a9bb02d2ea4c808047938ce97))
+* **deps:** bump gozala/typescript-error-reporter-action ([4a36fb7](https://github.com/multiformats/js-multiformats/commit/4a36fb7ee49edb4300267b90301ef0e4300cbc46))
+* Update .github/dependabot.yml [skip ci] ([58bebda](https://github.com/multiformats/js-multiformats/commit/58bebda0a892429bf125ea6bc2e4f0a2208b27a6))
+
+
+### Dependencies
+
+* **dev:** bump aegir from 37.12.1 to 40.0.11 ([d17424d](https://github.com/multiformats/js-multiformats/commit/d17424d257fd9995ad775d2309a67ae2dc4f3c54))
+
+## [12.0.1](https://github.com/multiformats/js-multiformats/compare/v12.0.0...v12.0.1) (2023-06-15)
+
+
+### Trivial Changes
+
+* **deps:** bump codecov/codecov-action from 3.1.1 to 3.1.4 ([#256](https://github.com/multiformats/js-multiformats/issues/256)) ([910eeeb](https://github.com/multiformats/js-multiformats/commit/910eeeb36c9fe4bd087ee83e6cec03e03c2e1899))
+
+
+### Dependencies
+
+* **dev:** bump @types/node from 18.16.18 to 20.3.1 ([7a6d036](https://github.com/multiformats/js-multiformats/commit/7a6d036adc1c18d8311a978d339e323ebd724da8))
+
+## [12.0.0](https://github.com/multiformats/js-multiformats/compare/v11.0.2...v12.0.0) (2023-06-14)
+
+
+### ⚠ BREAKING CHANGES
+
+* use aegir for ESM-only build/testing/release
+
+### Features
+
+* use aegir for ESM-only build/testing/release ([f82e61b](https://github.com/multiformats/js-multiformats/commit/f82e61bf1c6bfb67a709089e79ec57767fb1bcb7))
+
 ## [11.0.2](https://github.com/multiformats/js-multiformats/compare/v11.0.1...v11.0.2) (2023-03-09)
 
 
