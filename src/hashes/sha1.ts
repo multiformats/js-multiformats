@@ -1,5 +1,3 @@
-// @ts-check
-
 import crypto from 'crypto'
 import { coerce } from '../bytes.js'
 import { from } from './hasher.js'
