@@ -149,8 +149,8 @@
     },
     "./hashes/sha1": {
       "types": "./dist/types/src/hashes/sha1.d.ts",
-      "browser": "./src/hashes/sha1-browser.js",
-      "import": "./src/hashes/sha1.js"
+      "browser": "./dist/src/hashes/sha1-browser.js",
+      "import": "./dist/src/hashes/sha1.js"
     },
     "./hashes/sha2": {
       "types": "./dist/src/hashes/sha2.d.ts",
@@ -176,9 +176,9 @@
   },
   "browser": {
     "./hashes/sha1": "./dist/src/hashes/sha1-browser.js",
-    "./src/hashes/sha1.js": "./dist/src/hashes/sha1-browser.js",
+    "./dist/src/hashes/sha1.js": "./dist/src/hashes/sha1-browser.js",
     "./hashes/sha2": "./dist/src/hashes/sha2-browser.js",
-    "./src/hashes/sha2.js": "./dist/src/hashes/sha2-browser.js"
+    "./dist/src/hashes/sha2.js": "./dist/src/hashes/sha2-browser.js"
   },
   "eslintConfig": {
     "extends": "ipfs",
