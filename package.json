@@ -47,8 +47,7 @@
     "test",
     "tsconfig.json",
     "dist",
-    "!**/*.tsbuildinfo",
-    "!test/ts-use/node_modules"
+    "!**/*.tsbuildinfo"
   ],
   "exports": {
     ".": {
@@ -277,8 +276,7 @@
     "build": "aegir build",
     "release": "aegir release",
     "docs": "aegir docs",
-    "test": "npm run lint && npm run test:node && npm run test:chrome && npm run test:ts",
-    "test:ts": "npm run test --prefix test/ts-use",
+    "test": "npm run lint && npm run test:node && npm run test:chrome",
     "test:node": "aegir test -t node --cov",
     "test:chrome": "aegir test -t browser --cov",
     "test:chrome-webworker": "aegir test -t webworker",
