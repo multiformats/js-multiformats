@@ -1,3 +1,15 @@
+## [12.1.3](https://github.com/multiformats/js-multiformats/compare/v12.1.2...v12.1.3) (2023-10-25)
+
+
+### Trivial Changes
+
+* **deps:** bump actions/setup-node from 3.8.1 to 3.8.2 ([f190ad7](https://github.com/multiformats/js-multiformats/commit/f190ad7da5a0a17b44a88645dfa58c532d51dd56))
+
+
+### Dependencies
+
+* **dev:** bump crypto-hash from 2.0.1 to 3.0.0 ([f5b9958](https://github.com/multiformats/js-multiformats/commit/f5b995889b0b30b2e655e618b561bdfdf7df5299))
+
 ## [12.1.2](https://github.com/multiformats/js-multiformats/compare/v12.1.1...v12.1.2) (2023-10-03)
 
 
