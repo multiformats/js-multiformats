@@ -17,10 +17,6 @@
     "ipld",
     "multiformats"
   ],
-  "engines": {
-    "node": ">=16.0.0",
-    "npm": ">=7.0.0"
-  },
   "type": "module",
   "types": "./dist/src/index.d.ts",
   "typesVersions": {
@@ -40,13 +36,9 @@
     }
   },
   "files": [
-    "CHANGELOG.md",
-    "examples",
-    "LICENSE*",
     "src",
-    "test",
-    "tsconfig.json",
     "dist",
+    "!dist/test",
     "!**/*.tsbuildinfo"
   ],
   "exports": {
@@ -173,15 +165,10 @@
       "import": "./dist/src/traversal.js"
     }
   },
-  "browser": {
-    "./hashes/sha1": "./dist/src/hashes/sha1-browser.js",
-    "./dist/src/hashes/sha1.js": "./dist/src/hashes/sha1-browser.js",
-    "./hashes/sha2": "./dist/src/hashes/sha2-browser.js",
-    "./dist/src/hashes/sha2.js": "./dist/src/hashes/sha2-browser.js"
-  },
   "eslintConfig": {
     "extends": "ipfs",
     "parserOptions": {
+      "project": true,
       "sourceType": "module"
     }
   },
@@ -300,5 +287,11 @@
         "browser"
       ]
     }
+  },
+  "browser": {
+    "./hashes/sha1": "./dist/src/hashes/sha1-browser.js",
+    "./dist/src/hashes/sha1.js": "./dist/src/hashes/sha1-browser.js",
+    "./hashes/sha2": "./dist/src/hashes/sha2-browser.js",
+    "./dist/src/hashes/sha2.js": "./dist/src/hashes/sha2-browser.js"
   }
 }

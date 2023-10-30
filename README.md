@@ -1,37 +1,16 @@
-# multiformats <!-- omit in toc -->
-
 [![multiformats.io](https://img.shields.io/badge/project-IPFS-blue.svg?style=flat-square)](http://multiformats.io)
 [![codecov](https://img.shields.io/codecov/c/github/multiformats/js-multiformats.svg?style=flat-square)](https://codecov.io/gh/multiformats/js-multiformats)
 [![CI](https://img.shields.io/github/actions/workflow/status/multiformats/js-multiformats/js-test-and-release.yml?branch=master\&style=flat-square)](https://github.com/multiformats/js-multiformats/actions/workflows/js-test-and-release.yml?query=branch%3Amaster)
 
 > Interface for multihash, multicodec, multibase and CID
 
-## Table of contents <!-- omit in toc -->
-
-- [Install](#install)
-  - [Browser `<script>` tag](#browser-script-tag)
-- [Interfaces](#interfaces)
-  - [Creating Blocks](#creating-blocks)
-  - [Multibase Encoders / Decoders / Codecs](#multibase-encoders--decoders--codecs)
-  - [Multicodec Encoders / Decoders / Codecs](#multicodec-encoders--decoders--codecs)
-  - [Multihash Hashers](#multihash-hashers)
-  - [Traversal](#traversal)
-- [Legacy interface](#legacy-interface)
-- [Implementations](#implementations)
-  - [Multibase codecs](#multibase-codecs)
-  - [Multihash hashers](#multihash-hashers-1)
-  - [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
-- [API Docs](#api-docs)
-- [License](#license)
-- [Contribution](#contribution)
-
-## Install
+# Install
 
 ```console
 $ npm i multiformats
 ```
 
-### Browser `<script>` tag
+# Browser `<script>` tag
 
 Loading this module through a script tag will make it's exports available as `Multiformats` in the global namespace.
 
@@ -39,7 +18,7 @@ Loading this module through a script tag will make it's exports available as `Mu
 <script src="https://unpkg.com/multiformats/dist/index.min.js"></script>
 ```
 
-## Interfaces
+# Interfaces
 
 This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase, and CID). They can be used to implement custom base encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
@@ -80,7 +59,7 @@ block = await Block.decode({ bytes: block.bytes, codec, hasher })
 block = await Block.create({ bytes: block.bytes, cid: block.cid, codec, hasher })
 ```
 
-### Multibase Encoders / Decoders / Codecs
+## Multibase Encoders / Decoders / Codecs
 
 CIDs can be serialized to string representation using multibase encoders that implement [`MultibaseEncoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. This library provides quite a few implementations that can be imported:
 
@@ -123,7 +102,7 @@ v0.toV1().toString()
 //> 'bafybeihdwdcefgh4dqkjv67uzcmw7ojee6xedzdetojuzjevtenxquvyku'
 ```
 
-### Multicodec Encoders / Decoders / Codecs
+## Multicodec Encoders / Decoders / Codecs
 
 This library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts).
 Codec implementations should conform to the `BlockCodec` interface which implements both `BlockEncoder` and `BlockDecoder`.
@@ -142,7 +121,7 @@ export const { name, code, encode, decode } = {
 }
 ```
 
-### Multihash Hashers
+## Multihash Hashers
 
 This library defines [`MultihashHasher` and `MultihashDigest` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/hashes/interface.ts) and convinient function for implementing them:
 
@@ -164,7 +143,7 @@ CID.create(1, json.code, hash)
 //> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
 ```
 
-### Traversal
+## Traversal
 
 This library contains higher-order functions for traversing graphs of data easily.
 
@@ -200,18 +179,18 @@ console.log(blocks)
 //> [CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)]
 ```
 
-## Legacy interface
+# Legacy interface
 
 [`blockcodec-to-ipld-format`](https://github.com/ipld/js-blockcodec-to-ipld-format) converts a multiformats [`BlockCodec`](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts#L21) into an
 [`interface-ipld-format`](https://github.com/ipld/interface-ipld-format) for use with the [`ipld`](https://github.com/ipld/ipld) package. This can help bridge IPLD codecs implemented using the structure and interfaces defined here to existing code that assumes, or requires `interface-ipld-format`. This bridge also includes the relevant TypeScript definitions.
 
-## Implementations
+# Implementations
 
 By default, no base encodings (other than base32 & base58btc), hash functions,
 or codec implementations are exposed by `multiformats`, you need to
 import the ones you need yourself.
 
-### Multibase codecs
+## Multibase codecs
 
 | bases                                                         | import                      | repo                                                                                              |
 | ------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------- |
@@ -222,7 +201,7 @@ import the ones you need yourself.
 
 Other (less useful) bases implemented in [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) include: `base2`, `base8`, `base10`, `base36` and `base256emoji`.
 
-### Multihash hashers
+## Multihash hashers
 
 | hashes                                                                                                                          | import                         | repo                                                                                                               |
 | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
@@ -232,7 +211,7 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 | `murmur3-128`, `murmur3-32`                                                                                                     | `@multiformats/murmur3`        | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3)                                              |
 | `blake2b-*`, `blake2s-*`                                                                                                        | `@multiformats/blake2`         | [multiformats/js-blake2](https://github.com/multiformats/js-blake2)                                                |
 
-### IPLD codecs (multicodec)
+## IPLD codecs (multicodec)
 
 | codec      | import                     | repo                                                                                                   |
 | ---------- | -------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -243,17 +222,17 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 | `dag-pb`   | `@ipld/dag-pb`             | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb)                                                    |
 | `dag-jose` | `dag-jose`                 | [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose)                            |
 
-## API Docs
+# API Docs
 
 - <https://multiformats.github.io/js-multiformats>
 
-## License
+# License
 
 Licensed under either of
 
 - Apache 2.0, ([LICENSE-APACHE](LICENSE-APACHE) / <http://www.apache.org/licenses/LICENSE-2.0>)
 - MIT ([LICENSE-MIT](LICENSE-MIT) / <http://opensource.org/licenses/MIT>)
 
-## Contribution
+# Contribution
 
 Unless you explicitly state otherwise, any contribution intentionally submitted for inclusion in the work by you, as defined in the Apache-2.0 license, shall be dual licensed as above, without any additional terms or conditions.
