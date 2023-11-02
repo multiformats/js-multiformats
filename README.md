@@ -22,6 +22,7 @@
   - [Multihash hashers](#multihash-hashers-1)
   - [IPLD codecs (multicodec)](#ipld-codecs-multicodec)
 - [API Docs](#api-docs)
+- [Ownership and Maintenance](#ownership-and-maintenance)
 - [License](#license)
 - [Contribution](#contribution)
 
@@ -246,6 +247,12 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 ## API Docs
 
 - <https://multiformats.github.io/js-multiformats>
+
+## Ownership and Maintenance
+Maintainers are in [CODEOWNERS](./CODEOWNERS).
+
+Following [the decision](https://github.com/multiformats/js-multiformats/issues/273) to expand ownership to js-libp2p and helia maintainers, issues and PRs are now triaged and handled as part of the multi-party [js-libp2p Open Maintainers Call](https://lu.ma/js-libp2p)
+
 
 ## License
 
