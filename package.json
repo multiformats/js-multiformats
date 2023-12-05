@@ -5,6 +5,7 @@
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "Apache-2.0 OR MIT",
   "homepage": "https://github.com/multiformats/js-multiformats#readme",
+  "main": "dist/index.min.js",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/multiformats/js-multiformats.git"
