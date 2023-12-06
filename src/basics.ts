@@ -14,8 +14,8 @@ import * as identity from './hashes/identity.js'
 import * as sha2 from './hashes/sha2.js'
 import { CID, hasher, digest, varint, bytes } from './index.js'
 
-const bases = { ...identityBase, ...base2, ...base8, ...base10, ...base16, ...base32, ...base36, ...base58, ...base64, ...base256emoji }
-const hashes = { ...sha2, ...identity }
-const codecs = { raw, json }
+export const bases = { ...identityBase, ...base2, ...base8, ...base10, ...base16, ...base32, ...base36, ...base58, ...base64, ...base256emoji }
+export const hashes = { ...sha2, ...identity }
+export const codecs = { raw, json }
 
-export { CID, hasher, digest, varint, bytes, hashes, bases, codecs }
+export { CID, hasher, digest, varint, bytes }

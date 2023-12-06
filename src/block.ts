@@ -90,7 +90,7 @@ function get <T> (source: T, path: string[]): API.BlockCursorView<unknown> {
  * @template A - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @template V - CID version
  */
-class Block<T, C extends number, A extends number, V extends API.Version> implements API.BlockView<T, C, A, V> {
+export class Block<T, C extends number, A extends number, V extends API.Version> implements API.BlockView<T, C, A, V> {
   readonly cid: CID<T, C, A, V>
   readonly bytes: API.ByteView<T>
   readonly value: T
@@ -137,7 +137,7 @@ interface EncodeInput <T, Code extends number, Alg extends number> {
  * @template Code - multicodec code corresponding to codec used to encode the block
  * @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  */
-async function encode <T, Code extends number, Alg extends number> ({ value, codec, hasher }: EncodeInput<T, Code, Alg>): Promise<API.BlockView<T, Code, Alg>> {
+export async function encode <T, Code extends number, Alg extends number> ({ value, codec, hasher }: EncodeInput<T, Code, Alg>): Promise<API.BlockView<T, Code, Alg>> {
   if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
   if (codec == null || hasher == null) throw new Error('Missing required argument: codec or hasher')
 
@@ -164,7 +164,7 @@ interface DecodeInput <T, Code extends number, Alg extends number> {
  * @template Code - multicodec code corresponding to codec used to encode the block
  * @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  */
-async function decode <T, Code extends number, Alg extends number> ({ bytes, codec, hasher }: DecodeInput<T, Code, Alg>): Promise<API.BlockView<T, Code, Alg>> {
+export async function decode <T, Code extends number, Alg extends number> ({ bytes, codec, hasher }: DecodeInput<T, Code, Alg>): Promise<API.BlockView<T, Code, Alg>> {
   if (bytes == null) throw new Error('Missing required argument "bytes"')
   if (codec == null || hasher == null) throw new Error('Missing required argument: codec or hasher')
 
@@ -194,7 +194,7 @@ type CreateUnsafeInput <T, Code extends number, Alg extends number, V extends AP
  * @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @template V - CID version
  */
-function createUnsafe <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, value: maybeValue, codec }: CreateUnsafeInput<T, Code, Alg, V>): API.BlockView<T, Code, Alg, V> {
+export function createUnsafe <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, value: maybeValue, codec }: CreateUnsafeInput<T, Code, Alg, V>): API.BlockView<T, Code, Alg, V> {
   const value = maybeValue !== undefined
     ? maybeValue
     : (codec?.decode(bytes))
@@ -221,7 +221,7 @@ interface CreateInput <T, Code extends number, Alg extends number, V extends API
  * @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @template V - CID version
  */
-async function create <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, hasher, codec }: CreateInput<T, Code, Alg, V>): Promise<API.BlockView<T, Code, Alg, V>> {
+export async function create <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, hasher, codec }: CreateInput<T, Code, Alg, V>): Promise<API.BlockView<T, Code, Alg, V>> {
   if (bytes == null) throw new Error('Missing required argument "bytes"')
   if (hasher == null) throw new Error('Missing required argument "hasher"')
   const value = codec.decode(bytes)
@@ -237,5 +237,3 @@ async function create <T, Code extends number, Alg extends number, V extends API
     codec
   })
 }
-
-export { encode, decode, create, createUnsafe, Block }
