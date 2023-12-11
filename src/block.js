@@ -178,7 +178,7 @@ async function encode ({ value, codec, hasher }) {
   if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
-  const bytes = codec.encode(value)
+  const bytes = await codec.encode(value)
   const hash = await hasher.digest(bytes)
   /** @type {CID<T, Code, Alg, 1>} */
   const cid = CID.create(

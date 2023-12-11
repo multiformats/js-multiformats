@@ -6,7 +6,7 @@ import type { ByteView } from '../block/interface.js'
 export interface BlockEncoder<Code extends number, T> {
   name: string
   code: Code
-  encode(data: T): ByteView<T>
+  encode(data: T): ByteView<T> | Promise<ByteView<T>>
 }
 
 /**
