@@ -14,7 +14,7 @@ export interface BlockEncoder<Code extends number, T> {
  */
 export interface BlockDecoder<Code extends number, T> {
   code: Code
-  decode(bytes: ByteView<T>): T
+  decode(bytes: ByteView<T>): T | Promise<T>
 }
 
 /**
