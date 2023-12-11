@@ -23,11 +23,11 @@ describe('block', () => {
 
   it('createUnsafe', async () => {
     const block = await main.encode({ value: fixture, codec, hasher })
-    const block2 = main.createUnsafe({ bytes: block.bytes, cid: block.cid, codec })
+    const block2 = await main.createUnsafe({ bytes: block.bytes, cid: block.cid, codec })
     assert.deepStrictEqual(block.cid.equals(block2.cid), true)
   })
 
-  describe('reader', () => {
+  describe('reader', async () => {
     const value = {
       link,
       nope: 'skip',
@@ -37,7 +37,7 @@ describe('block', () => {
       bytes: Uint8Array.from('1234')
     }
     // @ts-expect-error - 'boolean' is not assignable to type 'CID'
-    const block = main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
+    const block = await main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
 
     it('links', () => {
       const expected = ['link', 'arr/0']
@@ -63,8 +63,8 @@ describe('block', () => {
       assert.deepStrictEqual(ret, { value: 'skip' })
     })
 
-    it('null links/tree', () => {
-      const block = main.createUnsafe({
+    it('null links/tree', async () => {
+      const block = await main.createUnsafe({
         value: null,
         codec,
         hasher,
@@ -95,9 +95,9 @@ describe('block', () => {
     assert.equal(links[0][1].toString(), link.toString())
   })
 
-  it('kitchen sink', () => {
+  it('kitchen sink', async () => {
     const sink = { one: { two: { arr: [true, false, null], three: 3, buff, link } } }
-    const block = main.createUnsafe({
+    const block = await main.createUnsafe({
       value: sink,
       codec,
       // @ts-expect-error - 'boolean' is not assignable to type 'ByteView<unknown>'
@@ -133,7 +133,7 @@ describe('block', () => {
 
     it('createUnsafe', async () => {
       // @ts-expect-error
-      assert.throws(() => main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
+      assert.isRejected(main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
     })
 
     it('create', async () => {

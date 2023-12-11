@@ -178,7 +178,7 @@ async function encode ({ value, codec, hasher }) {
   if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
-  const bytes = codec.encode(value)
+  const bytes = await codec.encode(value)
   const hash = await hasher.digest(bytes)
   /** @type {CID<T, Code, Alg, 1>} */
   const cid = CID.create(
@@ -204,7 +204,7 @@ async function decode ({ bytes, codec, hasher }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!codec || !hasher) throw new Error('Missing required argument: codec or hasher')
 
-  const value = codec.decode(bytes)
+  const value = await codec.decode(bytes)
   const hash = await hasher.digest(bytes)
   /** @type {CID<T, Code, Alg, 1>} */
   const cid = CID.create(1, codec.code, hash)
@@ -223,12 +223,12 @@ async function decode ({ bytes, codec, hasher }) {
  * @template {number} Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  * @template {API.Version} V - CID version
  * @param {{ cid: API.Link<T, Code, Alg, V>, value:T, codec?: API.BlockDecoder<Code, T>, bytes: API.ByteView<T> }|{cid:API.Link<T, Code, Alg, V>, bytes:API.ByteView<T>, value?:void, codec:API.BlockDecoder<Code, T>}} options
- * @returns {API.BlockView<T, Code, Alg, V>}
+ * @returns {Promise<API.BlockView<T, Code, Alg, V>>}
  */
-function createUnsafe ({ bytes, cid, value: maybeValue, codec }) {
+async function createUnsafe ({ bytes, cid, value: maybeValue, codec }) {
   const value = maybeValue !== undefined
     ? maybeValue
-    : (codec && codec.decode(bytes))
+    : (codec && await codec.decode(bytes))
 
   if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
 
@@ -255,12 +255,11 @@ function createUnsafe ({ bytes, cid, value: maybeValue, codec }) {
 async function create ({ bytes, cid, hasher, codec }) {
   if (!bytes) throw new Error('Missing required argument "bytes"')
   if (!hasher) throw new Error('Missing required argument "hasher"')
-  const value = codec.decode(bytes)
+  const value = await codec.decode(bytes)
   const hash = await hasher.digest(bytes)
   if (!binary.equals(cid.multihash.bytes, hash.bytes)) {
     throw new Error('CID hash does not match bytes')
   }
-
   return createUnsafe({
     bytes,
     cid,
