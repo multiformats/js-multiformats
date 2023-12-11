@@ -260,7 +260,6 @@ async function create ({ bytes, cid, hasher, codec }) {
   if (!binary.equals(cid.multihash.bytes, hash.bytes)) {
     throw new Error('CID hash does not match bytes')
   }
-
   return createUnsafe({
     bytes,
     cid,
