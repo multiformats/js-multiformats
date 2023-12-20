@@ -1,3 +1,19 @@
+## [13.0.0](https://github.com/multiformats/js-multiformats/compare/v12.1.3...v13.0.0) (2023-12-20)
+
+
+### ⚠ BREAKING CHANGES
+
+* this module is now TypeScript - the API has not changed but releasing as a major for saftey
+
+### Features
+
+* convert codebase to typescript ([#251](https://github.com/multiformats/js-multiformats/issues/251)) ([56bbb96](https://github.com/multiformats/js-multiformats/commit/56bbb9686ed0233f76d7aea6015d4d3294db443c)), closes [#249](https://github.com/multiformats/js-multiformats/issues/249)
+
+
+### Trivial Changes
+
+* **deps:** bump actions/setup-node from 3.8.2 to 4.0.0 ([139b3c2](https://github.com/multiformats/js-multiformats/commit/139b3c2fa0d1afcba9f0aafde929fcf69f4d7804))
+
 ## [12.1.3](https://github.com/multiformats/js-multiformats/compare/v12.1.2...v12.1.3) (2023-10-25)
 
 
