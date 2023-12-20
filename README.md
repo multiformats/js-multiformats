@@ -4,27 +4,13 @@
 
 > Interface for multihash, multicodec, multibase and CID
 
-# Install
-
-```console
-$ npm i multiformats
-```
-
-# Browser `<script>` tag
-
-Loading this module through a script tag will make it's exports available as `Multiformats` in the global namespace.
-
-```html
-<script src="https://unpkg.com/multiformats/dist/index.min.js"></script>
-```
-
-# Interfaces
+# About
 
 This library defines common interfaces and low level building blocks for various interrelated multiformat technologies (multicodec, multihash, multibase, and CID). They can be used to implement custom base encoders / decoders / codecs, codec encoders /decoders and multihash hashers that comply to the interface that layers above assume.
 
 This library provides implementations for most basics and many others can be found in linked repositories.
 
-```js
+```TypeScript
 import { CID } from 'multiformats/cid'
 import * as json from 'multiformats/codecs/json'
 import { sha256 } from 'multiformats/hashes/sha2'
@@ -36,9 +22,9 @@ const cid = CID.create(1, json.code, hash)
 //> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
 ```
 
-### Creating Blocks
+## Creating Blocks
 
-```js
+```TypeScript
 import * as Block from 'multiformats/block'
 import * as codec from '@ipld/dag-cbor'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
@@ -63,7 +49,7 @@ block = await Block.create({ bytes: block.bytes, cid: block.cid, codec, hasher }
 
 CIDs can be serialized to string representation using multibase encoders that implement [`MultibaseEncoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. This library provides quite a few implementations that can be imported:
 
-```js
+```TypeScript
 import { base64 } from "multiformats/bases/base64"
 cid.toString(base64.encoder)
 //> 'mAYAEEiCTojlxqRTl6svwqNJRVM2jCcPBxy+7mRTUfGDzy2gViA'
@@ -71,7 +57,7 @@ cid.toString(base64.encoder)
 
 Parsing CID string serialized CIDs requires multibase decoder that implements [`MultibaseDecoder`](https://github.com/multiformats/js-multiformats/blob/master/src/bases/interface.ts) interface. This library provides a decoder for every encoder it provides:
 
-```js
+```TypeScript
 CID.parse('mAYAEEiCTojlxqRTl6svwqNJRVM2jCcPBxy+7mRTUfGDzy2gViA', base64.decoder)
 //> CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)
 ```
@@ -81,7 +67,7 @@ them as `encoder` and `decoder` properties. For added convenience codecs also
 implement `MultibaseEncoder` and `MultibaseDecoder` interfaces so they could be
 used as either or both:
 
-```js
+```TypeScript
 cid.toString(base64)
 CID.parse(cid.toString(base64), base64)
 ```
@@ -90,7 +76,7 @@ CID.parse(cid.toString(base64), base64)
 multibase codecs so that CIDs can be base serialized to (version specific)
 default base encoding and parsed without having to supply base encoders/decoders:
 
-```js
+```TypeScript
 const v1 = CID.parse('bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea')
 v1.toString()
 //> 'bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea'
@@ -108,11 +94,7 @@ This library defines [`BlockEncoder`, `BlockDecoder` and `BlockCodec` interfaces
 Codec implementations should conform to the `BlockCodec` interface which implements both `BlockEncoder` and `BlockDecoder`.
 Here is an example implementation of JSON `BlockCodec`.
 
-```js
-/**
- * @template T
- * @type {BlockCodec<0x0200, T>}
- */
+```TypeScript
 export const { name, code, encode, decode } = {
   name: 'json',
   code: 0x0200,
@@ -125,7 +107,7 @@ export const { name, code, encode, decode } = {
 
 This library defines [`MultihashHasher` and `MultihashDigest` interfaces](https://github.com/multiformats/js-multiformats/blob/master/src/hashes/interface.ts) and convinient function for implementing them:
 
-```js
+```TypeScript
 import * as hasher from 'multiformats/hashes/hasher'
 
 const sha256 = hasher.from({
@@ -149,7 +131,7 @@ This library contains higher-order functions for traversing graphs of data easil
 
 `walk()` walks through the links in each block of a DAG calling a user-supplied loader function for each one, in depth-first order with no duplicate block visits. The loader should return a `Block` object and can be used to inspect and collect block ordering for a full DAG walk. The loader should `throw` on error, and return `null` if a block should be skipped by `walk()`.
 
-```js
+```TypeScript
 import { walk } from 'multiformats/traversal'
 import * as Block from 'multiformats/block'
 import * as codec from 'multiformats/codecs/json'
@@ -179,18 +161,18 @@ console.log(blocks)
 //> [CID(bagaaierasords4njcts6vs7qvdjfcvgnume4hqohf65zsfguprqphs3icwea)]
 ```
 
-# Legacy interface
+## Legacy interface
 
 [`blockcodec-to-ipld-format`](https://github.com/ipld/js-blockcodec-to-ipld-format) converts a multiformats [`BlockCodec`](https://github.com/multiformats/js-multiformats/blob/master/src/codecs/interface.ts#L21) into an
 [`interface-ipld-format`](https://github.com/ipld/interface-ipld-format) for use with the [`ipld`](https://github.com/ipld/ipld) package. This can help bridge IPLD codecs implemented using the structure and interfaces defined here to existing code that assumes, or requires `interface-ipld-format`. This bridge also includes the relevant TypeScript definitions.
 
-# Implementations
+## Implementations
 
 By default, no base encodings (other than base32 & base58btc), hash functions,
 or codec implementations are exposed by `multiformats`, you need to
 import the ones you need yourself.
 
-## Multibase codecs
+### Multibase codecs
 
 | bases                                                         | import                      | repo                                                                                              |
 | ------------------------------------------------------------- | --------------------------- | ------------------------------------------------------------------------------------------------- |
@@ -201,7 +183,7 @@ import the ones you need yourself.
 
 Other (less useful) bases implemented in [multiformats/js-multiformats](https://github.com/multiformats/js-multiformats/tree/master/bases) include: `base2`, `base8`, `base10`, `base36` and `base256emoji`.
 
-## Multihash hashers
+### Multihash hashers
 
 | hashes                                                                                                                          | import                         | repo                                                                                                               |
 | ------------------------------------------------------------------------------------------------------------------------------- | ------------------------------ | ------------------------------------------------------------------------------------------------------------------ |
@@ -211,7 +193,7 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 | `murmur3-128`, `murmur3-32`                                                                                                     | `@multiformats/murmur3`        | [multiformats/js-murmur3](https://github.com/multiformats/js-murmur3)                                              |
 | `blake2b-*`, `blake2s-*`                                                                                                        | `@multiformats/blake2`         | [multiformats/js-blake2](https://github.com/multiformats/js-blake2)                                                |
 
-## IPLD codecs (multicodec)
+### IPLD codecs (multicodec)
 
 | codec      | import                     | repo                                                                                                   |
 | ---------- | -------------------------- | ------------------------------------------------------------------------------------------------------ |
@@ -221,6 +203,20 @@ Other (less useful) bases implemented in [multiformats/js-multiformats](https://
 | `dag-json` | `@ipld/dag-json`           | [ipld/js-dag-json](https://github.com/ipld/js-dag-json)                                                |
 | `dag-pb`   | `@ipld/dag-pb`             | [ipld/js-dag-pb](https://github.com/ipld/js-dag-pb)                                                    |
 | `dag-jose` | `dag-jose`                 | [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose)                            |
+
+# Install
+
+```console
+$ npm i multiformats
+```
+
+## Browser `<script>` tag
+
+Loading this module through a script tag will make it's exports available as `Multiformats` in the global namespace.
+
+```html
+<script src="https://unpkg.com/multiformats/dist/index.min.js"></script>
+```
 
 # API Docs
 
