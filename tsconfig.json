@@ -1,22 +1,7 @@
 {
   "extends": "aegir/src/config/tsconfig.aegir.json",
   "compilerOptions": {
-    "outDir": "dist/types",
-    "emitDeclarationOnly": true,
-    "paths": {
-      "multiformats": [
-        "./src/index.js"
-      ],
-      "multiformats/interface": [
-        "./src/interface"
-      ],
-      "multiformats/hashes/interface": [
-        "./src/hashes/interface"
-      ],
-      "multiformats/*": [
-        "./src/*.js"
-      ]
-    }
+    "outDir": "dist"
   },
   "include": [
     "src",

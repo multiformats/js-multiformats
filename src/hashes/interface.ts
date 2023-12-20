@@ -41,8 +41,6 @@ export interface MultihashHasher<Code extends number = number> {
    * either promise of a digest or a digest. This way general use can `await`
    * while performance critical code may asses return value to decide whether
    * await is needed.
-   *
-   * @param {Uint8Array} input
    */
   digest(input: Uint8Array): Promise<MultihashDigest<Code>> | MultihashDigest<Code>
 

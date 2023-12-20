@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-/* eslint-disable no-use-before-define */
-
 import type { CID } from '../cid.js'
 import type { Link, Version } from '../link/interface.js'
 
@@ -55,7 +52,7 @@ export interface Block<
   cid: Link<T, C, A, V>
 }
 
-export type BlockCursorView<T extends unknown = unknown> =
+export type BlockCursorView<T = unknown> =
   | { value: T, remaining?: undefined }
   | { value: CID, remaining: string }
 

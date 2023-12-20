@@ -1,11 +1,9 @@
-.coverage
-package-lock.json
 node_modules
-.DS_Store
-yarn.lock
-types
-test/ts-use/tsconfig.tsbuildinfo
-types/tsconfig.tsbuildinfo
-*.log
+build
 dist
 .docs
+.coverage
+node_modules
+package-lock.json
+yarn.lock
+.vscode

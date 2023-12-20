@@ -8,8 +8,6 @@ export interface BaseEncoder {
   /**
    * Base encodes to a **plain** (and not a multibase) string. Unlike
    * `encode` no multibase prefix is added.
-   *
-   * @param bytes
    */
   baseEncode(bytes: Uint8Array): string
 }
@@ -21,8 +19,6 @@ export interface BaseDecoder {
   /**
    * Decodes **plain** (and not a multibase) string. Unlike
    * decode
-   *
-   * @param text
    */
   baseDecode(text: string): Uint8Array
 }
@@ -73,8 +69,6 @@ export interface MultibaseDecoder<Prefix extends string> {
   /**
    * Decodes **multibase** string (which must have a multibase prefix added).
    * If prefix does not match
-   *
-   * @param multibase
    */
   decode(multibase: Multibase<Prefix>): Uint8Array
 }
