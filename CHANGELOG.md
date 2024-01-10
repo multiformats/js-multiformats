@@ -1,3 +1,10 @@
+## [13.0.1](https://github.com/multiformats/js-multiformats/compare/v13.0.0...v13.0.1) (2024-01-10)
+
+
+### Dependencies
+
+* **dev:** bump aegir from 41.3.5 to 42.1.0 ([12c8686](https://github.com/multiformats/js-multiformats/commit/12c86868defc40b698c425b21be4e11152531658))
+
 ## [13.0.0](https://github.com/multiformats/js-multiformats/compare/v12.1.3...v13.0.0) (2023-12-20)
 
 
