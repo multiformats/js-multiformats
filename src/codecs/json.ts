@@ -1,4 +1,4 @@
-import type { ByteView } from './interface.js'
+import type { ArrayBufferView, ByteView } from './interface.js'
 
 const textEncoder = new TextEncoder()
 const textDecoder = new TextDecoder()
@@ -10,6 +10,6 @@ export function encode <T> (node: T): ByteView<T> {
   return textEncoder.encode(JSON.stringify(node))
 }
 
-export function decode <T> (data: ByteView<T>): T {
+export function decode <T> (data: ByteView<T> | ArrayBufferView<T>): T {
   return JSON.parse(textDecoder.decode(data))
 }

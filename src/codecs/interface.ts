@@ -1,4 +1,4 @@
-import type { ByteView } from '../block/interface.js'
+import type { ArrayBufferView, ByteView } from '../block/interface.js'
 
 /**
  * IPLD encoder part of the codec.
@@ -14,7 +14,7 @@ export interface BlockEncoder<Code extends number, T> {
  */
 export interface BlockDecoder<Code extends number, T> {
   code: Code
-  decode(bytes: ByteView<T>): T
+  decode(bytes: ByteView<T> | ArrayBufferView<T>): T
 }
 
 /**
@@ -22,4 +22,4 @@ export interface BlockDecoder<Code extends number, T> {
  */
 export interface BlockCodec<Code extends number, T> extends BlockEncoder<Code, T>, BlockDecoder<Code, T> {}
 
-export type { ByteView }
+export type { ArrayBufferView, ByteView }

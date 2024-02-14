@@ -12,6 +12,11 @@ import type { Link, Version } from '../link/interface.js'
  */
 export interface ByteView<Data> extends Uint8Array, Phantom<Data> {}
 
+/**
+ * Similar to ByteView but extends ArrayBuffer.
+ */
+export interface ArrayBufferView<Data> extends ArrayBuffer, Phantom<Data> {}
+
 declare const Marker: unique symbol
 
 /**
