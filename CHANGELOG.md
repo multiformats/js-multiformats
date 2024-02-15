@@ -1,3 +1,15 @@
+## [13.1.0](https://github.com/multiformats/js-multiformats/compare/v13.0.1...v13.1.0) (2024-02-15)
+
+
+### Features
+
+* support decoding ArrayBuffers ([#287](https://github.com/multiformats/js-multiformats/issues/287)) ([e7f3272](https://github.com/multiformats/js-multiformats/commit/e7f3272fded88801409358dcef4a5b04b08ad38e))
+
+
+### Trivial Changes
+
+* Update .github/dependabot.yml [skip ci] ([aa9c730](https://github.com/multiformats/js-multiformats/commit/aa9c7303a7bd844d659163261d301c5c95f26c3b))
+
 ## [13.0.1](https://github.com/multiformats/js-multiformats/compare/v13.0.0...v13.0.1) (2024-01-10)
 
 
