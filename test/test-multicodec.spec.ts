@@ -12,10 +12,22 @@ describe('multicodec', () => {
     assert.deepStrictEqual(raw.decode(buff), bytes.fromString('test'))
   })
 
+  it('encode/decode raw arraybuffer', () => {
+    const buff = raw.encode(bytes.fromString('test'))
+    assert.deepStrictEqual(buff, bytes.fromString('test'))
+    assert.deepStrictEqual(raw.decode(buff.buffer), bytes.fromString('test'))
+  })
+
   it('encode/decode json', () => {
     const buff = json.encode({ hello: 'world' })
     assert.deepStrictEqual(buff, bytes.fromString(JSON.stringify({ hello: 'world' })))
     assert.deepStrictEqual(json.decode(buff), { hello: 'world' })
+  })
+
+  it('encode/decode json arraybuffer', () => {
+    const buff = json.encode({ hello: 'world' })
+    assert.deepStrictEqual(buff, bytes.fromString(JSON.stringify({ hello: 'world' })))
+    assert.deepStrictEqual(json.decode(buff.buffer), { hello: 'world' })
   })
 
   it('raw cannot encode string', async () => {
