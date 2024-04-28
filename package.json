@@ -92,6 +92,7 @@
     },
     "./basics": {
       "types": "./dist/src/basics.d.ts",
+      "browser": "./dist/src/basics-browser.js",
       "import": "./dist/src/basics.js"
     },
     "./block": {
