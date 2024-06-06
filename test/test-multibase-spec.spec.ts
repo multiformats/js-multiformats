@@ -25,6 +25,7 @@ const encoded = [
       ['base32z', 'het1sg3mqqt3gn5djxj11y3msci3817depfzgqejb'],
       ['base36', 'k343ixo7d49hqj1ium15pgy1wzww5fxrid21td7l'],
       ['base36upper', 'K343IXO7D49HQJ1IUM15PGY1WZWW5FXRID21TD7L'],
+      ['base45', 'R4T8KPCG/DVKEXVDDLFD44O/EALEAWEZEDV1DX0'],
       ['base58flickr', 'Ztwe7gVTeK8wswS1gf8hrgAua9fcw9reboD'],
       ['base58btc', 'zUXE7GvtEk8XTXs1GF8HSGbVA9FCX9SEBPe'],
       ['base64', 'mRGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ'],
@@ -54,6 +55,7 @@ const encoded = [
       ['base32z', 'hxf1zgedpcfzg1ebb'],
       ['base36', 'k2lcpzo5yikidynfl'],
       ['base36upper', 'K2LCPZO5YIKIDYNFL'],
+      ['base45', 'RRFF.OEB$D5/DZ24'],
       ['base58flickr', 'Z7Pznk19XTTzBtx'],
       ['base58btc', 'z7paNL19xttacUY'],
       ['base64', 'meWVzIG1hbmkgIQ'],
@@ -83,6 +85,7 @@ const encoded = [
       ['base32z', 'hpb1sa5dxrb5s6hucco'],
       ['base36', 'kfuvrsivvnfrbjwajo'],
       ['base36upper', 'KFUVRSIVVNFRBJWAJO'],
+      ['base45', 'R+8D VD82EK4F.KEA2'],
       ['base58flickr', 'ZrTu1dk6cWsRYjYu'],
       ['base58btc', 'zStV1DL6CwTryKyV'],
       ['base64', 'maGVsbG8gd29ybGQ'],
@@ -112,6 +115,7 @@ const encoded = [
       ['base32z', 'hybhskh3ypiosh4jyrr'],
       ['base36', 'k02lcpzo5yikidynfl'],
       ['base36upper', 'K02LCPZO5YIKIDYNFL'],
+      ['base45', 'RV206$CL44CEC2DDX0'],
       ['base58flickr', 'Z17Pznk19XTTzBtx'],
       ['base58btc', 'z17paNL19xttacUY'],
       ['base64', 'mAHllcyBtYW5pICE'],
@@ -141,6 +145,7 @@ const encoded = [
       ['base32z', 'hyyy813murbssn5ujryoo'],
       ['base36', 'k002lcpzo5yikidynfl'],
       ['base36upper', 'K002LCPZO5YIKIDYNFL'],
+      ['base45', 'R000RFF.OEB$D5/DZ24'],
       ['base58flickr', 'Z117Pznk19XTTzBtx'],
       ['base58btc', 'z117paNL19xttacUY'],
       ['base64', 'mAAB5ZXMgbWFuaSAh'],
@@ -149,7 +154,11 @@ const encoded = [
       ['base64urlpad', 'UAAB5ZXMgbWFuaSAh'],
       ['base256emoji', '🚀🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
     ]
-  }
+  },
+  { input: 'AB', tests: [['base45', 'RBB8']] },
+  { input: 'Hello!!', tests: [['base45', 'R%69 VD92EX0']] },
+  { input: 'base-45', tests: [['base45', 'RUJCLQE7W581']] },
+  { input: 'ietf!', tests: [['base45', 'RQED8WEX0']] }
 ]
 
 describe('spec test', () => {
@@ -160,12 +169,12 @@ describe('spec test', () => {
         const base = bases[name as keyof typeof bases]
 
         describe(name, () => {
-          it('should encode buffer', () => {
+          it(`should encode from buffer [${input}]`, () => {
             const out = base.encode(fromString(input))
             assert.deepStrictEqual(out, output)
           })
 
-          it('should decode string', () => {
+          it(`should decode from string [${input}]`, () => {
             assert.deepStrictEqual(base.decode(output), fromString(input))
           })
         })
@@ -182,4 +191,9 @@ describe('spec test', () => {
       assert.throws(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
     })
   }
+
+  it('base45 should fail with invalid input', () => {
+    // not enough input chars, should be multiple of 3 or multiple of 3 + 2
+    assert.throws(() => bases.base45.decode('R%69 VD92EX'), 'Unexpected end of data')
+  })
 })
