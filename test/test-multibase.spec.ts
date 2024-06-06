@@ -10,6 +10,7 @@ import * as b45 from '../src/bases/base45.js'
 import * as b58 from '../src/bases/base58.js'
 import * as b64 from '../src/bases/base64.js'
 import * as b8 from '../src/bases/base8.js'
+import * as proquint from '../src/bases/proquint.js'
 import * as bytes from '../src/bytes.js'
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
@@ -65,7 +66,7 @@ describe('multibase', () => {
   const buff = bytes.fromString('test')
   const nonPrintableBuff = Uint8Array.from([239, 250, 254])
 
-  const baseTest = (bases: typeof b2 | typeof b8 | typeof b10 | typeof b16 | typeof b32 | typeof b36 | typeof b45 | typeof b58 | typeof b64): void => {
+  const baseTest = (bases: typeof b2 | typeof b8 | typeof b10 | typeof b16 | typeof b32 | typeof b36 | typeof b45 | typeof b58 | typeof b64 | typeof proquint): void => {
     for (const base of Object.values(bases)) {
       if (((base as { name: string })?.name) !== '') {
         it(`encode/decode ${base.name}`, () => {
@@ -121,6 +122,10 @@ describe('multibase', () => {
 
   describe('base64', () => {
     baseTest(b64)
+  })
+
+  describe('proquint', () => {
+    baseTest(proquint)
   })
 
   it('multibase mismatch', () => {

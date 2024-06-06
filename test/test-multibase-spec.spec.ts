@@ -32,7 +32,8 @@ const encoded = [
       ['base64pad', 'MRGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ=='],
       ['base64url', 'uRGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ'],
       ['base64urlpad', 'URGVjZW50cmFsaXplIGV2ZXJ5dGhpbmchIQ=='],
-      ['base256emoji', '🚀💛✋💃✋😻😈🥺🤤🍀🌟💐✋😅✋💦✋🥺🏃😈😴🌟😻😝👏👏']
+      ['base256emoji', '🚀💛✋💃✋😻😈🥺🤤🍀🌟💐✋😅✋💦✋🥺🏃😈😴🌟😻😝👏👏'],
+      ['proquint', 'pro-hidoj-katoj-kunuh-lanod-kudon-lonoj-fadoj-linoj-lanun-lidom-kojov-kisod-fah']
     ]
   },
   {
@@ -62,7 +63,8 @@ const encoded = [
       ['base64pad', 'MeWVzIG1hbmkgIQ=='],
       ['base64url', 'ueWVzIG1hbmkgIQ'],
       ['base64urlpad', 'UeWVzIG1hbmkgIQ=='],
-      ['base256emoji', '🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
+      ['base256emoji', '🚀🏃✋🌈😅🌷🤤😻🌟😅👏'],
+      ['proquint', 'pro-lojoj-lasob-kujod-kunon-fabod']
     ]
   },
   {
@@ -92,7 +94,8 @@ const encoded = [
       ['base64pad', 'MaGVsbG8gd29ybGQ='],
       ['base64url', 'uaGVsbG8gd29ybGQ'],
       ['base64urlpad', 'UaGVsbG8gd29ybGQ='],
-      ['base256emoji', '🚀😴✋🍀🍀😓😅✔😓🥺🍀😳']
+      ['base256emoji', '🚀😴✋🍀🍀😓😅✔😓🥺🍀😳'],
+      ['proquint', 'pro-kodoj-kudos-kusob-litoz-lanos-kib']
     ]
   },
   {
@@ -122,7 +125,8 @@ const encoded = [
       ['base64pad', 'MAHllcyBtYW5pICE='],
       ['base64url', 'uAHllcyBtYW5pICE'],
       ['base64urlpad', 'UAHllcyBtYW5pICE='],
-      ['base256emoji', '🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
+      ['base256emoji', '🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏'],
+      ['proquint', 'pro-badun-kijug-fadot-kajov-kohob-fah']
     ]
   },
   {
@@ -152,13 +156,30 @@ const encoded = [
       ['base64pad', 'MAAB5ZXMgbWFuaSAh'],
       ['base64url', 'uAAB5ZXMgbWFuaSAh'],
       ['base64urlpad', 'UAAB5ZXMgbWFuaSAh'],
-      ['base256emoji', '🚀🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏']
+      ['base256emoji', '🚀🚀🚀🏃✋🌈😅🌷🤤😻🌟😅👏'],
+      ['proquint', 'pro-babab-lojoj-lasob-kujod-kunon-fabod']
     ]
   },
+
+  // RFC9285 examples
   { input: 'AB', tests: [['base45', 'RBB8']] },
   { input: 'Hello!!', tests: [['base45', 'R%69 VD92EX0']] },
   { input: 'base-45', tests: [['base45', 'RUJCLQE7W581']] },
-  { input: 'ietf!', tests: [['base45', 'RQED8WEX0']] }
+  { input: 'ietf!', tests: [['base45', 'RQED8WEX0']] },
+
+  // proquint spec examples, IPv4 addresses
+  { input: Uint8Array.from([127, 0, 0, 1]), tests: [['proquint', 'pro-lusab-babad']] }, // 127.0.0.1
+  { input: Uint8Array.from([63, 84, 220, 193]), tests: [['proquint', 'pro-gutih-tugad']] }, // 63.84.220.193
+  { input: Uint8Array.from([63, 118, 7, 35]), tests: [['proquint', 'pro-gutuk-bisog']] }, // 63.118.7.35
+  { input: Uint8Array.from([140, 98, 193, 141]), tests: [['proquint', 'pro-mudof-sakat']] }, // 140.98.193.141
+  { input: Uint8Array.from([64, 255, 6, 200]), tests: [['proquint', 'pro-haguz-biram']] }, // 64.255.6.200
+  { input: Uint8Array.from([128, 30, 52, 45]), tests: [['proquint', 'pro-mabiv-gibot']] }, // 128.30.52.45
+  { input: Uint8Array.from([147, 67, 119, 2]), tests: [['proquint', 'pro-natag-lisaf']] }, // 147.67.119.2
+  { input: Uint8Array.from([212, 58, 253, 68]), tests: [['proquint', 'pro-tibup-zujah']] }, // 212.58.253.68
+  { input: Uint8Array.from([216, 35, 68, 215]), tests: [['proquint', 'pro-tobog-higil']] }, // 216.35.68.215
+  { input: Uint8Array.from([216, 68, 232, 21]), tests: [['proquint', 'pro-todah-vobij']] }, // 216.68.232.21
+  { input: Uint8Array.from([198, 81, 129, 136]), tests: [['proquint', 'pro-sinid-makam']] }, // 198.81.129.136
+  { input: Uint8Array.from([12, 110, 110, 204]), tests: [['proquint', 'pro-budov-kuras']] } // 12.110.110.204
 ]
 
 describe('spec test', () => {
@@ -169,13 +190,15 @@ describe('spec test', () => {
         const base = bases[name as keyof typeof bases]
 
         describe(name, () => {
+          const byteInput = typeof input === 'string' ? fromString(input) : input
+
           it(`should encode from buffer [${input}]`, () => {
-            const out = base.encode(fromString(input))
+            const out = base.encode(byteInput)
             assert.deepStrictEqual(out, output)
           })
 
           it(`should decode from string [${input}]`, () => {
-            assert.deepStrictEqual(base.decode(output), fromString(input))
+            assert.deepStrictEqual(base.decode(output), byteInput)
           })
         })
       }
@@ -187,6 +210,10 @@ describe('spec test', () => {
       if (base.name === 'identity') {
         return this.skip()
       }
+      if (base.name === 'proquint') {
+        assert.throws(() => base.decode('pro-^!@$%!#$%@#y'), `Non-${base.name} character`)
+        return
+      }
 
       assert.throws(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
     })
@@ -195,5 +222,15 @@ describe('spec test', () => {
   it('base45 should fail with invalid input', () => {
     // not enough input chars, should be multiple of 3 or multiple of 3 + 2
     assert.throws(() => bases.base45.decode('R%69 VD92EX'), 'Unexpected end of data')
+  })
+
+  it('proquint should fail with invalid input', () => {
+    assert.throws(() => bases.proquint.decode('pro-lojoj-lasob-kujod-kunon-'), 'Unexpected end of data')
+    assert.throws(() => bases.proquint.decode('pro-lojoj-lasob-kujod-kunon-f'), 'Unexpected end of data')
+    assert.throws(() => bases.proquint.decode('pro-lojoj-lasob-kujod-kunon-fa'), 'Unexpected end of data')
+    assert.throws(() => bases.proquint.decode('pro-lojoj-lasob-kujod-kunon-fabo'), 'Unexpected end of data')
+    assert.throws(() => bases.proquint.decode('plojoj-lasob-kujod-kunon-fabod'), 'Invalid proquint string')
+    assert.throws(() => bases.proquint.decode('prlojoj-lasob-kujod-kunon-fabod'), 'Invalid proquint string')
+    assert.throws(() => bases.proquint.decode('prolojoj-lasob-kujod-kunon-fabod'), 'Invalid proquint string')
   })
 })
