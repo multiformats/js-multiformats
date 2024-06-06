@@ -90,6 +90,10 @@
       "types": "./dist/src/bases/identity.d.ts",
       "import": "./dist/src/bases/identity.js"
     },
+    "./bases/proquint": {
+      "types": "./dist/src/bases/proquint.d.ts",
+      "import": "./dist/src/bases/proquint.js"
+    },
     "./bases/interface": {
       "types": "./dist/src/bases/interface.d.ts",
       "import": "./dist/src/bases/interface.js"

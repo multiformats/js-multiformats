@@ -9,13 +9,14 @@ import * as base58 from './bases/base58.js'
 import * as base64 from './bases/base64.js'
 import * as base8 from './bases/base8.js'
 import * as identityBase from './bases/identity.js'
+import * as proquint from './bases/proquint.js'
 import * as json from './codecs/json.js'
 import * as raw from './codecs/raw.js'
 import * as identity from './hashes/identity.js'
 import * as sha2 from './hashes/sha2.js'
 import { CID, hasher, digest, varint, bytes } from './index.js'
 
-export const bases = { ...identityBase, ...base2, ...base8, ...base10, ...base16, ...base32, ...base36, ...base45, ...base58, ...base64, ...base256emoji }
+export const bases = { ...identityBase, ...base2, ...base8, ...base10, ...base16, ...base32, ...base36, ...base45, ...base58, ...base64, ...base256emoji, ...proquint }
 export const hashes = { ...sha2, ...identity }
 export const codecs = { raw, json }
 
