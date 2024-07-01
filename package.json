@@ -272,7 +272,7 @@
     "test:electron-main": "aegir test -t electron-main"
   },
   "devDependencies": {
-    "@stablelib/sha256": "^1.0.1",
+    "@stablelib/sha256": "^2.0.0",
     "@stablelib/sha512": "^1.0.1",
     "@types/node": "^20.3.1",
     "aegir": "^43.0.1",
