@@ -1,3 +1,10 @@
+## [13.1.3](https://github.com/multiformats/js-multiformats/compare/v13.1.2...v13.1.3) (2024-07-02)
+
+
+### Dependencies
+
+* **dev:** bump @stablelib/sha512 from 1.0.1 to 2.0.0 ([3091935](https://github.com/multiformats/js-multiformats/commit/30919356b2e06a643d78351d3e90ab11f598f5fc))
+
 ## [13.1.2](https://github.com/multiformats/js-multiformats/compare/v13.1.1...v13.1.2) (2024-07-02)
 
 
