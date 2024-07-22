@@ -1,3 +1,10 @@
+## [13.2.0](https://github.com/multiformats/js-multiformats/compare/v13.1.3...v13.2.0) (2024-07-22)
+
+
+### Features
+
+* BlockCodec methods are generic ([2ee062e](https://github.com/multiformats/js-multiformats/commit/2ee062ee83115b28b8f1c153918cd61db5919e5c))
+
 ## [13.1.3](https://github.com/multiformats/js-multiformats/compare/v13.1.2...v13.1.3) (2024-07-02)
 
 
