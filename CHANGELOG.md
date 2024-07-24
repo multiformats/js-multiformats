@@ -1,3 +1,5 @@
+## [13.2.1](https://github.com/multiformats/js-multiformats/compare/v13.2.0...v13.2.1) (2024-07-24)
+
 ## [13.2.0](https://github.com/multiformats/js-multiformats/compare/v13.1.3...v13.2.0) (2024-07-22)
 
 
