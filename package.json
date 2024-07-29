@@ -274,7 +274,7 @@
   "devDependencies": {
     "@stablelib/sha256": "^2.0.0",
     "@stablelib/sha512": "^2.0.0",
-    "@types/node": "^20.3.1",
+    "@types/node": "^22.0.0",
     "aegir": "^43.0.1",
     "buffer": "^6.0.3",
     "cids": "^1.1.9",
