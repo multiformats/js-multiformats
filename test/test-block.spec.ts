@@ -10,6 +10,20 @@ const fixture = { hello: 'world' }
 const link = CID.parse('bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae')
 const buff = bytes.fromString('sadf')
 
+describe('promise-resolve-semantics', () => {
+  it('should resolve to the value', async () => {
+    const value = await Promise.resolve('hello')
+    assert.equal(value, 'hello')
+  })
+  it('should resolve to the promise value', async () => {
+    // eslint-disable-next-line promise/param-names
+    const value = await Promise.resolve(new Promise<string>(function (rs: (value: string) => void) {
+      setTimeout(function () { rs('hello') }, 10)
+    }))
+    assert.equal(value, 'hello')
+  })
+})
+
 describe('block', () => {
   it('basic encode/decode roundtrip', async () => {
     const block = await main.encode({ value: fixture, codec, hasher })
@@ -23,7 +37,7 @@ describe('block', () => {
 
   it('createUnsafe', async () => {
     const block = await main.encode({ value: fixture, codec, hasher })
-    const block2 = main.createUnsafe({ bytes: block.bytes, cid: block.cid, codec })
+    const block2 = await main.createUnsafe({ bytes: block.bytes, cid: block.cid, codec })
     assert.deepStrictEqual(block.cid.equals(block2.cid), true)
   })
 
@@ -36,25 +50,29 @@ describe('block', () => {
       // @ts-expect-error - 'string' is not assignable to parameter of type 'ArrayLike<number>'
       bytes: Uint8Array.from('1234')
     }
-    // @ts-expect-error - 'boolean' is not assignable to type 'CID'
-    const block = main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
 
-    it('links', () => {
+    it('links', async () => {
       const expected = ['link', 'arr/0']
+      // @ts-expect-error - 'boolean' is not assignable to type 'CID'
+      const block = await main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
       for (const [path, cid] of block.links()) {
         assert.deepStrictEqual(path, expected.shift())
         assert.deepStrictEqual(cid.toString(), link.toString())
       }
     })
 
-    it('tree', () => {
+    it('tree', async () => {
       const expected = ['link', 'nope', 'arr', 'arr/0', 'obj', 'obj/arr', 'obj/arr/0', 'obj/arr/0/obj', 'bytes']
+      // @ts-expect-error - 'boolean' is not assignable to type 'CID'
+      const block = await main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
       for (const path of block.tree()) {
         assert.deepStrictEqual(path, expected.shift())
       }
     })
 
-    it('get', () => {
+    it('get', async () => {
+      // @ts-expect-error - 'boolean' is not assignable to type 'CID'
+      const block = await main.createUnsafe({ value, codec, hasher, cid: true, bytes: true })
       let ret = block.get('link/test')
       assert.deepStrictEqual(ret.remaining, 'test')
       assert.deepStrictEqual(String(ret.value), link.toString())
@@ -63,8 +81,8 @@ describe('block', () => {
       assert.deepStrictEqual(ret, { value: 'skip' })
     })
 
-    it('null links/tree', () => {
-      const block = main.createUnsafe({
+    it('null links/tree', async () => {
+      const block = await main.createUnsafe({
         value: null,
         codec,
         hasher,
@@ -95,9 +113,9 @@ describe('block', () => {
     assert.equal(links[0][1].toString(), link.toString())
   })
 
-  it('kitchen sink', () => {
+  it('kitchen sink', async () => {
     const sink = { one: { two: { arr: [true, false, null], three: 3, buff, link } } }
-    const block = main.createUnsafe({
+    const block = await main.createUnsafe({
       value: sink,
       codec,
       // @ts-expect-error - 'boolean' is not assignable to type 'ByteView<unknown>'
@@ -132,8 +150,13 @@ describe('block', () => {
     })
 
     it('createUnsafe', async () => {
-      // @ts-expect-error testing invalid usage
-      assert.throws(() => main.createUnsafe({}), 'Missing required argument, must either provide "value" or "codec"')
+      try {
+        // @ts-expect-error testing invalid usage
+        await main.createUnsafe({})
+        assert(false, 'Missing required argument, must either provide "value" or "codec"')
+      } catch (/** @type {Error} */ err) {
+        /* c8 ignore next */
+      }
     })
 
     it('create', async () => {

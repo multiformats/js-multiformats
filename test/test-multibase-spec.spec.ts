@@ -174,9 +174,11 @@ describe('spec test', () => {
   }
 
   for (const base of Object.values(bases)) {
-    it('should fail decode with invalid char', function () {
+    // eslint-disable-next-line @typescript-eslint/method-signature-style
+    it('should fail decode with invalid char', function (this: { skip: () => void }) {
       if (base.name === 'identity') {
-        return this.skip()
+        this.skip()
+        return
       }
 
       assert.throws(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
