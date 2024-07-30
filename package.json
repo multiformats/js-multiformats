@@ -278,7 +278,8 @@
     "aegir": "^43.0.1",
     "buffer": "^6.0.3",
     "cids": "^1.1.9",
-    "crypto-hash": "^3.0.0"
+    "crypto-hash": "^3.0.0",
+    "mocha": "^10.7.0"
   },
   "aegir": {
     "test": {
