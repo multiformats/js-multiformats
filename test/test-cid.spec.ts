@@ -3,6 +3,7 @@
 import { assert } from 'aegir/chai'
 import OLDCID from 'cids'
 import { base32 } from '../src/bases/base32.js'
+import { base36 } from '../src/bases/base36.js'
 import { base58btc } from '../src/bases/base58.js'
 import { base64 } from '../src/bases/base64.js'
 import { fromHex, toHex, equals } from '../src/bytes.js'
@@ -568,7 +569,15 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
 
-      const parsed = CID.parse(cid.toString())
+      const parsed = CID.parse(cid.toString(base32))
+      digestsame(cid, parsed)
+    })
+
+    it('parse 36 encoded CIDv1', async () => {
+      const hash = await sha256.digest(textEncoder.encode('abc'))
+      const cid = CID.create(1, 112, hash)
+
+      const parsed = CID.parse(cid.toString(base36))
       digestsame(cid, parsed)
     })
 
@@ -592,7 +601,7 @@ describe('CID', () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 112, hash)
       const msg =
-        'To parse non base32 or base58btc encoded CID multibase decoder must be provided'
+        'To parse non base32, base36 or base58btc encoded CID multibase decoder must be provided'
 
       assert.throws(() => CID.parse(cid.toString(base64)), msg)
     })

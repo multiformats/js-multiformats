@@ -1,4 +1,5 @@
 import { base32 } from './bases/base32.js'
+import { base36 } from './bases/base36.js'
 import { base58btc } from './bases/base58.js'
 import { coerce } from './bytes.js'
 import * as Digest from './hashes/digest.js'
@@ -402,10 +403,14 @@ function parseCIDtoBytes <Prefix extends string, Data, Code extends number, Alg 
       const decoder = base ?? base32
       return [base32.prefix as Prefix, decoder.decode(source)]
     }
+    case base36.prefix: {
+      const decoder = base ?? base36
+      return [base36.prefix as Prefix, decoder.decode(source)]
+    }
     default: {
       if (base == null) {
         throw Error(
-          'To parse non base32 or base58btc encoded CID multibase decoder must be provided'
+          'To parse non base32, base36 or base58btc encoded CID multibase decoder must be provided'
         )
       }
       return [source[0] as Prefix, base.decode(source)]
