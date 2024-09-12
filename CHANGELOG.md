@@ -1,3 +1,10 @@
+## [13.2.3](https://github.com/multiformats/js-multiformats/compare/v13.2.2...v13.2.3) (2024-09-12)
+
+
+### Bug Fixes
+
+* CID.parse(base36) ([#307](https://github.com/multiformats/js-multiformats/issues/307)) ([892f198](https://github.com/multiformats/js-multiformats/commit/892f198ebc6fe4f8c53d625d7d13521b65bea73e))
+
 ## [13.2.2](https://github.com/multiformats/js-multiformats/compare/v13.2.1...v13.2.2) (2024-07-30)
 
 
