@@ -159,12 +159,12 @@ describe('multibase', () => {
   })
 
   it('infers prefix and name corretly', () => {
-    const name = base32.name as 'base32'
+    const name = base32.name
 
     // @ts-expect-error - TS catches mismatch
     const name2: 'base16' = base32.name
 
-    const prefix = base32.prefix as 'b'
+    const prefix = base32.prefix
     assert.equal(prefix, 'b')
     assert.equal(name, 'base32')
     assert.equal(name2, name)

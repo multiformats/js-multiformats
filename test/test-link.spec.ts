@@ -1,4 +1,5 @@
 /* globals describe, it */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { assert } from 'aegir/chai'
 import { sha256 } from '../src/hashes/sha2.js'
@@ -25,10 +26,10 @@ describe('Link', () => {
     it('create v1', async () => {
       const hash = await sha256.digest(utf8.encode('abc'))
       const link = Link.create(0x71, hash)
-      const code = link.code as 0x71
+      const code = link.code
       assert.deepStrictEqual(code, 0x71)
 
-      const version = link.version as 1
+      const version = link.version
       assert.deepEqual(version, 1)
 
       const multihash = link.multihash
@@ -39,10 +40,10 @@ describe('Link', () => {
       const hash = await sha256.digest(utf8.encode('abc'))
       const link = Link.createLegacy(hash)
 
-      const code = link.code as 0x70
+      const code = link.code
       assert.deepStrictEqual(code, 0x70)
 
-      const version = link.version as 0
+      const version = link.version
       assert.deepEqual(version, 0)
 
       const multihash = link.multihash
@@ -72,7 +73,7 @@ describe('Link', () => {
       const t1 = link
       assert.ok(t1)
 
-      // ensurate that you can't cast incorrectly
+      // ensure that you can't cast incorrectly
       const t2 =
         // @ts-expect-error - version is 1 not 0
         (link as Link.Link<unknown, typeof CBOR, typeof SHA256, 0>)
@@ -124,10 +125,10 @@ describe('decode', () => {
 
     const link = Link.decode(bytes)
 
-    const code = link.code as 0x71
+    const code = link.code
     assert.deepStrictEqual(code, 0x71)
 
-    const version = link.version as 1
+    const version = link.version
     assert.deepEqual(version, 1)
 
     const multihash = link.multihash

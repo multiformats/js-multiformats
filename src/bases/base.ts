@@ -44,11 +44,12 @@ class Decoder<Base extends string, Prefix extends string> implements MultibaseDe
   constructor (name: Base, prefix: Prefix, baseDecode: DecodeFn) {
     this.name = name
     this.prefix = prefix
+    const prefixCodePoint = prefix.codePointAt(0)
     /* c8 ignore next 3 */
-    if (prefix.codePointAt(0) === undefined) {
+    if (prefixCodePoint === undefined) {
       throw new Error('Invalid prefix character')
     }
-    this.prefixCodePoint = prefix.codePointAt(0) as number
+    this.prefixCodePoint = prefixCodePoint
     this.baseDecode = baseDecode
   }
 

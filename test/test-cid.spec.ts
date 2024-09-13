@@ -1,4 +1,5 @@
 /* globals describe, it */
+/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { assert } from 'aegir/chai'
 import OLDCID from 'cids'
@@ -104,8 +105,8 @@ describe('CID', () => {
     it('should construct from an old CID', () => {
       const cidStr = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
       const oldCid = CID.parse(cidStr)
-      const newCid = (CID.asCID(oldCid) as CID)
-      assert.deepStrictEqual(newCid.toString(), cidStr)
+      const newCid = CID.asCID(oldCid)
+      assert.deepStrictEqual(newCid?.toString(), cidStr)
     })
 
     it('inspect bytes', () => {
@@ -225,8 +226,8 @@ describe('CID', () => {
       const cidStr =
         'bafybeidskjjd4zmr7oh6ku6wp72vvbxyibcli2r6if3ocdcy7jjjusvl2u'
       const oldCid = CID.parse(cidStr)
-      const newCid = (CID.asCID(oldCid) as CID)
-      assert.deepStrictEqual(newCid.toString(), cidStr)
+      const newCid = CID.asCID(oldCid)
+      assert.deepStrictEqual(newCid?.toString(), cidStr)
     })
 
     it('.link() should return this CID', () => {
@@ -515,7 +516,7 @@ describe('CID', () => {
     // @ts-expect-error - no such method
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
 
-    const cid1 = (CID.asCID(incompatibleCID) as CID)
+    const cid1 = CID.asCID(incompatibleCID)
     assert.ok(cid1 instanceof CID)
     assert.strictEqual(cid1.code, code)
     assert.strictEqual(cid1.version, version)
@@ -537,7 +538,7 @@ describe('CID', () => {
     assert.strictEqual(cid3, cid4)
 
     const cid5 = (
-      CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))) as CID
+      CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes)))
     )
     assert.ok(cid5 instanceof CID)
     assert.strictEqual(cid5.version, 1)
@@ -556,7 +557,9 @@ describe('CID', () => {
     assert.deepStrictEqual({ ...x, ...empty }, { ...y, ...empty })
   }
 
-  const equalDigest = (x: MultihashDigest, y: MultihashDigest): void => {
+  const equalDigest = (x?: MultihashDigest, y?: MultihashDigest): void => {
+    assert.ok(x)
+    assert.ok(y)
     assert.deepStrictEqual(x.digest, y.digest)
     assert.deepStrictEqual(x.code, y.code)
     assert.deepStrictEqual(x.digest, y.digest)
@@ -653,12 +656,12 @@ describe('CID', () => {
   it('new CID from old CID', async () => {
     const hash = await sha256.digest(textEncoder.encode('abc'))
     const cid = (
-      CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes))) as CID
+      CID.asCID(new OLDCID(1, 'raw', Uint8Array.from(hash.bytes)))
     )
-    assert.deepStrictEqual(cid.version, 1)
+    assert.deepStrictEqual(cid?.version, 1)
 
-    equalDigest(cid.multihash, hash)
-    assert.deepStrictEqual(cid.code, 85)
+    equalDigest(cid?.multihash, hash)
+    assert.deepStrictEqual(cid?.code, 85)
   })
 
   it('util.inspect', async () => {

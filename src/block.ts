@@ -195,6 +195,7 @@ type CreateUnsafeInput <T, Code extends number, Alg extends number, V extends AP
  * @template V - CID version
  */
 export function createUnsafe <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, value: maybeValue, codec }: CreateUnsafeInput<T, Code, Alg, V>): API.BlockView<T, Code, Alg, V> {
+  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const value = maybeValue !== undefined
     ? maybeValue
     : (codec?.decode(bytes))
