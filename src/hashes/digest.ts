@@ -69,3 +69,10 @@ export class Digest<Code extends number, Size extends number> implements Multiha
     this.bytes = bytes
   }
 }
+
+/**
+ * Used to check that the passed multihash has the passed code
+ */
+export function hasCode <T extends number> (digest: MultihashDigest, code: T): digest is MultihashDigest<T> {
+  return digest.code === code
+}
