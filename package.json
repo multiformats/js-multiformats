@@ -12,6 +12,10 @@
   "bugs": {
     "url": "https://github.com/multiformats/js-multiformats/issues"
   },
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "keywords": [
     "ipfs",
     "ipld",
