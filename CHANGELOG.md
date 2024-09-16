@@ -1,3 +1,9 @@
+## [13.3.0](https://github.com/multiformats/js-multiformats/compare/v13.2.4...v13.3.0) (2024-09-16)
+
+### Features
+
+* add hasCode to Digest ([#308](https://github.com/multiformats/js-multiformats/issues/308)) ([a5fbf61](https://github.com/multiformats/js-multiformats/commit/a5fbf61f2474963994cb60d12a68666c91fe824c))
+
 ## [13.2.4](https://github.com/multiformats/js-multiformats/compare/v13.2.3...v13.2.4) (2024-09-16)
 
 ### Trivial Changes
