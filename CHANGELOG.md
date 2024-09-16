@@ -1,3 +1,13 @@
+## [13.2.4](https://github.com/multiformats/js-multiformats/compare/v13.2.3...v13.2.4) (2024-09-16)
+
+### Trivial Changes
+
+* fix linting ([9d24b62](https://github.com/multiformats/js-multiformats/commit/9d24b62051f140e5050010655f1a5ee832b0cd23))
+
+### Dependencies
+
+* **dev:** bump aegir from 43.0.3 to 44.1.1 ([a0fdb76](https://github.com/multiformats/js-multiformats/commit/a0fdb76928ae93a95bd2d6799b57c081833f7adf))
+
 ## [13.2.3](https://github.com/multiformats/js-multiformats/compare/v13.2.2...v13.2.3) (2024-09-12)
 
 
