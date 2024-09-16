@@ -1,7 +1,7 @@
 import { coerce } from '../bytes.js'
 import * as Digest from './digest.js'
 
-const code = 0x0
+const code: 0x0 = 0x0
 const name = 'identity'
 
 const encode: (input: Uint8Array) => Uint8Array = coerce

@@ -5,12 +5,13 @@ import { hash as slSha512 } from '@stablelib/sha512'
 import { assert } from 'aegir/chai'
 import { sha1 as chSha1 } from 'crypto-hash'
 import { fromHex, fromString } from '../src/bytes.js'
-import { decode as decodeDigest, create as createDigest } from '../src/hashes/digest.js'
+import { decode as decodeDigest, create as createDigest, hasCode as digestHasCode } from '../src/hashes/digest.js'
 import { identity } from '../src/hashes/identity.js'
 import { sha1 } from '../src/hashes/sha1.js'
 import { sha256, sha512 } from '../src/hashes/sha2.js'
 import invalid from './fixtures/invalid-multihash.js'
 import valid from './fixtures/valid-multihash.js'
+import type { MultihashDigest } from '../src/cid.js'
 
 const sample = (code: number | string, size: number, hex: string): Uint8Array => {
   const toHex = (i: number | string): string => {
@@ -157,5 +158,29 @@ describe('multihash', () => {
     } catch (error) {
       assert.match(String(error), /Unknown type, must be binary type/)
     }
+  })
+
+  describe('hasCode', () => {
+    it('asserts that a multihash has the expected code', () => {
+      const buf = Uint8Array.from([0, 1, 2, 3])
+
+      // remove code type from MultihashDigest
+      const hash = decodeDigest(identity.digest(buf).bytes)
+
+      // a function that requires a specific type of multihash
+      function needIdentity (_: MultihashDigest<0x0>): void {
+
+      }
+
+      assert.isTrue(digestHasCode(hash, identity.code))
+
+      // @ts-expect-error fails to compile as hash is MultihashDigest<number>
+      needIdentity(hash)
+
+      // hint to tsc that hash is MultihashDigest<0x0>
+      if (digestHasCode(hash, identity.code)) {
+        needIdentity(hash)
+      }
+    })
   })
 })
