@@ -1,5 +1,6 @@
-import { CID } from 'multiformats/cid'
+/* eslint-disable no-console */
 import crypto from 'crypto'
+import { CID } from 'multiformats/cid'
 import * as json from 'multiformats/codecs/json'
 import * as hasher from 'multiformats/hashes/hasher'
 

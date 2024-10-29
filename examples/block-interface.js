@@ -1,5 +1,7 @@
-import * as Block from 'multiformats/block'
+/* eslint-disable no-console */
+
 import * as codec from '@ipld/dag-cbor'
+import * as Block from 'multiformats/block'
 import { sha256 as hasher } from 'multiformats/hashes/sha2'
 
 async function run () {
