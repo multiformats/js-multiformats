@@ -107,6 +107,22 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.code, identity.code)
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
+
+    it('hash identity sync', async () => {
+      const hash = identity.digest(fromString('test'))
+
+      if (hash instanceof Promise) {
+        assert.fail('expected sync result')
+      } else {
+        assert.deepStrictEqual(hash.code, identity.code)
+        assert.deepStrictEqual(identity.code, 0)
+        assert.deepStrictEqual(hash.digest, fromString('test'))
+
+        const hash2 = decodeDigest(hash.bytes)
+        assert.deepStrictEqual(hash2.code, identity.code)
+        assert.deepStrictEqual(hash2.bytes, hash.bytes)
+      }
+    })
   })
   describe('decode', () => {
     for (const { encoding, hex, size } of valid) {
