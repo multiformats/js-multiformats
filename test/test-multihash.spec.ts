@@ -108,7 +108,7 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
 
-    it('hash identity sync', async () => {
+    it('hash identity sync', () => {
       const hash = identity.digest(fromString('test'))
 
       if (hash instanceof Promise) {
