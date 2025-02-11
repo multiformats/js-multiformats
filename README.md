@@ -74,7 +74,7 @@ cid.toString(base64)
 CID.parse(cid.toString(base64), base64)
 ```
 
-**Note:** CID implementation comes bundled with `base32` and `base58btc`
+**Note:** CID implementation comes bundled with `base32`, `base36`, and `base58btc`
 multibase codecs so that CIDs can be base serialized to (version specific)
 default base encoding and parsed without having to supply base encoders/decoders:
 
