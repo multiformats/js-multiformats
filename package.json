@@ -1,6 +1,6 @@
 {
   "name": "multiformats",
-  "version": "13.3.1",
+  "version": "13.3.2",
   "description": "Interface for multihash, multicodec, multibase and CID",
   "author": "Mikeal Rogers <mikeal.rogers@gmail.com> (https://www.mikealrogers.com/)",
   "license": "Apache-2.0 OR MIT",

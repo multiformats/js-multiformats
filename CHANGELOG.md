@@ -1,3 +1,9 @@
+## [13.3.2](https://github.com/multiformats/js-multiformats/compare/v13.3.1...v13.3.2) (2025-02-11)
+
+### Documentation
+
+* add missing base36 from default multibases ([#315](https://github.com/multiformats/js-multiformats/issues/315)) ([d03762a](https://github.com/multiformats/js-multiformats/commit/d03762a14741863e4555b89d2e55a7faac041201))
+
 ## [13.3.1](https://github.com/multiformats/js-multiformats/compare/v13.3.0...v13.3.1) (2024-10-29)
 
 ### Trivial Changes
