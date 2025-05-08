@@ -9,7 +9,8 @@ import { base58btc } from '../src/bases/base58.js'
 import { base64 } from '../src/bases/base64.js'
 import { fromHex, toHex, equals } from '../src/bytes.js'
 import { sha256, sha512 } from '../src/hashes/sha2.js'
-import { varint, CID, type MultihashDigest } from '../src/index.js'
+import type MultihashDigest from '../src/index.js'
+import { varint, CID } from '../src/index.js'
 import invalidMultihash from './fixtures/invalid-multihash.js'
 
 const textEncoder = new TextEncoder()
