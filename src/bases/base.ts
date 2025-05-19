@@ -141,13 +141,7 @@ export function baseX <Base extends string, Prefix extends string> ({ name, pref
   })
 }
 
-function decode (string: string, alphabet: string, bitsPerChar: number, name: string): Uint8Array {
-  // Build the character lookup table:
-  const codes: Record<string, number> = {}
-  for (let i = 0; i < alphabet.length; ++i) {
-    codes[alphabet[i]] = i
-  }
-
+function decode (string: string, alphabetIdx: Record<string, number>, bitsPerChar: number, name: string): Uint8Array {
   // Count the padding bytes:
   let end = string.length
   while (string[end - 1] === '=') {
@@ -163,7 +157,7 @@ function decode (string: string, alphabet: string, bitsPerChar: number, name: st
   let written = 0 // Next byte to write
   for (let i = 0; i < end; ++i) {
     // Read one character from the string:
-    const value = codes[string[i]]
+    const value = alphabetIdx[string[i]]
     if (value === undefined) {
       throw new SyntaxError(`Non-${name} character`)
     }
@@ -221,10 +215,20 @@ function encode (data: Uint8Array, alphabet: string, bitsPerChar: number): strin
   return out
 }
 
+function createAlphabetIdx (alphabet: string): Record<string, number> {
+  // Build the character lookup table:
+  const alphabetIdx: Record<string, number> = {}
+  for (let i = 0; i < alphabet.length; ++i) {
+    alphabetIdx[alphabet[i]] = i
+  }
+  return alphabetIdx
+}
+
 /**
  * RFC4648 Factory
  */
 export function rfc4648 <Base extends string, Prefix extends string> ({ name, prefix, bitsPerChar, alphabet }: { name: Base, prefix: Prefix, bitsPerChar: number, alphabet: string }): Codec<Base, Prefix> {
+  const alphabetIdx = createAlphabetIdx(alphabet)
   return from({
     prefix,
     name,
@@ -232,7 +236,7 @@ export function rfc4648 <Base extends string, Prefix extends string> ({ name, pr
       return encode(input, alphabet, bitsPerChar)
     },
     decode (input: string): Uint8Array {
-      return decode(input, alphabet, bitsPerChar, name)
+      return decode(input, alphabetIdx, bitsPerChar, name)
     }
   })
 }
