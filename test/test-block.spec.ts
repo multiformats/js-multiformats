@@ -33,7 +33,6 @@ describe('block', () => {
       nope: 'skip',
       arr: [link],
       obj: { arr: [{ obj: {} }] },
-      // @ts-expect-error - 'string' is not assignable to parameter of type 'ArrayLike<number>'
       bytes: Uint8Array.from('1234')
     }
     // @ts-expect-error - 'boolean' is not assignable to type 'CID'
