@@ -1,3 +1,9 @@
+## [13.3.5](https://github.com/multiformats/js-multiformats/compare/v13.3.4...v13.3.5) (2025-05-20)
+
+### Bug Fixes
+
+* **perf:** improve rfc4648 base decoding ([#323](https://github.com/multiformats/js-multiformats/issues/323)) ([900b5f6](https://github.com/multiformats/js-multiformats/commit/900b5f64416e65d3ff1189d681676c20f1756df0))
+
 ## [13.3.4](https://github.com/multiformats/js-multiformats/compare/v13.3.3...v13.3.4) (2025-05-15)
 
 ### Dependencies
