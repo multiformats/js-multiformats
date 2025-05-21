@@ -1,5 +1,4 @@
 /* globals describe, it */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { assert } from 'aegir/chai'
 import OLDCID from 'cids'
@@ -503,7 +502,6 @@ describe('CID', () => {
         this.asCID = this
       }
 
-      // eslint-disable-next-line @typescript-eslint/class-literal-property-style
       get [Symbol.for('@ipld/js-cid/CID')] (): boolean {
         return true
       }
@@ -513,7 +511,7 @@ describe('CID', () => {
     const code = 112
 
     const incompatibleCID = new IncompatibleCID(version, code, hash)
-    // eslint-disable-next-line @typescript-eslint/no-base-to-string
+
     assert.strictEqual(incompatibleCID.toString(), '[object Object]')
     // @ts-expect-error - no such method
     assert.strictEqual(typeof incompatibleCID.toV0, 'undefined')
@@ -530,7 +528,7 @@ describe('CID', () => {
     const duckCID = { version, code, multihash: hash }
     // @ts-expect-error - no such property
     duckCID.asCID = duckCID
-    const cid3 = (CID.asCID(duckCID) as CID)
+    const cid3 = CID.asCID(duckCID) as CID
     assert.ok(cid3 instanceof CID)
     assert.strictEqual(cid3.code, code)
     assert.strictEqual(cid3.version, version)
@@ -567,7 +565,6 @@ describe('CID', () => {
     assert.deepStrictEqual(x.digest, y.digest)
   }
 
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   describe('CID.parse', async () => {
     it('parse 32 encoded CIDv1', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))

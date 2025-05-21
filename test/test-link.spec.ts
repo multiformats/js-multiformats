@@ -1,5 +1,4 @@
 /* globals describe, it */
-/* eslint-disable @typescript-eslint/strict-boolean-expressions */
 
 import { assert } from 'aegir/chai'
 import { sha256 } from '../src/hashes/sha2.js'
@@ -10,11 +9,9 @@ const utf8 = new TextEncoder()
 const h1 = 'QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n'
 const h4 = 'bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae'
 const CBOR = 0x71
-const SHA256 = sha256.code
 
-const sh1 = (
+const sh1 =
   Link.parse(h4).multihash as Link.MultihashDigest<typeof sha256.code>
-)
 
 describe('Link', () => {
   it('isLink', () => {
@@ -55,11 +52,11 @@ describe('Link', () => {
     it('can parse any string', () => {
       const link = Link.parse(h1)
 
-      const t1 = link as Link.Link<unknown, typeof CBOR, typeof SHA256, 1>
+      const t1 = link as Link.Link<unknown, typeof CBOR, typeof sha256.code, 1>
       assert.ok(t1)
 
       // it is possible to manually cast
-      const t2 = (link as Link.LegacyLink<unknown>)
+      const t2 = link as Link.LegacyLink<unknown>
       assert.ok(t2)
     })
 
@@ -76,7 +73,7 @@ describe('Link', () => {
       // ensure that you can't cast incorrectly
       const t2 =
         // @ts-expect-error - version is 1 not 0
-        (link as Link.Link<unknown, typeof CBOR, typeof SHA256, 0>)
+        link as Link.Link<unknown, typeof CBOR, typeof sha256.code, 0>
       assert.ok(t2)
     })
   })

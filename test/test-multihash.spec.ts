@@ -15,7 +15,7 @@ import type { MultihashDigest } from '../src/cid.js'
 
 const sample = (code: number | string, size: number, hex: string): Uint8Array => {
   const toHex = (i: number | string): string => {
-    if (typeof i === 'string') return i
+    if (typeof i === 'string') { return i }
     const h = i.toString(16)
     return h.length % 2 === 1 ? `0${h}` : h
   }
@@ -141,7 +141,7 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash.code, 18)
     })
   })
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
+
   describe('validate', async () => {
     it('invalid fixtures', async () => {
       for (const test of invalid) {

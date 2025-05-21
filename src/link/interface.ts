@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unnecessary-type-constraint */
-/* eslint-disable no-use-before-define */
-
 import type { MultibaseEncoder, MultibaseDecoder, Multibase } from '../bases/interface.js'
 import type { Phantom, ByteView } from '../block/interface.js'
 import type { MultihashDigest } from '../hashes/interface.js'
