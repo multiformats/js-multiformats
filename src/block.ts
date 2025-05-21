@@ -138,12 +138,12 @@ interface EncodeInput <T, Code extends number, Alg extends number> {
  * @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  */
 export async function encode <T, Code extends number, Alg extends number> ({ value, codec, hasher }: EncodeInput<T, Code, Alg>): Promise<API.BlockView<T, Code, Alg>> {
-  if (typeof value === 'undefined') throw new Error('Missing required argument "value"')
-  if (codec == null || hasher == null) throw new Error('Missing required argument: codec or hasher')
+  if (typeof value === 'undefined') { throw new Error('Missing required argument "value"') }
+  if (codec == null || hasher == null) { throw new Error('Missing required argument: codec or hasher') }
 
   const bytes = codec.encode(value)
   const hash = await hasher.digest(bytes)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+
   const cid = CID.create(
     1,
     codec.code,
@@ -165,12 +165,12 @@ interface DecodeInput <T, Code extends number, Alg extends number> {
  * @template Alg - multicodec code corresponding to the hashing algorithm used in CID creation.
  */
 export async function decode <T, Code extends number, Alg extends number> ({ bytes, codec, hasher }: DecodeInput<T, Code, Alg>): Promise<API.BlockView<T, Code, Alg>> {
-  if (bytes == null) throw new Error('Missing required argument "bytes"')
-  if (codec == null || hasher == null) throw new Error('Missing required argument: codec or hasher')
+  if (bytes == null) { throw new Error('Missing required argument "bytes"') }
+  if (codec == null || hasher == null) { throw new Error('Missing required argument: codec or hasher') }
 
   const value = codec.decode(bytes)
   const hash = await hasher.digest(bytes)
-  // eslint-disable-next-line @typescript-eslint/no-unnecessary-type-assertion
+
   const cid = CID.create(1, codec.code, hash) as CID<T, Code, Alg, 1>
 
   return new Block({ value, bytes, cid })
@@ -195,12 +195,11 @@ type CreateUnsafeInput <T, Code extends number, Alg extends number, V extends AP
  * @template V - CID version
  */
 export function createUnsafe <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, value: maybeValue, codec }: CreateUnsafeInput<T, Code, Alg, V>): API.BlockView<T, Code, Alg, V> {
-  // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
   const value = maybeValue !== undefined
     ? maybeValue
     : (codec?.decode(bytes))
 
-  if (value === undefined) throw new Error('Missing required argument, must either provide "value" or "codec"')
+  if (value === undefined) { throw new Error('Missing required argument, must either provide "value" or "codec"') }
 
   return new Block({
     cid: cid as CID<T, Code, Alg, V>,
@@ -223,8 +222,8 @@ interface CreateInput <T, Code extends number, Alg extends number, V extends API
  * @template V - CID version
  */
 export async function create <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, hasher, codec }: CreateInput<T, Code, Alg, V>): Promise<API.BlockView<T, Code, Alg, V>> {
-  if (bytes == null) throw new Error('Missing required argument "bytes"')
-  if (hasher == null) throw new Error('Missing required argument "hasher"')
+  if (bytes == null) { throw new Error('Missing required argument "bytes"') }
+  if (hasher == null) { throw new Error('Missing required argument "hasher"') }
   const value = codec.decode(bytes)
   const hash = await hasher.digest(bytes)
   if (!binary.equals(cid.multihash.bytes, hash.bytes)) {

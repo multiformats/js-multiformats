@@ -10,7 +10,7 @@ export function fromHex (hex: string): Uint8Array {
 }
 
 export function equals (aa: Uint8Array, bb: Uint8Array): boolean {
-  if (aa === bb) return true
+  if (aa === bb) { return true }
   if (aa.byteLength !== bb.byteLength) {
     return false
   }
@@ -25,8 +25,8 @@ export function equals (aa: Uint8Array, bb: Uint8Array): boolean {
 }
 
 export function coerce (o: ArrayBufferView | ArrayBuffer | Uint8Array): Uint8Array {
-  if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') return o
-  if (o instanceof ArrayBuffer) return new Uint8Array(o)
+  if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') { return o }
+  if (o instanceof ArrayBuffer) { return new Uint8Array(o) }
   if (ArrayBuffer.isView(o)) {
     return new Uint8Array(o.buffer, o.byteOffset, o.byteLength)
   }

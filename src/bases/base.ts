@@ -94,7 +94,6 @@ class ComposedDecoder<Prefix extends string> implements MultibaseDecoder<Prefix>
 }
 
 export function or <L extends string, R extends string> (left: UnibaseDecoder<L> | CombobaseDecoder<L>, right: UnibaseDecoder<R> | CombobaseDecoder<R>): ComposedDecoder<L | R> {
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return new ComposedDecoder({
     ...(left.decoders ?? { [(left as UnibaseDecoder<L>).prefix]: left }),
     ...(right.decoders ?? { [(right as UnibaseDecoder<R>).prefix]: right })

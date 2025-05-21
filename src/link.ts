@@ -38,7 +38,7 @@ export function isLink <L extends API.Link<unknown, number, number, 0 | 1>> (val
     return true
   }
 
-  const withAsCID = value as { 'asCID'?: unknown }
+  const withAsCID = value as { asCID?: unknown }
 
   if (withAsCID.asCID === value) {
     return true

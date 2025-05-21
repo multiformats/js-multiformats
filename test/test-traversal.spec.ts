@@ -19,7 +19,6 @@ function createLink (name: string, size: number, cid: CID): { Hash: CID, Name: s
 }
 
 describe('traversal', () => {
-  // eslint-disable-next-line @typescript-eslint/no-misused-promises
   describe('walk', async () => {
     // Forming the following DAG for testing
     //             A
@@ -27,12 +26,12 @@ describe('traversal', () => {
     //          B     C
     //         / \   / \
     //        D   D D   E
-    const linksE = ([] as [])
+    const linksE = [] as []
     const valueE = createNode(fromString('string E qacdswa'), linksE)
     const blockE = await main.encode({ value: valueE, codec, hasher })
     const cidE = blockE.cid
 
-    const linksD = ([] as [])
+    const linksD = [] as []
     const valueD = createNode(fromString('string D zasa'), linksD)
     const blockD = await main.encode({ value: valueD, codec, hasher })
     const cidD = blockD.cid

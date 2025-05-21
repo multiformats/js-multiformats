@@ -11,6 +11,7 @@ describe('bytes', () => {
 
   it('coerce', () => {
     const fixture = bytes.fromString('test')
+    // @ts-expect-error
     assert.deepStrictEqual(bytes.coerce(fixture.buffer), fixture)
     assert.deepStrictEqual(bytes.coerce(new DataView(fixture.buffer)), fixture)
   })
