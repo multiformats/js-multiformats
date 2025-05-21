@@ -1,3 +1,13 @@
+## [13.3.6](https://github.com/multiformats/js-multiformats/compare/v13.3.5...v13.3.6) (2025-05-21)
+
+### Trivial Changes
+
+* remove package-lock.json ([#324](https://github.com/multiformats/js-multiformats/issues/324)) ([c65d07e](https://github.com/multiformats/js-multiformats/commit/c65d07e4c95d7f9b3510f0d68229619c30349792))
+
+### Dependencies
+
+* **dev:** bump aegir from 46.0.0 to 47.0.6 ([#325](https://github.com/multiformats/js-multiformats/issues/325)) ([ea828e1](https://github.com/multiformats/js-multiformats/commit/ea828e18b269fc43f32ec451073e68b0a43ce98f))
+
 ## [13.3.5](https://github.com/multiformats/js-multiformats/compare/v13.3.4...v13.3.5) (2025-05-20)
 
 ### Bug Fixes
