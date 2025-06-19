@@ -97,8 +97,7 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
 
-    it('hash identity async', async () => {
-      // eslint-disable-next-line @typescript-eslint/await-thenable
+    it('hash identity', async () => {
       const hash = await identity.digest(fromString('test'))
       assert.deepStrictEqual(hash.code, identity.code)
       assert.deepStrictEqual(identity.code, 0)
@@ -111,13 +110,18 @@ describe('multihash', () => {
 
     it('hash identity sync', () => {
       const hash = identity.digest(fromString('test'))
-      assert.deepStrictEqual(hash.code, identity.code)
-      assert.deepStrictEqual(identity.code, 0)
-      assert.deepStrictEqual(hash.digest, fromString('test'))
 
-      const hash2 = decodeDigest(hash.bytes)
-      assert.deepStrictEqual(hash2.code, identity.code)
-      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+      if (hash instanceof Promise) {
+        assert.fail('expected sync result')
+      } else {
+        assert.deepStrictEqual(hash.code, identity.code)
+        assert.deepStrictEqual(identity.code, 0)
+        assert.deepStrictEqual(hash.digest, fromString('test'))
+
+        const hash2 = decodeDigest(hash.bytes)
+        assert.deepStrictEqual(hash2.code, identity.code)
+        assert.deepStrictEqual(hash2.bytes, hash.bytes)
+      }
     })
   })
   describe('decode', () => {
@@ -161,11 +165,12 @@ describe('multihash', () => {
   })
 
   describe('hasCode', () => {
-    it('asserts that a multihash has the expected code', () => {
+    it('asserts that a multihash has the expected code', async () => {
       const buf = Uint8Array.from([0, 1, 2, 3])
 
       // remove code type from MultihashDigest
-      const hash = decodeDigest(identity.digest(buf).bytes)
+      const digest = await identity.digest(buf)
+      const hash = decodeDigest(digest.bytes)
 
       // a function that requires a specific type of multihash
       function needIdentity (_: MultihashDigest<0x0>): void {
