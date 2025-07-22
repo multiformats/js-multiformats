@@ -65,26 +65,28 @@ export class Hasher<Name extends string, Code extends number> implements Multiha
     }
 
     if (input instanceof Uint8Array) {
-      let result = this.encode(input)
+      const result = this.encode(input)
 
       if (result instanceof Uint8Array) {
-        if (options?.truncate != null) {
-          result = result.subarray(0, options.truncate)
-        }
-
-        return Digest.create(this.code, result)
+        return truncateDigest(result, this.code, options?.truncate)
       }
 
-      return result.then(digest => {
-        if (options?.truncate != null) {
-          digest = digest.subarray(0, options.truncate)
-        }
-
-        return Digest.create(this.code, digest)
-      })
+      return result.then(digest => truncateDigest(digest, this.code, options?.truncate))
     } else {
       throw Error('Unknown type, must be binary type')
       /* c8 ignore next 1 */
     }
   }
+}
+
+function truncateDigest <Code extends number> (digest: Uint8Array, code: Code, truncate?: number): Digest.Digest<Code, number> {
+  if (truncate != null && truncate !== digest.byteLength) {
+    if (truncate > digest.byteLength) {
+      throw new Error(`Invalid truncate option, must be less than or equal to ${digest.byteLength}`)
+    }
+
+    digest = digest.subarray(0, truncate)
+  }
+
+  return Digest.create(code, digest)
 }
