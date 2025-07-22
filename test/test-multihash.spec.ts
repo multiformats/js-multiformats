@@ -71,6 +71,32 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
 
+    it('hash sha2-256 truncated', async () => {
+      const hash = await sha256.digest(fromString('test'), {
+        truncate: 24
+      })
+      assert.deepStrictEqual(hash.code, sha256.code)
+      assert.deepStrictEqual(hash.digest.byteLength, 24)
+
+      const hash2 = decodeDigest(hash.bytes)
+      assert.deepStrictEqual(hash2.code, sha256.code)
+      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash sha2-256 truncated (invalid option)', async () => {
+      assert.throws(() => {
+        void sha256.digest(fromString('test'), {
+          truncate: 10
+        })
+      }, /Invalid truncate option/)
+
+      assert.throws(() => {
+        void sha256.digest(fromString('test'), {
+          truncate: 64
+        })
+      }, /Invalid truncate option/)
+    })
+
     if (typeof navigator === 'undefined') {
       it('sync sha-256', () => {
         const hash = sha256.digest(fromString('test'))
@@ -95,6 +121,32 @@ describe('multihash', () => {
       const hash2 = decodeDigest(hash.bytes)
       assert.deepStrictEqual(hash2.code, sha512.code)
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash sha2-512 truncated', async () => {
+      const hash = await sha512.digest(fromString('test'), {
+        truncate: 32
+      })
+      assert.deepStrictEqual(hash.code, sha512.code)
+      assert.deepStrictEqual(hash.digest.byteLength, 32)
+
+      const hash2 = decodeDigest(hash.bytes)
+      assert.deepStrictEqual(hash2.code, sha512.code)
+      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash sha2-512 truncated (invalid option)', async () => {
+      assert.throws(() => {
+        void sha512.digest(fromString('test'), {
+          truncate: 10
+        })
+      }, /Invalid truncate option/)
+
+      assert.throws(() => {
+        void sha512.digest(fromString('test'), {
+          truncate: 100
+        })
+      }, /Invalid truncate option/)
     })
 
     it('hash identity async', async () => {

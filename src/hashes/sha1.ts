@@ -5,5 +5,6 @@ import { from } from './hasher.js'
 export const sha1 = from({
   name: 'sha-1',
   code: 0x11,
-  encode: (input) => coerce(crypto.createHash('sha1').update(input).digest())
+  encode: (input) => coerce(crypto.createHash('sha1').update(input).digest()),
+  maxDigestLength: 20
 })

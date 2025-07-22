@@ -8,5 +8,6 @@ const sha = (name: AlgorithmIdentifier) =>
 export const sha1 = from({
   name: 'sha-1',
   code: 0x11,
-  encode: sha('SHA-1')
+  encode: sha('SHA-1'),
+  maxDigestLength: 20
 })
