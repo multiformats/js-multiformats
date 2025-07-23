@@ -4,7 +4,6 @@ import type { MultihashHasher } from './interface.js'
 type Await<T> = Promise<T> | T
 
 const DEFAULT_MIN_DIGEST_LENGTH = 20
-const DEFAULT_MAX_DIGEST_LENGTH = 128
 
 export interface HasherInit <Name extends string, Code extends number> {
   name: Name
@@ -12,16 +11,15 @@ export interface HasherInit <Name extends string, Code extends number> {
   encode(input: Uint8Array): Await<Uint8Array>
 
   /**
-   * The minimum length a hash is allowed to be in bytes
+   * The minimum length a hash is allowed to be truncated to in bytes
    *
    * @default 20
    */
   minDigestLength?: number
 
   /**
-   * The maximum length a hash is allowed to be in bytes
-   *
-   * @default 128
+   * The maximum length a hash is allowed to be truncated to in bytes. If not
+   * specified it will be inferred from the length of the digest.
    */
   maxDigestLength?: number
 }
@@ -43,14 +41,14 @@ export class Hasher<Name extends string, Code extends number> implements Multiha
   readonly code: Code
   readonly encode: (input: Uint8Array) => Await<Uint8Array>
   readonly minDigestLength: number
-  readonly maxDigestLength: number
+  readonly maxDigestLength?: number
 
   constructor (name: Name, code: Code, encode: (input: Uint8Array) => Await<Uint8Array>, minDigestLength?: number, maxDigestLength?: number) {
     this.name = name
     this.code = code
     this.encode = encode
     this.minDigestLength = minDigestLength ?? DEFAULT_MIN_DIGEST_LENGTH
-    this.maxDigestLength = maxDigestLength ?? DEFAULT_MAX_DIGEST_LENGTH
+    this.maxDigestLength = maxDigestLength
   }
 
   digest (input: Uint8Array, options?: DigestOptions): Await<Digest.Digest<Code, number>> {
@@ -59,7 +57,7 @@ export class Hasher<Name extends string, Code extends number> implements Multiha
         throw new Error(`Invalid truncate option, must be greater than or equal to ${this.minDigestLength}`)
       }
 
-      if (options.truncate > this.maxDigestLength) {
+      if (this.maxDigestLength != null && options.truncate > this.maxDigestLength) {
         throw new Error(`Invalid truncate option, must be less than or equal to ${this.maxDigestLength}`)
       }
     }

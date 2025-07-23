@@ -84,17 +84,17 @@ describe('multihash', () => {
     })
 
     it('hash sha2-256 truncated (invalid option)', async () => {
-      assert.throws(() => {
-        void sha256.digest(fromString('test'), {
+      await assert.isRejected((async () => {
+        await sha256.digest(fromString('test'), {
           truncate: 10
         })
-      }, /Invalid truncate option/)
+      })(), /Invalid truncate option/)
 
-      assert.throws(() => {
-        void sha256.digest(fromString('test'), {
+      await assert.isRejected((async () => {
+        await sha256.digest(fromString('test'), {
           truncate: 64
         })
-      }, /Invalid truncate option/)
+      })(), /Invalid truncate option/)
     })
 
     if (typeof navigator === 'undefined') {
@@ -136,17 +136,17 @@ describe('multihash', () => {
     })
 
     it('hash sha2-512 truncated (invalid option)', async () => {
-      assert.throws(() => {
-        void sha512.digest(fromString('test'), {
+      await assert.isRejected((async () => {
+        await sha512.digest(fromString('test'), {
           truncate: 10
         })
-      }, /Invalid truncate option/)
+      })(), /Invalid truncate option/)
 
-      assert.throws(() => {
-        void sha512.digest(fromString('test'), {
+      await assert.isRejected((async () => {
+        await sha512.digest(fromString('test'), {
           truncate: 100
         })
-      }, /Invalid truncate option/)
+      })(), /Invalid truncate option/)
     })
 
     it('hash identity async', async () => {
