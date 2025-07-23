@@ -29,6 +29,16 @@ export function from <Name extends string, Code extends number> ({ name, code, e
 }
 
 export interface DigestOptions {
+  /**
+   * Truncate the returned digest to this number of bytes.
+   *
+   * This may cause the digest method to throw/reject if the passed value is
+   * greater than the digest length or below a threshold under which the risk of
+   * hash collisions is significant.
+   *
+   * The actual value of this threshold can depend on the hashing algorithm in
+   * use.
+   */
   truncate?: number
 }
 
