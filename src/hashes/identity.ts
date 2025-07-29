@@ -19,9 +19,4 @@ function digest (input: Uint8Array, options?: DigestOptions): Digest.Digest<type
   return Digest.create(code, encode(input))
 }
 
-export const identity = {
-  code,
-  name,
-  encode,
-  digest
-}
+export const identity = { code, name, encode, digest }
