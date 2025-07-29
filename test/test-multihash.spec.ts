@@ -171,6 +171,32 @@ describe('multihash', () => {
       assert.deepStrictEqual(hash2.code, identity.code)
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
     })
+
+    it('hash identity truncated', async () => {
+      const hash = identity.digest(fromString('test'), {
+        truncate: 2
+      })
+      assert.deepStrictEqual(hash.code, identity.code)
+      assert.deepStrictEqual(hash.digest.byteLength, 2)
+
+      const hash2 = decodeDigest(hash.bytes)
+      assert.deepStrictEqual(hash2.code, identity.code)
+      assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash identity truncated (invalid option)', async () => {
+      assert.throws(() => {
+        identity.digest(fromString('test'), {
+          truncate: -1
+        })
+      }, /Invalid truncate option/)
+
+      assert.throws(() => {
+        identity.digest(fromString('test'), {
+          truncate: 100
+        })
+      }, /Invalid truncate option/)
+    })
   })
   describe('decode', () => {
     for (const { encoding, hex, size } of valid) {
