@@ -1,6 +1,6 @@
 // # Multihash
 
-import type { DigestOptions } from "./hasher.ts"
+import type { DigestOptions } from './hasher.js'
 
 /**
  * Represents a multihash digest which carries information about the
