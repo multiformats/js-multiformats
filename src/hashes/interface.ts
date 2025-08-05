@@ -1,5 +1,7 @@
 // # Multihash
 
+import type { DigestOptions } from './hasher.js'
+
 /**
  * Represents a multihash digest which carries information about the
  * hashing algorithm and an actual hash digest.
@@ -42,7 +44,7 @@ export interface MultihashHasher<Code extends number = number> {
    * while performance critical code may asses return value to decide whether
    * await is needed.
    */
-  digest(input: Uint8Array): Promise<MultihashDigest<Code>> | MultihashDigest<Code>
+  digest(input: Uint8Array, options?: DigestOptions): Promise<MultihashDigest<Code>> | MultihashDigest<Code>
 
   /**
    * Name of the multihash
@@ -66,5 +68,5 @@ export interface MultihashHasher<Code extends number = number> {
  * impractical e.g. implementation of Hash Array Mapped Trie (HAMT).
  */
 export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
-  digest(input: Uint8Array): MultihashDigest<Code>
+  digest(input: Uint8Array, options?: DigestOptions): MultihashDigest<Code>
 }
