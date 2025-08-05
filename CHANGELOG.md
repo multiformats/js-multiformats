@@ -1,3 +1,9 @@
+## [13.4.0](https://github.com/multiformats/js-multiformats/compare/v13.3.7...v13.4.0) (2025-08-05)
+
+### Features
+
+* support truncating digests ([#329](https://github.com/multiformats/js-multiformats/issues/329)) ([e4d3a22](https://github.com/multiformats/js-multiformats/commit/e4d3a22b5580d49ed7c1506a871867f451c609b6)), closes [#328](https://github.com/multiformats/js-multiformats/issues/328)
+
 ## [13.3.7](https://github.com/multiformats/js-multiformats/compare/v13.3.6...v13.3.7) (2025-06-10)
 
 ### Dependencies
