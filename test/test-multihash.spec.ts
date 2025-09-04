@@ -2,7 +2,7 @@
 
 import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
-import { assert } from 'aegir/chai'
+import { assert, expect } from 'aegir/chai'
 import { sha1 as chSha1 } from 'crypto-hash'
 import { fromHex, fromString } from '../src/bytes.js'
 import { decode as decodeDigest, create as createDigest, hasCode as digestHasCode } from '../src/hashes/digest.js'
@@ -170,6 +170,11 @@ describe('multihash', () => {
       const hash2 = decodeDigest(hash.bytes)
       assert.deepStrictEqual(hash2.code, identity.code)
       assert.deepStrictEqual(hash2.bytes, hash.bytes)
+    })
+
+    it('hash identity oversized', () => {
+      const oversized = new Uint8Array(129).fill(0x61)
+      expect(() => identity.digest(oversized)).to.throw(/Identity digest exceeds maximum size of 128 bytes/)
     })
 
     it('hash identity truncated', async () => {

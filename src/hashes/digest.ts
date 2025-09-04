@@ -1,5 +1,6 @@
 import { coerce, equals as equalBytes } from '../bytes.js'
 import * as varint from '../varint.js'
+import { identity } from './identity.js'
 import type { MultihashDigest } from './interface.js'
 
 /**
@@ -29,6 +30,9 @@ export function decode (multihash: Uint8Array): MultihashDigest {
 
   if (digest.byteLength !== size) {
     throw new Error('Incorrect length')
+  }
+  if (code === 0x0 && size > identity.DefaultMaxIdentityDigestSize) {
+    throw new Error(`Identity digest exceeds maximum size of ${identity.DefaultMaxIdentityDigestSize} bytes`)
   }
 
   return new Digest(code, size, digest, bytes)
