@@ -1,3 +1,9 @@
+## [13.4.1](https://github.com/multiformats/js-multiformats/compare/v13.4.0...v13.4.1) (2025-09-15)
+
+### Dependencies
+
+* **dev:** bump crypto-hash from 3.1.0 to 4.0.0 ([#332](https://github.com/multiformats/js-multiformats/issues/332)) ([bbc711a](https://github.com/multiformats/js-multiformats/commit/bbc711abc09800f09e022f094deda007b8039873))
+
 ## [13.4.0](https://github.com/multiformats/js-multiformats/compare/v13.3.7...v13.4.0) (2025-08-05)
 
 ### Features
