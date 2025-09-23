@@ -5,6 +5,8 @@ import type { DigestOptions } from './hasher.js'
 const code: 0x0 = 0x0
 const name = 'identity'
 
+const DefaultMaxIdentityDigestSize = 128
+
 const encode: (input: Uint8Array) => Uint8Array = coerce
 
 function digest (input: Uint8Array, options?: DigestOptions): Digest.Digest<typeof code, number> {
@@ -16,7 +18,11 @@ function digest (input: Uint8Array, options?: DigestOptions): Digest.Digest<type
     input = input.subarray(0, options.truncate)
   }
 
+  if (input.byteLength > DefaultMaxIdentityDigestSize) {
+    throw new Error(`Identity digest exceeds maximum size of ${DefaultMaxIdentityDigestSize} bytes`)
+  }
+
   return Digest.create(code, encode(input))
 }
 
-export const identity = { code, name, encode, digest }
+export const identity = { code, name, encode, digest, DefaultMaxIdentityDigestSize }
