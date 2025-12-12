@@ -1,3 +1,9 @@
+## [13.4.2](https://github.com/multiformats/js-multiformats/compare/v13.4.1...v13.4.2) (2025-12-12)
+
+### Dependencies
+
+* **dev:** bump @types/node from 24.10.3 to 25.0.0 ([#333](https://github.com/multiformats/js-multiformats/issues/333)) ([0bad504](https://github.com/multiformats/js-multiformats/commit/0bad50482060cde11cf0517326261112e1ca9f19))
+
 ## [13.4.1](https://github.com/multiformats/js-multiformats/compare/v13.4.0...v13.4.1) (2025-09-15)
 
 ### Dependencies
