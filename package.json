@@ -74,6 +74,10 @@
       "types": "./dist/src/bases/base36.d.ts",
       "import": "./dist/src/bases/base36.js"
     },
+    "./bases/base45": {
+      "types": "./dist/src/bases/base45.d.ts",
+      "import": "./dist/src/bases/base45.js"
+    },
     "./bases/base58": {
       "types": "./dist/src/bases/base58.d.ts",
       "import": "./dist/src/bases/base58.js"
