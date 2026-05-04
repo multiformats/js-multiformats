@@ -1,4 +1,4 @@
-import crypto from 'crypto'
+import crypto from 'node:crypto'
 import { coerce } from '../bytes.ts'
 import { from } from './hasher.ts'
 
