@@ -198,7 +198,11 @@ describe('multihash', () => {
       }, /Invalid truncate option/)
     })
 
-    it('hash identity with non-ArrayBuffer backing buffer', async () => {
+    it('hash identity with non-ArrayBuffer backing buffer', function () {
+      if (globalThis.SharedArrayBuffer == null) {
+        return this.skip()
+      }
+
       const s = new SharedArrayBuffer(10)
       const b = new Uint8Array(s, 0, s.byteLength)
       const hash = identity.digest(b)

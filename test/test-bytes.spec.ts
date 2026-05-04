@@ -25,7 +25,11 @@ describe('bytes', () => {
     assert.deepStrictEqual(bytes.toString(bytes.fromString(fixture)), fixture)
   })
 
-  it('toArrayBufferBackedArray()', () => {
+  it('toArrayBufferBackedArray()', function () {
+    if (globalThis.SharedArrayBuffer == null) {
+      return this.skip()
+    }
+
     const b = new Uint8Array(10)
     assert.equal(b, bytes.toArrayBufferBackedArray(b))
 
