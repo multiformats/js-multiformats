@@ -1,5 +1,3 @@
-/* eslint-env mocha */
-
 import { assert } from 'aegir/chai'
 import { bases } from '../src/basics.ts'
 import { fromString } from '../src/bytes.ts'

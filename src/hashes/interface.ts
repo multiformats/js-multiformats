@@ -20,7 +20,7 @@ export interface MultihashDigest<Code extends number = number> {
   /**
    * Raw digest (without a hashing algorithm info)
    */
-  digest: Uint8Array
+  digest: Uint8Array<ArrayBuffer>
 
   /**
    * byte length of the `this.digest`
@@ -30,7 +30,7 @@ export interface MultihashDigest<Code extends number = number> {
   /**
    * Binary representation of this multihash digest.
    */
-  bytes: Uint8Array
+  bytes: Uint8Array<ArrayBuffer>
 }
 
 /**
@@ -68,5 +68,5 @@ export interface MultihashHasher<Code extends number = number> {
  * impractical e.g. implementation of Hash Array Mapped Trie (HAMT).
  */
 export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
-  digest(input: Uint8Array, options?: DigestOptions): MultihashDigest<Code>
+  digest(input: Uint8Array<ArrayBuffer>, options?: DigestOptions): MultihashDigest<Code>
 }

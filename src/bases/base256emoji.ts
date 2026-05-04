@@ -18,7 +18,7 @@ function encode (data: Uint8Array): string {
   }, '')
 }
 
-function decode (str: string): Uint8Array {
+function decode (str: string): Uint8Array<ArrayBuffer> {
   const byts = []
   for (const char of str) {
     const codePoint = char.codePointAt(0)
