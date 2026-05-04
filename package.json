@@ -48,132 +48,155 @@
   "exports": {
     ".": {
       "types": "./dist/src/index.d.ts",
-      "import": "./dist/src/index.js"
+      "import": "./dist/src/index.js",
+      "module-sync": "./dist/src/index.js"
     },
     "./bases/base10": {
       "types": "./dist/src/bases/base10.d.ts",
-      "import": "./dist/src/bases/base10.js"
+      "import": "./dist/src/bases/base10.js",
+      "module-sync": "./dist/src/bases/base10.js"
     },
     "./bases/base16": {
       "types": "./dist/src/bases/base16.d.ts",
-      "import": "./dist/src/bases/base16.js"
+      "import": "./dist/src/bases/base16.js",
+      "module-sync": "./dist/src/bases/base16.js"
     },
     "./bases/base2": {
       "types": "./dist/src/bases/base2.d.ts",
-      "import": "./dist/src/bases/base2.js"
+      "import": "./dist/src/bases/base2.js",
+      "module-sync": "./dist/src/bases/base2.js"
     },
     "./bases/base256emoji": {
       "types": "./dist/src/bases/base256emoji.d.ts",
-      "import": "./dist/src/bases/base256emoji.js"
+      "import": "./dist/src/bases/base256emoji.js",
+      "module-sync": "./dist/src/bases/base256emoji.js"
     },
     "./bases/base32": {
       "types": "./dist/src/bases/base32.d.ts",
-      "import": "./dist/src/bases/base32.js"
+      "import": "./dist/src/bases/base32.js",
+      "module-sync": "./dist/src/bases/base32.js"
     },
     "./bases/base36": {
       "types": "./dist/src/bases/base36.d.ts",
-      "import": "./dist/src/bases/base36.js"
+      "import": "./dist/src/bases/base36.js",
+      "module-sync": "./dist/src/bases/base36.js"
     },
     "./bases/base58": {
       "types": "./dist/src/bases/base58.d.ts",
-      "import": "./dist/src/bases/base58.js"
+      "import": "./dist/src/bases/base58.js",
+      "module-sync": "./dist/src/bases/base58.js"
     },
     "./bases/base64": {
       "types": "./dist/src/bases/base64.d.ts",
-      "import": "./dist/src/bases/base64.js"
+      "import": "./dist/src/bases/base64.js",
+      "module-sync": "./dist/src/bases/base64.js"
     },
     "./bases/base8": {
       "types": "./dist/src/bases/base8.d.ts",
-      "import": "./dist/src/bases/base8.js"
+      "import": "./dist/src/bases/base8.js",
+      "module-sync": "./dist/src/bases/base8.js"
     },
     "./bases/identity": {
       "types": "./dist/src/bases/identity.d.ts",
-      "import": "./dist/src/bases/identity.js"
+      "import": "./dist/src/bases/identity.js",
+      "module-sync": "./dist/src/bases/identity.js"
     },
     "./bases/interface": {
       "types": "./dist/src/bases/interface.d.ts",
-      "import": "./dist/src/bases/interface.js"
+      "import": "./dist/src/bases/interface.js",
+      "module-sync": "./dist/src/bases/interface.js"
     },
     "./basics": {
       "types": "./dist/src/basics.d.ts",
-      "import": "./dist/src/basics.js"
+      "import": "./dist/src/basics.js",
+      "module-sync": "./dist/src/basics.js"
     },
     "./block": {
       "types": "./dist/src/block.d.ts",
-      "import": "./dist/src/block.js"
+      "import": "./dist/src/block.js",
+      "module-sync": "./dist/src/block.js"
     },
     "./block/interface": {
       "types": "./dist/src/block/interface.d.ts",
-      "import": "./dist/src/block/interface.js"
+      "import": "./dist/src/block/interface.js",
+      "module-sync": "./dist/src/block/interface.js"
     },
     "./bytes": {
       "types": "./dist/src/bytes.d.ts",
-      "import": "./dist/src/bytes.js"
+      "import": "./dist/src/bytes.js",
+      "module-sync": "./dist/src/bytes.js"
     },
     "./cid": {
       "types": "./dist/src/cid.d.ts",
-      "import": "./dist/src/cid.js"
+      "import": "./dist/src/cid.js",
+      "module-sync": "./dist/src/cid.js"
     },
     "./codecs/interface": {
       "types": "./dist/src/codecs/interface.d.ts",
-      "import": "./dist/src/codecs/interface.js"
+      "import": "./dist/src/codecs/interface.js",
+      "module-sync": "./dist/src/codecs/interface.js"
     },
     "./codecs/json": {
       "types": "./dist/src/codecs/json.d.ts",
-      "import": "./dist/src/codecs/json.js"
+      "import": "./dist/src/codecs/json.js",
+      "module-sync": "./dist/src/codecs/json.js"
     },
     "./codecs/raw": {
       "types": "./dist/src/codecs/raw.d.ts",
-      "import": "./dist/src/codecs/raw.js"
+      "import": "./dist/src/codecs/raw.js",
+      "module-sync": "./dist/src/codecs/raw.js"
     },
     "./hashes/digest": {
       "types": "./dist/src/hashes/digest.d.ts",
-      "import": "./dist/src/hashes/digest.js"
+      "import": "./dist/src/hashes/digest.js",
+      "module-sync": "./dist/src/hashes/digest.js"
     },
     "./hashes/hasher": {
       "types": "./dist/src/hashes/hasher.d.ts",
-      "import": "./dist/src/hashes/hasher.js"
+      "import": "./dist/src/hashes/hasher.js",
+      "module-sync": "./dist/src/hashes/hasher.js"
     },
     "./hashes/identity": {
       "types": "./dist/src/hashes/identity.d.ts",
-      "import": "./dist/src/hashes/identity.js"
+      "import": "./dist/src/hashes/identity.js",
+      "module-sync": "./dist/src/hashes/identity.js"
     },
     "./hashes/interface": {
       "types": "./dist/src/hashes/interface.d.ts",
-      "import": "./dist/src/hashes/interface.js"
+      "import": "./dist/src/hashes/interface.js",
+      "module-sync": "./dist/src/hashes/interface.js"
     },
     "./hashes/sha1": {
       "types": "./dist/types/src/hashes/sha1.d.ts",
       "browser": "./dist/src/hashes/sha1-browser.js",
-      "import": "./dist/src/hashes/sha1.js"
+      "import": "./dist/src/hashes/sha1.js",
+      "module-sync": "./dist/src/hashes/sha1.js"
     },
     "./hashes/sha2": {
       "types": "./dist/src/hashes/sha2.d.ts",
       "browser": "./dist/src/hashes/sha2-browser.js",
-      "import": "./dist/src/hashes/sha2.js"
+      "import": "./dist/src/hashes/sha2.js",
+      "module-sync": "./dist/src/hashes/sha2.js"
     },
     "./interface": {
       "types": "./dist/src/interface.d.ts",
-      "import": "./dist/src/interface.js"
+      "import": "./dist/src/interface.js",
+      "module-sync": "./dist/src/interface.js"
     },
     "./link": {
       "types": "./dist/src/link.d.ts",
-      "import": "./dist/src/link.js"
+      "import": "./dist/src/link.js",
+      "module-sync": "./dist/src/link.js"
     },
     "./link/interface": {
       "types": "./dist/src/link/interface.d.ts",
-      "import": "./dist/src/link/interface.js"
+      "import": "./dist/src/link/interface.js",
+      "module-sync": "./dist/src/link/interface.js"
     },
     "./traversal": {
       "types": "./dist/src/traversal.d.ts",
-      "import": "./dist/src/traversal.js"
-    }
-  },
-  "eslintConfig": {
-    "extends": "ipfs",
-    "parserOptions": {
-      "project": true,
-      "sourceType": "module"
+      "import": "./dist/src/traversal.js",
+      "module-sync": "./dist/src/traversal.js"
     }
   },
   "release": {
@@ -286,18 +309,10 @@
   "devDependencies": {
     "@stablelib/sha256": "^2.0.0",
     "@stablelib/sha512": "^2.0.0",
-    "aegir": "^47.0.7",
+    "aegir": "^48.0.0",
     "buffer": "^6.0.3",
     "cids": "^1.1.9",
     "crypto-hash": "^4.0.0"
-  },
-  "aegir": {
-    "test": {
-      "target": [
-        "node",
-        "browser"
-      ]
-    }
   },
   "browser": {
     "./hashes/sha1": "./dist/src/hashes/sha1-browser.js",
