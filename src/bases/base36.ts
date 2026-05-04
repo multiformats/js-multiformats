@@ -1,4 +1,4 @@
-import { baseX } from './base.js'
+import { baseX } from './base.ts'
 
 export const base36 = baseX({
   prefix: 'k',

@@ -1,4 +1,4 @@
-import type { ArrayBufferView, ByteView } from '../block/interface.js'
+import type { ArrayBufferView, ByteView } from '../block/interface.ts'
 
 /**
  * IPLD encoder part of the codec.

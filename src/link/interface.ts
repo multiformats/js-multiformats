@@ -1,6 +1,6 @@
-import type { MultibaseEncoder, MultibaseDecoder, Multibase } from '../bases/interface.js'
-import type { Phantom, ByteView } from '../block/interface.js'
-import type { MultihashDigest } from '../hashes/interface.js'
+import type { MultibaseEncoder, MultibaseDecoder, Multibase } from '../bases/interface.ts'
+import type { Phantom, ByteView } from '../block/interface.ts'
+import type { MultihashDigest } from '../hashes/interface.ts'
 
 export type { MultihashDigest, MultibaseEncoder, MultibaseDecoder }
 export type Version = 0 | 1

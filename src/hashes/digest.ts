@@ -1,6 +1,6 @@
-import { coerce, equals as equalBytes } from '../bytes.js'
-import * as varint from '../varint.js'
-import type { MultihashDigest } from './interface.js'
+import { coerce, equals as equalBytes } from '../bytes.ts'
+import * as varint from '../varint.ts'
+import type { MultihashDigest } from './interface.ts'
 
 /**
  * Creates a multihash digest.

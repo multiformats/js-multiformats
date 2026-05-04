@@ -1,8 +1,8 @@
 /* globals describe, it */
 
 import { assert } from 'aegir/chai'
-import { sha256 } from '../src/hashes/sha2.js'
-import * as Link from '../src/link.js'
+import { sha256 } from '../src/hashes/sha2.ts'
+import * as Link from '../src/link.ts'
 
 const utf8 = new TextEncoder()
 

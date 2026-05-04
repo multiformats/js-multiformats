@@ -1,7 +1,7 @@
 /* globals describe, it */
 
 import { assert } from 'aegir/chai'
-import * as bytes from '../src/bytes.js'
+import * as bytes from '../src/bytes.ts'
 
 describe('bytes', () => {
   it('isBinary', () => {

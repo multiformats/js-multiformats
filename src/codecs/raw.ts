@@ -1,5 +1,5 @@
-import { coerce } from '../bytes.js'
-import type { ArrayBufferView, ByteView } from './interface.js'
+import { coerce } from '../bytes.ts'
+import type { ArrayBufferView, ByteView } from './interface.ts'
 
 export const name = 'raw'
 export const code = 0x55

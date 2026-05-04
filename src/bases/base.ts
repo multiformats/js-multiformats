@@ -1,6 +1,6 @@
-import { coerce } from '../bytes.js'
+import { coerce } from '../bytes.ts'
 import basex from '../vendor/base-x.js'
-import type { BaseCodec, BaseDecoder, BaseEncoder, CombobaseDecoder, Multibase, MultibaseCodec, MultibaseDecoder, MultibaseEncoder, UnibaseDecoder } from './interface.js'
+import type { BaseCodec, BaseDecoder, BaseEncoder, CombobaseDecoder, Multibase, MultibaseCodec, MultibaseDecoder, MultibaseEncoder, UnibaseDecoder } from './interface.ts'
 
 interface EncodeFn { (bytes: Uint8Array): string }
 interface DecodeFn { (text: string): Uint8Array }

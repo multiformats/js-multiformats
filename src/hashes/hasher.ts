@@ -1,5 +1,5 @@
-import * as Digest from './digest.js'
-import type { MultihashHasher } from './interface.js'
+import * as Digest from './digest.ts'
+import type { MultihashHasher } from './interface.ts'
 
 type Await<T> = Promise<T> | T
 

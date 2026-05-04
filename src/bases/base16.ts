@@ -1,4 +1,4 @@
-import { rfc4648 } from './base.js'
+import { rfc4648 } from './base.ts'
 
 export const base16 = rfc4648({
   prefix: 'f',

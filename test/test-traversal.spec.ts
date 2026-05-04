@@ -1,13 +1,13 @@
 /* globals describe, it */
 
 import { assert } from 'aegir/chai'
-import * as main from '../src/block.js'
-import { fromString } from '../src/bytes.js'
-import * as codec from '../src/codecs/json.js'
-import { sha256 as hasher } from '../src/hashes/sha2.js'
-import { walk } from '../src/traversal.js'
-import type { BlockView } from '../src/block/interface.js'
-import type { CID } from '../src/cid.js'
+import * as main from '../src/block.ts'
+import { fromString } from '../src/bytes.ts'
+import * as codec from '../src/codecs/json.ts'
+import { sha256 as hasher } from '../src/hashes/sha2.ts'
+import { walk } from '../src/traversal.ts'
+import type { BlockView } from '../src/block/interface.ts'
+import type { CID } from '../src/cid.ts'
 
 // from dag-pb, simplified
 function createNode (data: Uint8Array, links: Array<{ Hash: CID, Name: string, Tsize: number }>): { Data: Uint8Array, Links: Array<{ Hash: CID, Name: string, Tsize: number }> } {

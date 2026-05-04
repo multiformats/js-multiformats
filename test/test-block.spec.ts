@@ -1,10 +1,10 @@
 /* globals describe, it */
 
 import { assert } from 'aegir/chai'
-import * as main from '../src/block.js'
-import * as codec from '../src/codecs/json.js'
-import { sha256 as hasher } from '../src/hashes/sha2.js'
-import { CID, bytes } from '../src/index.js'
+import * as main from '../src/block.ts'
+import * as codec from '../src/codecs/json.ts'
+import { sha256 as hasher } from '../src/hashes/sha2.ts'
+import { CID, bytes } from '../src/index.ts'
 
 const fixture = { hello: 'world' }
 const link = CID.parse('bafyreidykglsfhoixmivffc5uwhcgshx4j465xwqntbmu43nb2dzqwfvae')

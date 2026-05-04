@@ -1,5 +1,5 @@
-import { fromString, toString } from '../bytes.js'
-import { from } from './base.js'
+import { fromString, toString } from '../bytes.ts'
+import { from } from './base.ts'
 
 export const identity = from({
   prefix: '\x00',

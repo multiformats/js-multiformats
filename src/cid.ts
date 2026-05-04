@@ -1,13 +1,13 @@
-import { base32 } from './bases/base32.js'
-import { base36 } from './bases/base36.js'
-import { base58btc } from './bases/base58.js'
-import { coerce } from './bytes.js'
-import * as Digest from './hashes/digest.js'
-import * as varint from './varint.js'
-import type * as API from './link/interface.js'
+import { base32 } from './bases/base32.ts'
+import { base36 } from './bases/base36.ts'
+import { base58btc } from './bases/base58.ts'
+import { coerce } from './bytes.ts'
+import * as Digest from './hashes/digest.ts'
+import * as varint from './varint.ts'
+import type * as API from './link/interface.ts'
 
 // This way TS will also expose all the types from module
-export * from './link/interface.js'
+export * from './link/interface.ts'
 
 export function format <T extends API.Link<unknown, number, number, API.Version>, Prefix extends string> (link: T, base?: API.MultibaseEncoder<Prefix>): API.ToString<T, Prefix> {
   const { bytes, version } = link
