@@ -24,4 +24,14 @@ describe('bytes', () => {
     const fixture = 'hello world'
     assert.deepStrictEqual(bytes.toString(bytes.fromString(fixture)), fixture)
   })
+
+  it('toArrayBufferBackedArray()', () => {
+    const b = new Uint8Array(10)
+    assert.equal(b, bytes.toArrayBufferBackedArray(b))
+
+    const s = new SharedArrayBuffer(10)
+    const b2 = new Uint8Array(s, 0, s.byteLength)
+    assert.notEqual(b2, bytes.toArrayBufferBackedArray(b2) as any)
+    assert.deepEqual(b, bytes.toArrayBufferBackedArray(b2))
+  })
 })

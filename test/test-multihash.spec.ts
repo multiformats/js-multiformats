@@ -197,6 +197,15 @@ describe('multihash', () => {
         })
       }, /Invalid truncate option/)
     })
+
+    it('hash identity with non-ArrayBuffer backing buffer', async () => {
+      const s = new SharedArrayBuffer(10)
+      const b = new Uint8Array(s, 0, s.byteLength)
+      const hash = identity.digest(b)
+
+      assert.notEqual(b.buffer.constructor.name, hash.digest.buffer.constructor.name)
+      assert.deepStrictEqual(b.slice(), hash.digest)
+    })
   })
   describe('decode', () => {
     for (const { encoding, hex, size } of valid) {
