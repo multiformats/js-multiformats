@@ -68,5 +68,5 @@ export interface MultihashHasher<Code extends number = number> {
  * impractical e.g. implementation of Hash Array Mapped Trie (HAMT).
  */
 export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
-  digest(input: Uint8Array<ArrayBuffer>, options?: DigestOptions): MultihashDigest<Code>
+  digest(input: Uint8Array, options?: DigestOptions): MultihashDigest<Code>
 }
