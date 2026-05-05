@@ -24,6 +24,15 @@ export function equals (aa: Uint8Array, bb: Uint8Array): boolean {
   return true
 }
 
+/**
+ * Normalize binary input to a plain `Uint8Array` backed by an `ArrayBuffer`.
+ *
+ * Returns the input itself when it is already a plain `Uint8Array` over an
+ * `ArrayBuffer`, otherwise a fresh view (or, for `SharedArrayBuffer`-backed
+ * input, a copy) over the same bytes.
+ *
+ * Throws if input is not a recognised binary type.
+ */
 export function coerce (o: ArrayBufferView | ArrayBuffer | Uint8Array): Uint8Array<ArrayBuffer> {
   if (o instanceof Uint8Array && o.constructor.name === 'Uint8Array') {
     return toArrayBufferBackedArray(o)
