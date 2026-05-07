@@ -1,4 +1,4 @@
-import { from } from './base.js'
+import { from } from './base.ts'
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
 
@@ -31,7 +31,7 @@ export const base45 = from({
     }
     return ret
   },
-  decode: (input: string): Uint8Array => {
+  decode: (input: string): Uint8Array<ArrayBuffer> => {
     if ((input.length * 2) % 3 === 2) {
       throw new Error('Unexpected end of data')
     }
