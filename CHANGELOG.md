@@ -1,3 +1,15 @@
+## [14.0.0](https://github.com/multiformats/js-multiformats/compare/v13.4.2...v14.0.0) (2026-05-07)
+
+### ⚠ BREAKING CHANGES
+
+* all `Hasher`s are now `MultihashHasher<Code>`s
+* Returned `Uint8Array`s are now `Uint8Array<ArrayBuffer>`
+
+### Bug Fixes
+
+* identity hash is SyncMultihashHasher<0> ([#337](https://github.com/multiformats/js-multiformats/issues/337)) ([9b5b12b](https://github.com/multiformats/js-multiformats/commit/9b5b12ba9a3f80fe1fadfee94e77709129b31b18)), closes [#313](https://github.com/multiformats/js-multiformats/issues/313) [#314](https://github.com/multiformats/js-multiformats/issues/314)
+* specify type of backing buffer when Uint8Arrays are returned ([#335](https://github.com/multiformats/js-multiformats/issues/335)) ([bac2da5](https://github.com/multiformats/js-multiformats/commit/bac2da54b6b1d1d1e507cc1fa641a7aef6b89758))
+
 ## [13.4.2](https://github.com/multiformats/js-multiformats/compare/v13.4.1...v13.4.2) (2025-12-12)
 
 ### Dependencies
