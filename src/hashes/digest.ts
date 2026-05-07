@@ -1,6 +1,6 @@
-import { coerce, equals as equalBytes } from '../bytes.js'
-import * as varint from '../varint.js'
-import type { MultihashDigest } from './interface.js'
+import { coerce, equals as equalBytes, toArrayBufferBackedArray } from '../bytes.ts'
+import * as varint from '../varint.ts'
+import type { MultihashDigest } from './interface.ts'
 
 /**
  * Creates a multihash digest.
@@ -56,8 +56,8 @@ export function equals (a: MultihashDigest, b: unknown): b is MultihashDigest {
 export class Digest<Code extends number, Size extends number> implements MultihashDigest {
   readonly code: Code
   readonly size: Size
-  readonly digest: Uint8Array
-  readonly bytes: Uint8Array
+  readonly digest: Uint8Array<ArrayBuffer>
+  readonly bytes: Uint8Array<ArrayBuffer>
 
   /**
    * Creates a multihash digest.
@@ -65,8 +65,8 @@ export class Digest<Code extends number, Size extends number> implements Multiha
   constructor (code: Code, size: Size, digest: Uint8Array, bytes: Uint8Array) {
     this.code = code
     this.size = size
-    this.digest = digest
-    this.bytes = bytes
+    this.digest = toArrayBufferBackedArray(digest)
+    this.bytes = toArrayBufferBackedArray(bytes)
   }
 }
 

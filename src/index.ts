@@ -200,13 +200,13 @@
  * | `dag-jose` | `dag-jose`                 | [ceramicnetwork/js-dag-jose](https://github.com/ceramicnetwork/js-dag-jose)                            |
  */
 
-import * as bytes from './bytes.js'
-import { CID } from './cid.js'
-import * as digest from './hashes/digest.js'
-import * as hasher from './hashes/hasher.js'
-import * as varint from './varint.js'
+import * as bytes from './bytes.ts'
+import { CID } from './cid.ts'
+import * as digest from './hashes/digest.ts'
+import * as hasher from './hashes/hasher.ts'
+import * as varint from './varint.ts'
 
 // This way TS will also expose all the types from module
-export * from './interface.js'
+export * from './interface.ts'
 
 export { CID, hasher, digest, varint, bytes }

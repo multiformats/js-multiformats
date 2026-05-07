@@ -1,4 +1,4 @@
-import { baseX } from './base.js'
+import { baseX } from './base.ts'
 
 export const base58btc = baseX({
   name: 'base58btc',

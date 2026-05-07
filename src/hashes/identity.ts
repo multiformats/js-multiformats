@@ -1,6 +1,6 @@
-import { coerce } from '../bytes.js'
-import * as Digest from './digest.js'
-import type { DigestOptions } from './hasher.js'
+import { coerce } from '../bytes.ts'
+import * as Digest from './digest.ts'
+import type { DigestOptions } from './hasher.ts'
 
 const code: 0x0 = 0x0
 const name = 'identity'

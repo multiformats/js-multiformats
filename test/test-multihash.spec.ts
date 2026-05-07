@@ -4,14 +4,14 @@ import { hash as slSha256 } from '@stablelib/sha256'
 import { hash as slSha512 } from '@stablelib/sha512'
 import { assert } from 'aegir/chai'
 import { sha1 as chSha1 } from 'crypto-hash'
-import { fromHex, fromString } from '../src/bytes.js'
-import { decode as decodeDigest, create as createDigest, hasCode as digestHasCode } from '../src/hashes/digest.js'
-import { identity } from '../src/hashes/identity.js'
-import { sha1 } from '../src/hashes/sha1.js'
-import { sha256, sha512 } from '../src/hashes/sha2.js'
-import invalid from './fixtures/invalid-multihash.js'
-import valid from './fixtures/valid-multihash.js'
-import type { MultihashDigest } from '../src/cid.js'
+import { fromHex, fromString } from '../src/bytes.ts'
+import { decode as decodeDigest, create as createDigest, hasCode as digestHasCode } from '../src/hashes/digest.ts'
+import { identity } from '../src/hashes/identity.ts'
+import { sha1 } from '../src/hashes/sha1.ts'
+import { sha256, sha512 } from '../src/hashes/sha2.ts'
+import invalid from './fixtures/invalid-multihash.ts'
+import valid from './fixtures/valid-multihash.ts'
+import type { MultihashDigest } from '../src/cid.ts'
 
 const sample = (code: number | string, size: number, hex: string): Uint8Array => {
   const toHex = (i: number | string): string => {
@@ -196,6 +196,19 @@ describe('multihash', () => {
           truncate: 100
         })
       }, /Invalid truncate option/)
+    })
+
+    it('hash identity with non-ArrayBuffer backing buffer', function () {
+      if (globalThis.SharedArrayBuffer == null) {
+        return this.skip()
+      }
+
+      const s = new SharedArrayBuffer(10)
+      const b = new Uint8Array(s, 0, s.byteLength)
+      const hash = identity.digest(b)
+
+      assert.notEqual(b.buffer.constructor.name, hash.digest.buffer.constructor.name)
+      assert.deepStrictEqual(b.slice(), hash.digest)
     })
   })
   describe('decode', () => {

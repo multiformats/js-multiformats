@@ -1,6 +1,6 @@
 // # Multihash
 
-import type { DigestOptions } from './hasher.js'
+import type { DigestOptions } from './hasher.ts'
 
 /**
  * Represents a multihash digest which carries information about the
@@ -20,7 +20,7 @@ export interface MultihashDigest<Code extends number = number> {
   /**
    * Raw digest (without a hashing algorithm info)
    */
-  digest: Uint8Array
+  digest: Uint8Array<ArrayBuffer>
 
   /**
    * byte length of the `this.digest`
@@ -30,7 +30,7 @@ export interface MultihashDigest<Code extends number = number> {
   /**
    * Binary representation of this multihash digest.
    */
-  bytes: Uint8Array
+  bytes: Uint8Array<ArrayBuffer>
 }
 
 /**

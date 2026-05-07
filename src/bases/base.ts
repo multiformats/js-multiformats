@@ -1,9 +1,9 @@
-import { coerce } from '../bytes.js'
+import { coerce } from '../bytes.ts'
 import basex from '../vendor/base-x.js'
-import type { BaseCodec, BaseDecoder, BaseEncoder, CombobaseDecoder, Multibase, MultibaseCodec, MultibaseDecoder, MultibaseEncoder, UnibaseDecoder } from './interface.js'
+import type { BaseCodec, BaseDecoder, BaseEncoder, CombobaseDecoder, Multibase, MultibaseCodec, MultibaseDecoder, MultibaseEncoder, UnibaseDecoder } from './interface.ts'
 
 interface EncodeFn { (bytes: Uint8Array): string }
-interface DecodeFn { (text: string): Uint8Array }
+interface DecodeFn { (text: string): Uint8Array<ArrayBuffer> }
 
 /**
  * Class represents both BaseEncoder and MultibaseEncoder meaning it
@@ -53,7 +53,7 @@ class Decoder<Base extends string, Prefix extends string> implements MultibaseDe
     this.baseDecode = baseDecode
   }
 
-  decode (text: string): Uint8Array {
+  decode (text: string): Uint8Array<ArrayBuffer> {
     if (typeof text === 'string') {
       if (text.codePointAt(0) !== this.prefixCodePoint) {
         throw Error(`Unable to decode multibase string ${JSON.stringify(text)}, ${this.name} decoder only supports inputs prefixed with ${this.prefix}`)
@@ -82,7 +82,7 @@ class ComposedDecoder<Prefix extends string> implements MultibaseDecoder<Prefix>
     return or(this, decoder)
   }
 
-  decode (input: string): Uint8Array {
+  decode (input: string): Uint8Array<ArrayBuffer> {
     const prefix = input[0] as Prefix
     const decoder = this.decoders[prefix]
     if (decoder != null) {
@@ -121,7 +121,7 @@ export class Codec<Base extends string, Prefix extends string> implements Multib
     return this.encoder.encode(input)
   }
 
-  decode (input: string): Uint8Array {
+  decode (input: string): Uint8Array<ArrayBuffer> {
     return this.decoder.decode(input)
   }
 }
@@ -136,11 +136,11 @@ export function baseX <Base extends string, Prefix extends string> ({ name, pref
     prefix,
     name,
     encode,
-    decode: (text: string): Uint8Array => coerce(decode(text))
+    decode: (text: string): Uint8Array<ArrayBuffer> => coerce(decode(text))
   })
 }
 
-function decode (string: string, alphabetIdx: Record<string, number>, bitsPerChar: number, name: string): Uint8Array {
+function decode (string: string, alphabetIdx: Record<string, number>, bitsPerChar: number, name: string): Uint8Array<ArrayBuffer> {
   // Count the padding bytes:
   let end = string.length
   while (string[end - 1] === '=') {
@@ -234,7 +234,7 @@ export function rfc4648 <Base extends string, Prefix extends string> ({ name, pr
     encode (input: Uint8Array): string {
       return encode(input, alphabet, bitsPerChar)
     },
-    decode (input: string): Uint8Array {
+    decode (input: string): Uint8Array<ArrayBuffer> {
       return decode(input, alphabetIdx, bitsPerChar, name)
     }
   })

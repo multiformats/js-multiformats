@@ -1,5 +1,5 @@
-import type { CID } from '../cid.js'
-import type { Link, Version } from '../link/interface.js'
+import type { CID } from '../cid.ts'
+import type { Link, Version } from '../link/interface.ts'
 
 /**
  * A byte-encoded representation of some type of `Data`.

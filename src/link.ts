@@ -1,7 +1,7 @@
-import { CID, format, toJSON, fromJSON } from './cid.js'
-import type * as API from './link/interface.js'
+import { CID, format, toJSON, fromJSON } from './cid.ts'
+import type * as API from './link/interface.ts'
 // This way TS will also expose all the types from module
-export * from './link/interface.js'
+export * from './link/interface.ts'
 
 const DAG_PB_CODE = 0x70
 // eslint-disable-next-line

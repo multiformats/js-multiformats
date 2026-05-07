@@ -2,15 +2,15 @@
 
 import { assert } from 'aegir/chai'
 import OLDCID from 'cids'
-import { base32 } from '../src/bases/base32.js'
-import { base36 } from '../src/bases/base36.js'
-import { base58btc } from '../src/bases/base58.js'
-import { base64 } from '../src/bases/base64.js'
-import { fromHex, toHex, equals } from '../src/bytes.js'
-import { sha256, sha512 } from '../src/hashes/sha2.js'
-import { varint, CID } from '../src/index.js'
-import invalidMultihash from './fixtures/invalid-multihash.js'
-import type { MultihashDigest } from '../src/index.js'
+import { base32 } from '../src/bases/base32.ts'
+import { base36 } from '../src/bases/base36.ts'
+import { base58btc } from '../src/bases/base58.ts'
+import { base64 } from '../src/bases/base64.ts'
+import { fromHex, toHex, equals } from '../src/bytes.ts'
+import { sha256, sha512 } from '../src/hashes/sha2.ts'
+import { varint, CID } from '../src/index.ts'
+import invalidMultihash from './fixtures/invalid-multihash.ts'
+import type { MultihashDigest } from '../src/index.ts'
 
 const textEncoder = new TextEncoder()
 

@@ -1,6 +1,6 @@
-import { base58btc } from './bases/base58.js'
-import type { BlockView as _BlockView } from './block/interface.js'
-import type { CID, Version } from './cid.js'
+import { base58btc } from './bases/base58.ts'
+import type { BlockView as _BlockView } from './block/interface.ts'
+import type { CID, Version } from './cid.ts'
 
 type BlockView<T=unknown, C extends number = number, A extends number = number, V extends Version = Version> = _BlockView<T, C, A, V>
 

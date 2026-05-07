@@ -1,4 +1,4 @@
-import type { ArrayBufferView, ByteView } from './interface.js'
+import type { ArrayBufferView, ByteView } from './interface.ts'
 
 const textEncoder = new TextEncoder()
 const textDecoder = new TextDecoder()

@@ -1,5 +1,5 @@
-import { bytes as binary, CID } from './index.js'
-import type * as API from './interface.js'
+import { bytes as binary, CID } from './index.ts'
+import type * as API from './interface.ts'
 
 function readonly ({ enumerable = true, configurable = false } = {}): { enumerable: boolean, configurable: boolean, writable: false } {
   return { enumerable, configurable, writable: false }

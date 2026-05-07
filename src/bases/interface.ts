@@ -20,7 +20,7 @@ export interface BaseDecoder {
    * Decodes **plain** (and not a multibase) string. Unlike
    * decode
    */
-  baseDecode(text: string): Uint8Array
+  baseDecode(text: string): Uint8Array<ArrayBuffer>
 }
 
 /**
@@ -70,7 +70,7 @@ export interface MultibaseDecoder<Prefix extends string> {
    * Decodes **multibase** string (which must have a multibase prefix added).
    * If prefix does not match
    */
-  decode(multibase: Multibase<Prefix>): Uint8Array
+  decode(multibase: Multibase<Prefix>): Uint8Array<ArrayBuffer>
 }
 
 /**
