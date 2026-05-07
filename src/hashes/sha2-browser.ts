@@ -1,8 +1,6 @@
-/* global crypto */
-
 import { from } from './hasher.ts'
 
-function sha (name: AlgorithmIdentifier): (data: Uint8Array<ArrayBuffer>) => Promise<Uint8Array> {
+function sha (name: AlgorithmIdentifier): (data: Uint8Array<ArrayBuffer>) => Promise<Uint8Array<ArrayBuffer>> {
   return async data => new Uint8Array(await crypto.subtle.digest(name, data))
 }
 

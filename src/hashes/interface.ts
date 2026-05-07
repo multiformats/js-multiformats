@@ -47,6 +47,12 @@ export interface MultihashHasher<Code extends number = number> {
   digest(input: Uint8Array, options?: DigestOptions): Promise<MultihashDigest<Code>> | MultihashDigest<Code>
 
   /**
+   * Returns the raw digest representation of the binary input (e.g. without
+   * hashing codec)
+   */
+  encode(input: Uint8Array): Promise<Uint8Array<ArrayBuffer>> | Uint8Array<ArrayBuffer>
+
+  /**
    * Name of the multihash
    */
   name: string
@@ -69,4 +75,5 @@ export interface MultihashHasher<Code extends number = number> {
  */
 export interface SyncMultihashHasher<Code extends number = number> extends MultihashHasher<Code> {
   digest(input: Uint8Array, options?: DigestOptions): MultihashDigest<Code>
+  encode(input: Uint8Array): Uint8Array<ArrayBuffer>
 }

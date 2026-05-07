@@ -8,7 +8,7 @@ const DEFAULT_MIN_DIGEST_LENGTH = 20
 export interface HasherInit <Name extends string, Code extends number> {
   name: Name
   code: Code
-  encode(input: Uint8Array): Await<Uint8Array>
+  encode(input: Uint8Array): Await<Uint8Array<ArrayBuffer>>
 
   /**
    * The minimum length a hash is allowed to be truncated to in bytes
@@ -24,7 +24,7 @@ export interface HasherInit <Name extends string, Code extends number> {
   maxDigestLength?: number
 }
 
-export function from <Name extends string, Code extends number> ({ name, code, encode, minDigestLength, maxDigestLength }: HasherInit<Name, Code>): Hasher<Name, Code> {
+export function from <Name extends string, Code extends number> ({ name, code, encode, minDigestLength, maxDigestLength }: HasherInit<Name, Code>): MultihashHasher<Code> {
   return new Hasher(name, code, encode, minDigestLength, maxDigestLength)
 }
 
@@ -49,11 +49,11 @@ export interface DigestOptions {
 export class Hasher<Name extends string, Code extends number> implements MultihashHasher<Code> {
   readonly name: Name
   readonly code: Code
-  readonly encode: (input: Uint8Array) => Await<Uint8Array>
+  readonly encode: (input: Uint8Array) => Await<Uint8Array<ArrayBuffer>>
   readonly minDigestLength: number
   readonly maxDigestLength?: number
 
-  constructor (name: Name, code: Code, encode: (input: Uint8Array) => Await<Uint8Array>, minDigestLength?: number, maxDigestLength?: number) {
+  constructor (name: Name, code: Code, encode: (input: Uint8Array) => Await<Uint8Array<ArrayBuffer>>, minDigestLength?: number, maxDigestLength?: number) {
     this.name = name
     this.code = code
     this.encode = encode

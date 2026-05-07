@@ -1,5 +1,3 @@
-/* global crypto */
-
 import { from } from './hasher.ts'
 
 const sha = (name: AlgorithmIdentifier) =>
