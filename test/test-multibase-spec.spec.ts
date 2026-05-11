@@ -194,4 +194,20 @@ describe('spec test', () => {
     // not enough input chars, should be multiple of 3 or multiple of 3 + 2
     assert.throws(() => bases.base45.decode('R%69 VD92EX'), 'Unexpected end of data')
   })
+
+  // RFC9285 section 6: encoded chunks must lie within the byte ranges they
+  // represent; 3-char chunks decode to a 16-bit value, 2-char trailers to 8-bit.
+  for (const input of ['RGGW', 'R:::', 'R000V5', 'R000::']) {
+    it(`base45 should fail with out-of-range encoding [${input}]`, () => {
+      assert.throws(() => bases.base45.decode(input), 'Invalid base45 encoding')
+    })
+  }
+
+  // RFC9285 section 6 boundary: "FGW" is 65535 (0xFFFF), the largest valid
+  // 16-bit value; the contrasting "GGW" (above) is 65536 and must fail.
+  it('base45 should round-trip the 0xFFFF boundary [FGW]', () => {
+    const bytes = Uint8Array.from([0xff, 0xff])
+    assert.deepStrictEqual(bases.base45.encode(bytes), 'RFGW')
+    assert.deepStrictEqual(bases.base45.decode('RFGW'), bytes)
+  })
 })

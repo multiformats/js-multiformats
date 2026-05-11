@@ -1,13 +1,21 @@
 import { from } from './base.ts'
 
 const alphabet = '0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ $%*+-./:'
-
-function indexOf (char: string): number {
-  const index = alphabet.indexOf(char)
-  if (index === -1) {
-    throw new Error(`Non-base45 character: ${char}`)
+const INVALID = 0xff
+const decodeTable = (() => {
+  const table = new Uint8Array(256).fill(INVALID)
+  for (let i = 0; i < alphabet.length; i++) {
+    table[alphabet.charCodeAt(i)] = i
   }
-  return index
+  return table
+})()
+
+function decodeChar (input: string, i: number): number {
+  const v = decodeTable[input.charCodeAt(i)]
+  if (v === INVALID) {
+    throw new Error(`Non-base45 character: ${input[i]}`)
+  }
+  return v
 }
 
 export const base45 = from({
@@ -18,16 +26,11 @@ export const base45 = from({
     for (let i = 0; i < input.length; i += 2) {
       if (i + 1 === input.length) {
         const v = input[i]
-        const a = v / 45 | 0
-        const b = v % 45 | 0
-        ret += alphabet[b] + alphabet[a]
+        ret += alphabet[v % 45] + alphabet[(v / 45) | 0]
         break
       }
-      const v = input[i] << 8 | input[i + 1]
-      const a = v / 45 ** 2 | 0
-      const b = v / 45 % 45 | 0
-      const c = v % 45
-      ret += alphabet[c] + alphabet[b] + alphabet[a]
+      const v = (input[i] << 8) | input[i + 1]
+      ret += alphabet[v % 45] + alphabet[((v / 45) | 0) % 45] + alphabet[(v / 2025) | 0]
     }
     return ret
   },
@@ -35,16 +38,23 @@ export const base45 = from({
     if ((input.length * 2) % 3 === 2) {
       throw new Error('Unexpected end of data')
     }
-    const out = new Uint8Array(Math.floor(input.length * 2 / 3))
+    const out = new Uint8Array(((input.length * 2) / 3) | 0)
+    let o = 0
     for (let i = 0; i < input.length; i += 3) {
       if (i + 2 === input.length) {
-        const v = indexOf(input[i]) + indexOf(input[i + 1]) * 45
-        out[i / 3 * 2] = v
+        const v = decodeChar(input, i) + decodeChar(input, i + 1) * 45
+        if (v > 0xff) {
+          throw new Error('Invalid base45 encoding: trailing chunk out of range')
+        }
+        out[o++] = v
         break
       }
-      const v = indexOf(input[i]) + indexOf(input[i + 1]) * 45 + indexOf(input[i + 2]) * 45 ** 2
-      out[i / 3 * 2] = v >> 8
-      out[i / 3 * 2 + 1] = v & 0xff
+      const v = decodeChar(input, i) + decodeChar(input, i + 1) * 45 + decodeChar(input, i + 2) * 2025
+      if (v > 0xffff) {
+        throw new Error('Invalid base45 encoding: chunk out of range')
+      }
+      out[o++] = v >> 8
+      out[o++] = v & 0xff
     }
     return out
   }
