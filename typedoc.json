@@ -7,6 +7,7 @@
     "./src/bases/base256emoji.ts",
     "./src/bases/base32.ts",
     "./src/bases/base36.ts",
+    "./src/bases/base45.ts",
     "./src/bases/base58.ts",
     "./src/bases/base64.ts",
     "./src/bases/base8.ts",

@@ -6,6 +6,7 @@ import * as b16 from '../src/bases/base16.ts'
 import * as b2 from '../src/bases/base2.ts'
 import * as b32 from '../src/bases/base32.ts'
 import * as b36 from '../src/bases/base36.ts'
+import * as b45 from '../src/bases/base45.ts'
 import * as b58 from '../src/bases/base58.ts'
 import * as b64 from '../src/bases/base64.ts'
 import * as b8 from '../src/bases/base8.ts'
@@ -64,7 +65,7 @@ describe('multibase', () => {
   const buff = bytes.fromString('test')
   const nonPrintableBuff = Uint8Array.from([239, 250, 254])
 
-  const baseTest = (bases: typeof b2 | typeof b8 | typeof b10 | typeof b16 | typeof b32 | typeof b36 | typeof b58 | typeof b64): void => {
+  const baseTest = (bases: typeof b2 | typeof b8 | typeof b10 | typeof b16 | typeof b32 | typeof b36 | typeof b45 | typeof b58 | typeof b64): void => {
     for (const base of Object.values(bases)) {
       if (((base as { name: string })?.name) !== '') {
         it(`encode/decode ${base.name}`, () => {
@@ -108,6 +109,10 @@ describe('multibase', () => {
 
   describe('base36', () => {
     baseTest(b36)
+  })
+
+  describe('base45', () => {
+    baseTest(b45)
   })
 
   describe('base58', () => {
