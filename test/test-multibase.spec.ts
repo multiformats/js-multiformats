@@ -136,20 +136,26 @@ describe('multibase', () => {
     })
 
     it('should round-trip emojis', () => {
-      const u = bytes.fromString('😵‍💫🎉')
+      const input = '😵‍💫🎉'
+      const u = new TextEncoder().encode(input)
       const s = id.identity.encode(u)
       const b = id.identity.decode(s)
+      const output = new TextDecoder().decode(b)
 
       assert.equalBytes(b, u)
+      assert.equal(output, input)
     })
 
     it('should round-trip multi-byte characters', () => {
       // https://www.kanshudo.com/kanji/%F0%A0%AE%B7
-      const u = bytes.fromString('𠮷')
+      const input = '𠮷'
+      const u = new TextEncoder().encode(input)
       const s = id.identity.encode(u)
       const b = id.identity.decode(s)
+      const output = new TextDecoder().decode(b)
 
       assert.equalBytes(b, u)
+      assert.equal(output, input)
     })
   })
 
