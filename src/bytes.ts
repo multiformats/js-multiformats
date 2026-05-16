@@ -50,12 +50,32 @@ export function isBinary (o: unknown): o is ArrayBuffer | ArrayBufferView {
   return o instanceof ArrayBuffer || ArrayBuffer.isView(o)
 }
 
+/**
+ * Convert the passed string into a byte array, constraining each character
+ * value to a single byte
+ */
 export function fromString (str: string): Uint8Array<ArrayBuffer> {
-  return new TextEncoder().encode(str)
+  const output = new Uint8Array(str.length)
+
+  for (let i = 0; i < str.length; i++) {
+    output[i] = str.charCodeAt(i)
+  }
+
+  return output
 }
 
+/**
+ * Convert the passed byte array to a string, interpreting each byte as a single
+ * character
+ */
 export function toString (b: Uint8Array): string {
-  return new TextDecoder().decode(b)
+  let output = ''
+
+  for (let i = 0; i < b.length; i++) {
+    output += String.fromCharCode(b[i])
+  }
+
+  return output
 }
 
 function isByteArrayWithArrayBuffer (b?: Uint8Array): b is Uint8Array<ArrayBuffer> {
