@@ -145,6 +145,15 @@ describe('block', () => {
       await assert.isRejected(main.create({ bytes: block.bytes, cid: block2.cid, codec, hasher }), 'CID hash does not match bytes')
     })
 
+    it('create verifies the cid hash before decoding the bytes', async () => {
+      const block = await main.encode({ value: fixture, codec, hasher })
+      const badBytes = bytes.fromString('not valid json')
+      await assert.isRejected(
+        main.create({ bytes: badBytes, cid: block.cid, codec, hasher }),
+        'CID hash does not match bytes'
+      )
+    })
+
     it('get', async () => {
       const block = await main.encode({ value: fixture, codec, hasher })
       assert.throws(() => block.get('/asd/fs/dfasd/f'), 'Object has no property at ["asd"]')

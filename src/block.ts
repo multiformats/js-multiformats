@@ -224,7 +224,7 @@ interface CreateInput <T, Code extends number, Alg extends number, V extends API
 export async function create <T, Code extends number, Alg extends number, V extends API.Version> ({ bytes, cid, hasher, codec }: CreateInput<T, Code, Alg, V>): Promise<API.BlockView<T, Code, Alg, V>> {
   if (bytes == null) { throw new Error('Missing required argument "bytes"') }
   if (hasher == null) { throw new Error('Missing required argument "hasher"') }
-  const value = codec.decode(bytes)
+
   const hash = await hasher.digest(bytes)
   if (!binary.equals(cid.multihash.bytes, hash.bytes)) {
     throw new Error('CID hash does not match bytes')
@@ -233,7 +233,6 @@ export async function create <T, Code extends number, Alg extends number, V exte
   return createUnsafe({
     bytes,
     cid,
-    value,
     codec
   })
 }
