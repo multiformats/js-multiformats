@@ -7,8 +7,9 @@
 /**
  * @param {string} ALPHABET
  * @param {any} name
+ * @param {boolean} [caseInsensitive]
  */
-function base (ALPHABET, name) {
+function base (ALPHABET, name, caseInsensitive) {
   if (ALPHABET.length >= 255) { throw new TypeError('Alphabet too long') }
   var BASE_MAP = new Uint8Array(256);
   for (var j = 0; j < BASE_MAP.length; j++) {
@@ -19,6 +20,14 @@ function base (ALPHABET, name) {
     var xc = x.charCodeAt(0);
     if (BASE_MAP[xc] !== 255) { throw new TypeError(x + ' is ambiguous') }
     BASE_MAP[xc] = i;
+    // For case-insensitive codecs, map the opposite case to the same index so
+    // differently cased input decodes without errors (multibase spec).
+    if (caseInsensitive) {
+      var xl = x.toLowerCase().charCodeAt(0);
+      var xu = x.toUpperCase().charCodeAt(0);
+      if (xl !== xc) { BASE_MAP[xl] = i; }
+      if (xu !== xc) { BASE_MAP[xu] = i; }
+    }
   }
   var BASE = ALPHABET.length;
   var LEADER = ALPHABET.charAt(0);

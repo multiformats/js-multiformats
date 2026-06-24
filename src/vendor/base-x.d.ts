@@ -6,4 +6,4 @@ export interface BaseConverter {
     decode(string: string): Uint8Array;
 }
 
-export default function base(ALPHABET: string, name: string): BaseConverter
+export default function base(ALPHABET: string, name: string, caseInsensitive?: boolean): BaseConverter

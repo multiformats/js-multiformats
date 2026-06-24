@@ -130,8 +130,8 @@ export function from <Base extends string, Prefix extends string> ({ name, prefi
   return new Codec(name, prefix, encode, decode)
 }
 
-export function baseX <Base extends string, Prefix extends string> ({ name, prefix, alphabet }: { name: Base, prefix: Prefix, alphabet: string }): Codec<Base, Prefix> {
-  const { encode, decode } = basex(alphabet, name)
+export function baseX <Base extends string, Prefix extends string> ({ name, prefix, alphabet, caseInsensitive = false }: { name: Base, prefix: Prefix, alphabet: string, caseInsensitive?: boolean }): Codec<Base, Prefix> {
+  const { encode, decode } = basex(alphabet, name, caseInsensitive)
   return from({
     prefix,
     name,
@@ -214,11 +214,23 @@ function encode (data: Uint8Array, alphabet: string, bitsPerChar: number): strin
   return out
 }
 
-function createAlphabetIdx (alphabet: string): Record<string, number> {
+function createAlphabetIdx (alphabet: string, caseInsensitive: boolean): Record<string, number> {
   // Build the character lookup table:
   const alphabetIdx: Record<string, number> = {}
   for (let i = 0; i < alphabet.length; ++i) {
     alphabetIdx[alphabet[i]] = i
+    // For case-insensitive codecs, map the opposite case to the same index so
+    // differently cased input decodes without errors (multibase spec).
+    if (caseInsensitive) {
+      const lower = alphabet[i].toLowerCase()
+      const upper = alphabet[i].toUpperCase()
+      if (lower !== alphabet[i]) {
+        alphabetIdx[lower] = i
+      }
+      if (upper !== alphabet[i]) {
+        alphabetIdx[upper] = i
+      }
+    }
   }
   return alphabetIdx
 }
@@ -226,8 +238,8 @@ function createAlphabetIdx (alphabet: string): Record<string, number> {
 /**
  * RFC4648 Factory
  */
-export function rfc4648 <Base extends string, Prefix extends string> ({ name, prefix, bitsPerChar, alphabet }: { name: Base, prefix: Prefix, bitsPerChar: number, alphabet: string }): Codec<Base, Prefix> {
-  const alphabetIdx = createAlphabetIdx(alphabet)
+export function rfc4648 <Base extends string, Prefix extends string> ({ name, prefix, bitsPerChar, alphabet, caseInsensitive = false }: { name: Base, prefix: Prefix, bitsPerChar: number, alphabet: string, caseInsensitive?: boolean }): Codec<Base, Prefix> {
+  const alphabetIdx = createAlphabetIdx(alphabet, caseInsensitive)
   return from({
     prefix,
     name,
