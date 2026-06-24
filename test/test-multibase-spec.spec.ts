@@ -150,6 +150,24 @@ const encoded = [
   }
 ]
 
+// Differently cased than the canonical encoding. Per the multibase spec
+// `tests/case_insensitivity.csv` fixture, these must decode without errors.
+// Every value below encodes 'hello world'.
+const caseInsensitive: Array<[string, string]> = [
+  ['base16', 'f68656c6c6f20776F726C64'],
+  ['base16upper', 'F68656c6c6f20776F726C64'],
+  ['base32', 'bnbswy3dpeB3W64TMMQ'],
+  ['base32upper', 'Bnbswy3dpeB3W64TMMQ'],
+  ['base32hex', 'vd1imor3f41RMUSJCCG'],
+  ['base32hexupper', 'Vd1imor3f41RMUSJCCG'],
+  ['base32pad', 'cnbswy3dpeB3W64TMMQ======'],
+  ['base32padupper', 'Cnbswy3dpeB3W64TMMQ======'],
+  ['base32hexpad', 'td1imor3f41RMUSJCCG======'],
+  ['base32hexpadupper', 'Td1imor3f41RMUSJCCG======'],
+  ['base36', 'kfUvrsIvVnfRbjWaJo'],
+  ['base36upper', 'KfUVrSIVVnFRbJWAJo']
+]
+
 describe('spec test', () => {
   let index = 0
   for (const { input, tests } of encoded) {
@@ -180,4 +198,14 @@ describe('spec test', () => {
       assert.throws(() => base.decode(base.prefix + '^!@$%!#$%@#y'), `Non-${base.name} character`)
     })
   }
+
+  describe('case insensitivity', () => {
+    for (const [name, output] of caseInsensitive) {
+      const base = bases[name as keyof typeof bases]
+
+      it(`${name} should decode differently cased input`, () => {
+        assert.deepStrictEqual(base.decode(output), fromString('hello world'))
+      })
+    }
+  })
 })
