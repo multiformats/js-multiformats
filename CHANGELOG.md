@@ -1,3 +1,9 @@
+## [14.0.2](https://github.com/multiformats/js-multiformats/compare/v14.0.1...v14.0.2) (2026-06-24)
+
+### Bug Fixes
+
+* verify CID hash before decoding in Block.create ([#340](https://github.com/multiformats/js-multiformats/issues/340)) ([6784d3e](https://github.com/multiformats/js-multiformats/commit/6784d3e498c15510c602aaccf2ee89e39df49ae0)), closes [#339](https://github.com/multiformats/js-multiformats/issues/339)
+
 ## [14.0.1](https://github.com/multiformats/js-multiformats/compare/v14.0.0...v14.0.1) (2026-06-24)
 
 ### Bug Fixes
