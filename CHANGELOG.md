@@ -1,3 +1,9 @@
+## [14.0.1](https://github.com/multiformats/js-multiformats/compare/v14.0.0...v14.0.1) (2026-06-24)
+
+### Bug Fixes
+
+* case-insensitive decode for base16/base32/base36 (multibase spec) ([#341](https://github.com/multiformats/js-multiformats/issues/341)) ([ad87caa](https://github.com/multiformats/js-multiformats/commit/ad87caa13c0e72991d13c1fa6031e5e7409d9764))
+
 ## [14.0.0](https://github.com/multiformats/js-multiformats/compare/v13.4.2...v14.0.0) (2026-05-07)
 
 ### ⚠ BREAKING CHANGES
