@@ -15,7 +15,6 @@ describe('multicodec', () => {
   it('encode/decode raw arraybuffer', () => {
     const buff = raw.encode(bytes.fromString('test'))
     assert.deepStrictEqual(buff, bytes.fromString('test'))
-    // @ts-expect-error
     assert.deepStrictEqual(raw.decode(buff.buffer), bytes.fromString('test'))
   })
 
@@ -28,7 +27,6 @@ describe('multicodec', () => {
   it('encode/decode json arraybuffer', () => {
     const buff = json.encode({ hello: 'world' })
     assert.deepStrictEqual(buff, bytes.fromString(JSON.stringify({ hello: 'world' })))
-    // @ts-expect-error
     assert.deepStrictEqual(json.decode(buff.buffer), { hello: 'world' })
   })
 
