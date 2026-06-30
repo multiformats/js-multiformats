@@ -1,3 +1,9 @@
+## [14.0.3](https://github.com/multiformats/js-multiformats/compare/v14.0.2...v14.0.3) (2026-06-30)
+
+### Bug Fixes
+
+* constrain identity bytes to single characters ([#338](https://github.com/multiformats/js-multiformats/issues/338)) ([cb4eb32](https://github.com/multiformats/js-multiformats/commit/cb4eb32aa6d86ba4558146550f340f0191b21c76)), closes [#122](https://github.com/multiformats/js-multiformats/issues/122)
+
 ## [14.0.2](https://github.com/multiformats/js-multiformats/compare/v14.0.1...v14.0.2) (2026-06-24)
 
 ### Bug Fixes
