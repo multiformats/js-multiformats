@@ -10,7 +10,7 @@ import type { Link, Version } from '../link/interface.ts'
  * For example, a `ByteView<{ hello: "world" }>` is a `Uint8Array` containing a
  * binary representation of a `{hello: "world"}`.
  */
-export interface ByteView<Data> extends Uint8Array<ArrayBuffer>, Phantom<Data> {}
+export interface ByteView<Data, B extends ArrayBufferLike = ArrayBufferLike> extends Uint8Array<B>, Phantom<Data> {}
 
 /**
  * Similar to ByteView but extends ArrayBuffer.

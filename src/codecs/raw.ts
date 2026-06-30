@@ -4,7 +4,7 @@ import type { ArrayBufferView, ByteView } from './interface.ts'
 export const name = 'raw'
 export const code = 0x55
 
-export function encode (node: Uint8Array): ByteView<Uint8Array> {
+export function encode (node: Uint8Array): ByteView<Uint8Array<ArrayBuffer>, ArrayBuffer> {
   return coerce(node)
 }
 
