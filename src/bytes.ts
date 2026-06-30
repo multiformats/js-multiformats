@@ -64,18 +64,34 @@ export function fromString (str: string): Uint8Array<ArrayBuffer> {
   return output
 }
 
+// Based on http://stackoverflow.com/a/22747272/680742, the browser with
+// the lowest limit is Chrome, with 0x10000 args.
+// We go 1 magnitude less, for safety
+const MAX_ARGUMENTS_LENGTH = 0x1000
+
 /**
  * Convert the passed byte array to a string, interpreting each byte as a single
  * character
  */
 export function toString (b: Uint8Array): string {
-  let output = ''
+  const len = b.length
 
-  for (let i = 0; i < b.length; i++) {
-    output += String.fromCharCode(b[i])
+  if (len <= MAX_ARGUMENTS_LENGTH) {
+    // @ts-expect-error cannot ordinarily apply a Uint8Array
+    return String.fromCharCode.apply(String, b) // avoid extra subarray()
   }
 
-  return output
+  // Decode in chunks to avoid "call stack size exceeded".
+  let res = ''
+  let i = 0
+  while (i < len) {
+    res += String.fromCharCode.apply(
+      String,
+      // @ts-expect-error cannot ordinarily apply a Uint8Array
+      b.subarray(i, i += MAX_ARGUMENTS_LENGTH)
+    )
+  }
+  return res
 }
 
 function isByteArrayWithArrayBuffer (b?: Uint8Array): b is Uint8Array<ArrayBuffer> {
