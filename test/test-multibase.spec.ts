@@ -9,6 +9,7 @@ import * as b36 from '../src/bases/base36.ts'
 import * as b58 from '../src/bases/base58.ts'
 import * as b64 from '../src/bases/base64.ts'
 import * as b8 from '../src/bases/base8.ts'
+import * as id from '../src/bases/identity.ts'
 import * as bytes from '../src/bytes.ts'
 
 const { base16, base32, base58btc, base64 } = { ...b16, ...b32, ...b58, ...b64 }
@@ -64,7 +65,7 @@ describe('multibase', () => {
   const buff = bytes.fromString('test')
   const nonPrintableBuff = Uint8Array.from([239, 250, 254])
 
-  const baseTest = (bases: typeof b2 | typeof b8 | typeof b10 | typeof b16 | typeof b32 | typeof b36 | typeof b58 | typeof b64): void => {
+  const baseTest = (bases: typeof b2 | typeof b8 | typeof b10 | typeof b16 | typeof b32 | typeof b36 | typeof b58 | typeof b64 | typeof id): void => {
     for (const base of Object.values(bases)) {
       if (((base as { name: string })?.name) !== '') {
         it(`encode/decode ${base.name}`, () => {
@@ -118,6 +119,46 @@ describe('multibase', () => {
     baseTest(b64)
   })
 
+  describe('identity', () => {
+    baseTest(id)
+
+    it('should round-trip unprintable characters', () => {
+      const u = new Uint8Array([
+        6, 22, 184, 240, 237, 178,
+        112, 0, 150, 137, 182, 54,
+        220, 1, 217, 221
+      ])
+
+      const s = id.identity.encode(u)
+      const b = id.identity.decode(s)
+
+      assert.equalBytes(b, u)
+    })
+
+    it('should round-trip emojis', () => {
+      const input = '😵‍💫🎉'
+      const u = new TextEncoder().encode(input)
+      const s = id.identity.encode(u)
+      const b = id.identity.decode(s)
+      const output = new TextDecoder().decode(b)
+
+      assert.equalBytes(b, u)
+      assert.equal(output, input)
+    })
+
+    it('should round-trip multi-byte characters', () => {
+      // https://www.kanshudo.com/kanji/%F0%A0%AE%B7
+      const input = '𠮷'
+      const u = new TextEncoder().encode(input)
+      const s = id.identity.encode(u)
+      const b = id.identity.decode(s)
+      const output = new TextDecoder().decode(b)
+
+      assert.equalBytes(b, u)
+      assert.equal(output, input)
+    })
+  })
+
   it('multibase mismatch', () => {
     const b64 = base64.encode(bytes.fromString('test'))
     const msg = `Unable to decode multibase string "${b64}", base32 decoder only supports inputs prefixed with ${base32.prefix}`
@@ -158,7 +199,7 @@ describe('multibase', () => {
     assert.throws(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
   })
 
-  it('infers prefix and name corretly', () => {
+  it('infers prefix and name correctly', () => {
     const name = base32.name
 
     // @ts-expect-error - TS catches mismatch
