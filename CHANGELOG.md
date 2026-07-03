@@ -1,3 +1,9 @@
+## [14.0.4](https://github.com/multiformats/js-multiformats/compare/v14.0.3...v14.0.4) (2026-07-03)
+
+### Bug Fixes
+
+* allow specifying ByteView backing type ([#342](https://github.com/multiformats/js-multiformats/issues/342)) ([646249f](https://github.com/multiformats/js-multiformats/commit/646249f7424f934d61f9434a3b7f8800925fdd23))
+
 ## [14.0.3](https://github.com/multiformats/js-multiformats/compare/v14.0.2...v14.0.3) (2026-06-30)
 
 ### Bug Fixes
