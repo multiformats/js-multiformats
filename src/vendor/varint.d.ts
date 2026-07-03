@@ -10,7 +10,7 @@ interface Varint {
          * Encodes `num` into `buffer` starting at `offset`. returns `buffer`, with the encoded varint written into it.
          * `varint.encode.bytes` will now be set to the number of bytes modified.
          */
-        (num: number, buffer: Uint8Array, offset?: number): Buffer;
+        <T extends ArrayBufferLike> (num: number, buffer: Uint8Array<T>, offset?: number): Uint8Array<T>;
 
         /**
          * Encodes `num` into `array` starting at `offset`. returns `array`, with the encoded varint written into it.

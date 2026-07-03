@@ -5,7 +5,7 @@ export function decode (data: Uint8Array, offset = 0): [number, number] {
   return [code, varint.decode.bytes]
 }
 
-export function encodeTo (int: number, target: Uint8Array, offset = 0): Uint8Array {
+export function encodeTo <T extends ArrayBufferLike> (int: number, target: Uint8Array<T>, offset = 0): Uint8Array<T> {
   varint.encode(int, target, offset)
   return target
 }
