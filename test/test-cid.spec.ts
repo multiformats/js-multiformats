@@ -177,6 +177,14 @@ describe('CID', () => {
       assert.deepStrictEqual(cid.toString(), cidStr)
     })
 
+    it('rejects a non-minimally encoded varint prefix', () => {
+      // the version varint 0x01 replaced by its non-minimal encoding 0x81 0x00
+      const cidBuf = fromHex(
+        '81007012207252523e6591fb8fe553d67ff55a86f84044b46a3e4176e10c58fa529a4aabd5'
+      )
+      assert.throws(() => CID.decode(cidBuf), /minimal/)
+    })
+
     it('create by parts', async () => {
       const hash = await sha256.digest(textEncoder.encode('abc'))
       const cid = CID.create(1, 0x71, hash)
