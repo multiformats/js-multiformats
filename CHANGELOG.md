@@ -1,3 +1,9 @@
+## [14.0.5](https://github.com/multiformats/js-multiformats/compare/v14.0.4...v14.0.5) (2026-07-23)
+
+### Bug Fixes
+
+* reject non-minimally encoded varints ([#343](https://github.com/multiformats/js-multiformats/issues/343)) ([8ada774](https://github.com/multiformats/js-multiformats/commit/8ada77475dd32fec4f3e66d2cf48653544aa70c5))
+
 ## [14.0.4](https://github.com/multiformats/js-multiformats/compare/v14.0.3...v14.0.4) (2026-07-03)
 
 ### Bug Fixes
