@@ -199,6 +199,20 @@ describe('multibase', () => {
     assert.throws(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
   })
 
+  it('rejects interior padding (RFC 4648 section 3.2)', () => {
+    const padded = { ...b32, ...b64 }
+    for (const base of [padded.base64pad, padded.base64urlpad, padded.base32pad, padded.base32hexpad]) {
+      const value = Uint8Array.from([0x41, 0x42])
+      // A valid encoding, with legitimate trailing padding, still round-trips.
+      const encoded = base.encode(value)
+      assert.deepStrictEqual(base.decode(encoded), value)
+      // A '=' spliced into the data run (padding may only be a trailing run) is
+      // invalid and must be rejected, not silently decoded to bogus bytes.
+      const tampered = encoded.slice(0, 2) + '=' + encoded.slice(2)
+      assert.throws(() => base.decode(tampered), `Non-${base.name} character`)
+    }
+  })
+
   it('infers prefix and name correctly', () => {
     const name = base32.name
 
