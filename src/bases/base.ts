@@ -218,6 +218,14 @@ function createAlphabetIdx (alphabet: string, caseInsensitive: boolean): Record<
   // Build the character lookup table:
   const alphabetIdx: Record<string, number> = {}
   for (let i = 0; i < alphabet.length; ++i) {
+    // The trailing '=' of a padded alphabet is a padding marker, not a data
+    // symbol. Skip it so an interior '=' has no index and is rejected as a
+    // non-base character in decode, instead of being folded into the output as
+    // bogus data. Trailing padding is stripped by decode before the lookup, so
+    // valid input round-trips unchanged.
+    if (alphabet[i] === '=') {
+      continue
+    }
     alphabetIdx[alphabet[i]] = i
     // For case-insensitive codecs, map the opposite case to the same index so
     // differently cased input decodes without errors (multibase spec).
