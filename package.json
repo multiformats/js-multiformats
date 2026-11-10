@@ -319,10 +319,5 @@
     "./dist/src/hashes/sha1.js": "./dist/src/hashes/sha1-browser.js",
     "./hashes/sha2": "./dist/src/hashes/sha2-browser.js",
     "./dist/src/hashes/sha2.js": "./dist/src/hashes/sha2-browser.js"
-  },
-  "overrides": {
-    "aegir": {
-      "playwright-test": "^15.0.0"
-    }
   }
 }
