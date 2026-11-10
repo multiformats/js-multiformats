@@ -342,15 +342,16 @@ export class CID<Data = unknown, Format extends number = number, Alg extends num
 
     let version = next() as V
     let codec = DAG_PB_CODE as C
+
     if (version as number === 18) {
-      // CIDv0
+      // CIDv0, implicit version 0
       version = 0 as V
       offset = 0
-    } else {
+    } else if (version as number === 1) {
       codec = next() as C
-    }
-
-    if (version !== 0 && version !== 1) {
+    } else if (version as number === 0) {
+      throw new RangeError('Invalid CID version, v0 is always implicit')
+    } else {
       throw new RangeError(`Invalid CID version ${version}`)
     }
 
