@@ -103,7 +103,10 @@ function base (ALPHABET, name, caseInsensitive) {
         // Process the characters.
     while (source[psz]) {
             // Decode character
-      var carry = BASE_MAP[source.charCodeAt(psz)];
+      var charCode = source.charCodeAt(psz)
+      // Character code out of BASE_MAP range
+      if (charCode > 255) { return }
+      var carry = BASE_MAP[charCode];
             // Invalid character
       if (carry === 255) { return }
       var i = 0;

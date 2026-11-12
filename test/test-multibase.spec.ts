@@ -46,6 +46,17 @@ describe('multibase', () => {
     })
   }
 
+  it('base-x rejects characters with a code point > 255', () => {
+    // base-x uses a 256-entry lookup table, so a code unit >= 256 must be
+    // rejected rather than silently dropped (which corrupts the decoded bytes
+    // and lets distinct strings decode to the same value).
+    for (const base of [base58btc, b36.base36]) {
+      const msg = `Non-${base.name} character`
+      assert.throws(() => base.decode(base.prefix + '2Āg'), msg)
+      assert.throws(() => base.decode(base.prefix + '2ကg'), msg)
+    }
+  })
+
   it('encode string failure', () => {
     const msg = 'Unknown type, must be binary type'
     // @ts-expect-error - expects bytes
