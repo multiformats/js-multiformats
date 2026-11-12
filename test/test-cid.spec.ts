@@ -307,7 +307,9 @@ describe('CID', () => {
 
     const decode = [
       textEncoder.encode('hello world'),
-      textEncoder.encode('QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT')
+      textEncoder.encode('QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT'),
+      // A valid CIDv1 where the version number was replaced with a zero.
+      fromHex('007012207252523e6591fb8fe553d67ff55a86f84044b46a3e4176e10c58fa529a4aabd5')
     ]
 
     for (const i of decode) {
