@@ -1,3 +1,10 @@
+## [14.0.6](https://github.com/multiformats/js-multiformats/compare/v14.0.5...v14.0.6) (2026-11-17)
+
+### Bug Fixes
+
+* fail CIDs prefixed with zero ([#347](https://github.com/multiformats/js-multiformats/issues/347)) ([ad99819](https://github.com/multiformats/js-multiformats/commit/ad9981908026b59f1671174fe818198783bf8a28))
+* **multibase:** reject base-x characters with code point > 255 ([#348](https://github.com/multiformats/js-multiformats/issues/348)) ([80e478d](https://github.com/multiformats/js-multiformats/commit/80e478d0211c12147b1c60cea96c59df73d2dca7)), closes [cryptocoinjs/base-x#86](https://github.com/cryptocoinjs/base-x/issues/86)
+
 ## [14.0.5](https://github.com/multiformats/js-multiformats/compare/v14.0.4...v14.0.5) (2026-07-23)
 
 ### Bug Fixes
