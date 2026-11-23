@@ -312,7 +312,7 @@
     "aegir": "^48.0.1",
     "buffer": "^6.0.3",
     "cids": "^1.1.9",
-    "crypto-hash": "^4.0.0"
+    "crypto-hash": "^5.0.0"
   },
   "browser": {
     "./hashes/sha1": "./dist/src/hashes/sha1-browser.js",
