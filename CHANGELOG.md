@@ -1,3 +1,9 @@
+## [14.0.8](https://github.com/multiformats/js-multiformats/compare/v14.0.7...v14.0.8) (2026-11-25)
+
+### Bug Fixes
+
+* reject interior padding in rfc4648 decode ([#344](https://github.com/multiformats/js-multiformats/issues/344)) ([47dfaee](https://github.com/multiformats/js-multiformats/commit/47dfaee2c1b43c4b04e3a13c0681dea0fb016e3a))
+
 ## [14.0.7](https://github.com/multiformats/js-multiformats/compare/v14.0.6...v14.0.7) (2026-11-23)
 
 ### Dependencies
