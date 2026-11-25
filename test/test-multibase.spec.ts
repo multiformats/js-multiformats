@@ -210,6 +210,17 @@ describe('multibase', () => {
     assert.throws(() => base64.decode(b64.substring(0, b64.length - 1)), 'Unexpected end of data')
   })
 
+  it('rejects interior padding (RFC 4648 section 3.2)', () => {
+    const { base64pad, base64urlpad, base32pad, base32padupper, base32hexpad, base32hexpadupper } = { ...b32, ...b64 }
+    const value = Uint8Array.from([0x41, 0x42])
+    for (const base of [base64pad, base64urlpad, base32pad, base32padupper, base32hexpad, base32hexpadupper]) {
+      const encoded = base.encode(value)
+      assert.deepStrictEqual(base.decode(encoded), value)
+      const tampered = encoded.slice(0, 2) + '=' + encoded.slice(2)
+      assert.throws(() => base.decode(tampered), `Non-${base.name} character`)
+    }
+  })
+
   it('infers prefix and name correctly', () => {
     const name = base32.name
 
